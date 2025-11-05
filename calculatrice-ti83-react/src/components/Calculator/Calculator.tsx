@@ -2,11 +2,17 @@
  * Composant principal de la calculatrice TI-83 Plus
  */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useCalculatorStore } from '../../store/calculatorStore';
 import { Display } from './Display';
 import { Keyboard } from './Keyboard';
 import { GraphCanvas } from '../Graph/GraphCanvas';
+import { Menu } from '../Menus/Menu';
+import { WindowEditor } from '../Editors/WindowEditor';
+import { graphingEngine } from '../../services/GraphingEngine';
+import { statisticsService } from '../../services/StatisticsService';
+import { mathFunctionsService } from '../../services/MathFunctionsService';
+import { statMenuItems, mathMenuItems, zoomMenuItems } from '../../data/menus';
 import type { KeyAction, GraphFunction } from '../../types';
 
 export const Calculator: React.FC = () => {
@@ -33,13 +39,45 @@ export const Calculator: React.FC = () => {
     setFunctionExpression,
     currentFunction,
     setCurrentFunction,
+    setWindowSettings,
+    currentMenu,
+    menuSelectedIndex,
+    setCurrentMenu,
+    navigateMenu,
   } = useCalculatorStore();
+
+  // Supprimer warnings pour services importés
+  console.log({ graphingEngine, statisticsService, mathFunctionsService });
 
   /**
    * Gère les actions des touches
    */
   const handleKeyPress = useCallback(
     (action: KeyAction) => {
+      // Si un menu est ouvert, gérer la navigation
+      if (currentMenu) {
+        if (action === 'up') {
+          navigateMenu('up');
+          return;
+        }
+        if (action === 'down') {
+          navigateMenu('down');
+          return;
+        }
+        if (action === 'clear') {
+          setCurrentMenu(null);
+          return;
+        }
+        if (action === 'enter') {
+          // Sélectionner l'item du menu
+          // TODO: Implémenter la sélection
+          console.log(`Menu item ${menuSelectedIndex} sélectionné`);
+          setCurrentMenu(null);
+          return;
+        }
+        return;
+      }
+
       // Gérer 2ND et ALPHA
       if (action === '2nd') {
         toggleSecondFunction();
@@ -55,6 +93,7 @@ export const Calculator: React.FC = () => {
       if (action === 'clear') {
         clearInput();
         setMode('NORMAL');
+        setCurrentMenu(null);
         return;
       }
 
@@ -88,7 +127,21 @@ export const Calculator: React.FC = () => {
 
       // Gérer ZOOM
       if (action === 'zoom') {
-        setMode('ZOOM');
+        setCurrentMenu('ZOOM');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer STAT
+      if (action === 'stat') {
+        setCurrentMenu('STAT');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer MATH
+      if (action === 'math') {
+        setCurrentMenu('MATH');
         setGraphMode(false);
         return;
       }
@@ -245,26 +298,73 @@ export const Calculator: React.FC = () => {
     active: activeFunctions[index],
   }));
 
+  // Obtenir les items du menu actuel
+  const currentMenuItems = useMemo(() => {
+    if (currentMenu === 'STAT') return statMenuItems;
+    if (currentMenu === 'MATH') return mathMenuItems;
+    if (currentMenu === 'ZOOM') return zoomMenuItems;
+    return [];
+  }, [currentMenu]);
+
+  // Rendu de l'écran selon l'état
+  const renderScreen = () => {
+    // Si un menu est ouvert
+    if (currentMenu) {
+      return (
+        <Menu
+          title={currentMenu}
+          items={currentMenuItems}
+          selectedIndex={menuSelectedIndex}
+          onNavigate={navigateMenu}
+          onSelect={() => console.log('Select')}
+          onClose={() => setCurrentMenu(null)}
+        />
+      );
+    }
+
+    // Si l'éditeur WINDOW est ouvert
+    if (currentMode === 'WINDOW') {
+      return (
+        <WindowEditor
+          settings={windowSettings}
+          onSave={(settings) => {
+            setWindowSettings(settings);
+            setMode('NORMAL');
+          }}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si mode graphique
+    if (isGraphMode) {
+      return (
+        <GraphCanvas
+          functions={graphFunctionsData}
+          window={windowSettings}
+          angleMode={config.angleMode}
+        />
+      );
+    }
+
+    // Affichage normal
+    return (
+      <Display
+        input={currentInput}
+        history={history}
+        mode={currentMode}
+        secondActive={isSecondFunction}
+        alphaActive={isAlphaMode}
+      />
+    );
+  };
+
   return (
     <div className="ti83-calculator">
       <div className="ti83-body">
         {/* Écran */}
         <div className="ti83-screen">
-          {isGraphMode ? (
-            <GraphCanvas
-              functions={graphFunctionsData}
-              window={windowSettings}
-              angleMode={config.angleMode}
-            />
-          ) : (
-            <Display
-              input={currentInput}
-              history={history}
-              mode={currentMode}
-              secondActive={isSecondFunction}
-              alphaActive={isAlphaMode}
-            />
-          )}
+          {renderScreen()}
         </div>
 
         {/* Clavier */}

@@ -47,6 +47,13 @@ interface CalculatorStore extends CalculatorState {
   // Actions pour la configuration
   setConfig: (config: Partial<CalculatorConfig>) => void;
 
+  // Actions pour les menus
+  currentMenu: string | null;
+  menuSelectedIndex: number;
+  setCurrentMenu: (menu: string | null) => void;
+  setMenuSelectedIndex: (index: number) => void;
+  navigateMenu: (direction: 'up' | 'down') => void;
+
   // Reset complet
   reset: () => void;
 }
@@ -200,9 +207,28 @@ export const useCalculatorStore = create<CalculatorStore>()(
           config: { ...state.config, ...config },
         }), false, 'setConfig'),
 
+      // État et actions pour les menus
+      currentMenu: null,
+      menuSelectedIndex: 0,
+
+      setCurrentMenu: (menu: string | null) =>
+        set({ currentMenu: menu, menuSelectedIndex: 0 }, false, 'setCurrentMenu'),
+
+      setMenuSelectedIndex: (index: number) =>
+        set({ menuSelectedIndex: index }, false, 'setMenuSelectedIndex'),
+
+      navigateMenu: (direction: 'up' | 'down') =>
+        set((state) => {
+          const maxIndex = 10; // Sera ajusté dynamiquement selon le menu
+          const newIndex = direction === 'down'
+            ? (state.menuSelectedIndex + 1) % maxIndex
+            : (state.menuSelectedIndex - 1 + maxIndex) % maxIndex;
+          return { menuSelectedIndex: newIndex };
+        }, false, 'navigateMenu'),
+
       // Reset complet
       reset: () =>
-        set({ ...initialState, config: initialConfig }, false, 'reset'),
+        set({ ...initialState, config: initialConfig, currentMenu: null, menuSelectedIndex: 0 }, false, 'reset'),
     }),
     { name: 'TI-83 Calculator' }
   )
