@@ -102,7 +102,8 @@ export const Calculator: React.FC = () => {
             const funcIndex = parseInt(match[1]) - 1;
             const expression = match[2];
             setFunctionExpression(funcIndex, expression);
-            addToHistory(`Y${funcIndex + 1} sauvegardé`);
+            addToHistory(`Y${funcIndex + 1}=${expression}`);
+            addToHistory('Appuyez GRAPH pour tracer');
           }
           setMode('NORMAL');
           clearInput();

@@ -28,6 +28,11 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
     // Redessiner quand les paramètres changent
     useEffect(() => {
       if (canvasRef.current) {
+        console.log('🎨 Dessin du graphique:', {
+          functions: functions.map(f => ({ index: f.index, expr: f.expression, active: f.active })),
+          window,
+          angleMode
+        });
         graphingEngine.drawGraph(functions, window, angleMode);
       }
     }, [functions, window, angleMode]);

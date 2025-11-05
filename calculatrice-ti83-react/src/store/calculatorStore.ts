@@ -143,8 +143,14 @@ export const useCalculatorStore = create<CalculatorStore>()(
       setFunctionExpression: (index: number, expression: string) =>
         set((state) => {
           const newFunctions = [...state.graphFunctions];
+          const newActive = [...state.activeFunctions];
           newFunctions[index] = expression;
-          return { graphFunctions: newFunctions };
+          // Activer automatiquement la fonction si elle a une expression
+          newActive[index] = expression.trim() !== '';
+          return {
+            graphFunctions: newFunctions,
+            activeFunctions: newActive,
+          };
         }, false, 'setFunctionExpression'),
 
       toggleFunctionActive: (index: number) =>
