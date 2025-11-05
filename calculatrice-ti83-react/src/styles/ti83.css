@@ -420,3 +420,54 @@ body {
   border-top: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
 }
+
+/* Éditeur de listes STAT */
+.list-editor {
+  background: var(--ti83-screen-bg);
+  color: var(--ti83-screen-text);
+  height: 256px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Courier New', monospace;
+  padding: 8px;
+}
+
+.list-tabs {
+  font-size: 10px;
+  margin-left: auto;
+}
+
+.list-tabs .active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.list-values {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.list-row {
+  display: flex;
+  padding: 2px 8px;
+  font-size: 13px;
+}
+
+.list-row.selected {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.list-row.editing {
+  background: var(--ti83-screen-text);
+  color: var(--ti83-screen-bg);
+}
+
+.row-number {
+  width: 40px;
+  font-weight: bold;
+}
+
+.row-value {
+  flex: 1;
+}

@@ -13,6 +13,8 @@ import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
 import { statMenuItems, mathMenuItems, zoomMenuItems } from '../../data/menus';
+import { createZoomHandlers, createMathHandlers, createStatHandlers } from '../../utils/menuHandlers';
+import { ListEditor } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
 export const Calculator: React.FC = () => {
@@ -49,6 +51,30 @@ export const Calculator: React.FC = () => {
   // Supprimer warnings pour services importés
   console.log({ graphingEngine, statisticsService, mathFunctionsService });
 
+  // Obtenir les items du menu actuel AVANT handleKeyPress
+  const currentMenuItems = useMemo(() => {
+    if (currentMenu === 'STAT') return statMenuItems;
+    if (currentMenu === 'MATH') return mathMenuItems;
+    if (currentMenu === 'ZOOM') return zoomMenuItems;
+    return [];
+  }, [currentMenu]);
+
+  // Créer les handlers pour les menus
+  const zoomHandlers = useMemo(() =>
+    createZoomHandlers(setWindowSettings, setCurrentMenu),
+    [setWindowSettings, setCurrentMenu]
+  );
+
+  const mathHandlers = useMemo(() =>
+    createMathHandlers(appendInput, setCurrentMenu),
+    [appendInput, setCurrentMenu]
+  );
+
+  const statHandlers = useMemo(() =>
+    createStatHandlers(addToHistory, setCurrentMenu, setMode as (mode: string) => void),
+    [addToHistory, setCurrentMenu, setMode]
+  );
+
   /**
    * Gère les actions des touches
    */
@@ -69,10 +95,32 @@ export const Calculator: React.FC = () => {
           return;
         }
         if (action === 'enter') {
-          // Sélectionner l'item du menu
-          // TODO: Implémenter la sélection
-          console.log(`Menu item ${menuSelectedIndex} sélectionné`);
-          setCurrentMenu(null);
+          // Exécuter l'action du menu sélectionné
+          const currentItem = currentMenuItems[menuSelectedIndex];
+          if (currentItem) {
+            // Déterminer le handler approprié selon le menu
+            let handler;
+            if (currentMenu === 'ZOOM') {
+              handler = (zoomHandlers as any)[currentItem.id];
+              // ZoomIn et ZoomOut ont besoin des windowSettings
+              if (currentItem.id === 'zoomin' || currentItem.id === 'zoomout') {
+                handler = () => (zoomHandlers as any)[currentItem.id](windowSettings);
+              }
+            } else if (currentMenu === 'MATH') {
+              handler = (mathHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'STAT') {
+              handler = (statHandlers as any)[currentItem.id];
+            }
+
+            // Exécuter le handler s'il existe
+            if (handler) {
+              handler();
+            } else {
+              // Fallback pour actions non implémentées
+              console.log(`Pas de handler pour ${currentMenu} item: ${currentItem.id}`);
+              setCurrentMenu(null);
+            }
+          }
           return;
         }
         return;
@@ -236,6 +284,10 @@ export const Calculator: React.FC = () => {
       currentMode,
       currentFunction,
       graphFunctions,
+      currentMenu,
+      currentMenuItems,
+      menuSelectedIndex,
+      windowSettings,
       appendInput,
       clearInput,
       deleteLastChar,
@@ -247,6 +299,11 @@ export const Calculator: React.FC = () => {
       setGraphMode,
       setFunctionExpression,
       setCurrentFunction,
+      setCurrentMenu,
+      navigateMenu,
+      zoomHandlers,
+      mathHandlers,
+      statHandlers,
     ]
   );
 
@@ -298,14 +355,6 @@ export const Calculator: React.FC = () => {
     active: activeFunctions[index],
   }));
 
-  // Obtenir les items du menu actuel
-  const currentMenuItems = useMemo(() => {
-    if (currentMenu === 'STAT') return statMenuItems;
-    if (currentMenu === 'MATH') return mathMenuItems;
-    if (currentMenu === 'ZOOM') return zoomMenuItems;
-    return [];
-  }, [currentMenu]);
-
   // Rendu de l'écran selon l'état
   const renderScreen = () => {
     // Si un menu est ouvert
@@ -331,6 +380,15 @@ export const Calculator: React.FC = () => {
             setWindowSettings(settings);
             setMode('NORMAL');
           }}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si l'éditeur STAT LIST est ouvert
+    if (currentMode === 'STAT_EDIT') {
+      return (
+        <ListEditor
           onClose={() => setMode('NORMAL')}
         />
       );
