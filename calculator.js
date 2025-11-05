@@ -224,6 +224,46 @@ class TI83Calculator {
             case 'math':
                 this.openMathMenu();
                 break;
+            case 'window':
+                if (this.editorsModule) {
+                    this.editorsModule.openWindowEditor();
+                } else {
+                    console.log('WINDOW demandé');
+                }
+                break;
+            case 'zoom':
+                if (this.editorsModule) {
+                    this.editorsModule.openZoomMenu();
+                } else {
+                    console.log('ZOOM demandé');
+                }
+                break;
+            case 'trace':
+                if (this.isGraphMode && this.graphingEngine) {
+                    this.graphingEngine.enableTrace();
+                }
+                break;
+            case 'apps':
+                if (this.menuSystem) {
+                    this.menuSystem.showAppsMenu();
+                } else {
+                    console.log('APPS demandé');
+                }
+                break;
+            case 'prgm':
+                if (this.menuSystem) {
+                    this.menuSystem.showPrgmMenu();
+                } else {
+                    console.log('PRGM demandé');
+                }
+                break;
+            case 'vars':
+                if (this.menuSystem) {
+                    this.menuSystem.showVarsMenu();
+                } else {
+                    console.log('VARS demandé');
+                }
+                break;
             case 'sto':
                 this.storeVariable();
                 break;
@@ -234,6 +274,12 @@ class TI83Calculator {
                 break;
             case 'right':
                 this.moveCursor(1);
+                break;
+            case 'up':
+                // Géré par les modes spéciaux
+                break;
+            case 'down':
+                // Géré par les modes spéciaux
                 break;
 
             // Power
@@ -496,9 +542,13 @@ class TI83Calculator {
     }
 
     openModeMenu() {
-        const modes = ['Normal', 'Sci', 'Eng', 'Float'];
-        // Implémenter un menu pour changer de mode
-        console.log('Mode menu opened');
+        if (this.menuSystem) {
+            this.menuSystem.showModeMenu();
+        } else {
+            const modes = ['Normal', 'Sci', 'Eng', 'Float'];
+            // Implémenter un menu pour changer de mode
+            console.log('Mode menu opened');
+        }
     }
 
     toggleGraphMode() {
@@ -521,19 +571,31 @@ class TI83Calculator {
 
     openYEditor() {
         // Ouvrir l'éditeur de fonctions Y=
-        this.isGraphMode = false;
-        this.currentMode = 'Y-EDITOR';
-        this.currentInput = `Y${this.currentFunction + 1}=${this.graphFunctions[this.currentFunction]}`;
+        if (this.editorsModule) {
+            this.editorsModule.openYEditor();
+        } else {
+            this.isGraphMode = false;
+            this.currentMode = 'Y-EDITOR';
+            this.currentInput = `Y${this.currentFunction + 1}=${this.graphFunctions[this.currentFunction]}`;
+        }
     }
 
     openStatMenu() {
-        this.currentMode = 'STAT';
-        console.log('Statistics menu opened');
+        if (this.statModule) {
+            this.statModule.showStatMenu();
+        } else {
+            this.currentMode = 'STAT';
+            console.log('Statistics menu opened');
+        }
     }
 
     openMathMenu() {
-        this.currentMode = 'MATH';
-        console.log('Math menu opened');
+        if (this.mathModule) {
+            this.mathModule.showMathMenu();
+        } else {
+            this.currentMode = 'MATH';
+            console.log('Math menu opened');
+        }
     }
 
     moveCursor(direction) {

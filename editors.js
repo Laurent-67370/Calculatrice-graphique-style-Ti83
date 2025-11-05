@@ -50,7 +50,13 @@ class EditorsModule {
         this.calculator.graphingEngine.functions[index] = this.calculator.currentInput;
         this.calculator.graphingEngine.activeFunctions[index] = true;
         this.calculator.currentMode = 'NORMAL';
-        this.displayYEditor();
+        this.calculator.currentInput = '0';
+        this.calculator.updateDisplay();
+
+        // Message de confirmation
+        setTimeout(() => {
+            this.calculator.historyDisplay.textContent = `Y${index + 1} sauvegardé\nAppuyez sur GRAPH pour tracer`;
+        }, 100);
     }
 
     toggleYFunction(index) {

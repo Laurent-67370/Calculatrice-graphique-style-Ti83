@@ -1,4 +1,4 @@
-// Fichier d'intégration corrigé - Connecte tous les modules
+// Fichier d'intégration simplifié - Connecte tous les modules
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🔧 Initialisation de la calculatrice TI-83 Plus...');
 
@@ -59,12 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            // Sauvegarder les méthodes originales
+            // Sauvegarder la méthode originale handleKeyPress
             const originalHandleKeyPress = calculator.handleKeyPress.bind(calculator);
-            const originalHandleSecondary = calculator.handleSecondaryFunction.bind(calculator);
-            const originalEvaluate = calculator.evaluateExpression.bind(calculator);
 
-            // Étendre le gestionnaire de touches
+            // ÉTENDRE (et non remplacer) handleKeyPress pour gérer les modes spéciaux
             calculator.handleKeyPress = function(action) {
                 // Gérer les menus ouverts
                 if (this.menuSystem && this.menuSystem.currentMenu) {
@@ -86,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Gérer les modes spéciaux d'édition
-                if (this.editorsModule) {
+                // Gérer les modes d'édition spéciaux
+                if (this.editorsModule && this.currentMode) {
                     if (this.currentMode === 'Y_EDITOR') {
                         handleYEditorMode.call(this, action);
                         return;
@@ -151,93 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Actions normales avec extensions
-                switch(action) {
-                    case 'y-vars':
-                        if (this.editorsModule) {
-                            this.editorsModule.openYEditor();
-                        } else {
-                            console.log('Y= demandé');
-                        }
-                        break;
-
-                    case 'window':
-                        if (this.editorsModule) {
-                            this.editorsModule.openWindowEditor();
-                        } else {
-                            console.log('WINDOW demandé');
-                        }
-                        break;
-
-                    case 'zoom':
-                        if (this.editorsModule) {
-                            this.editorsModule.openZoomMenu();
-                        } else {
-                            console.log('ZOOM demandé');
-                        }
-                        break;
-
-                    case 'trace':
-                        if (this.isGraphMode && this.graphingEngine) {
-                            this.graphingEngine.enableTrace();
-                        }
-                        break;
-
-                    case 'graph':
-                        this.toggleGraphMode();
-                        break;
-
-                    case 'mode':
-                        if (this.menuSystem) {
-                            this.menuSystem.showModeMenu();
-                        } else {
-                            originalHandleKeyPress(action);
-                        }
-                        break;
-
-                    case 'stat':
-                        if (this.statModule) {
-                            this.statModule.showStatMenu();
-                        } else {
-                            originalHandleKeyPress(action);
-                        }
-                        break;
-
-                    case 'math':
-                        if (this.mathModule) {
-                            this.mathModule.showMathMenu();
-                        } else {
-                            originalHandleKeyPress(action);
-                        }
-                        break;
-
-                    case 'apps':
-                        if (this.menuSystem) {
-                            this.menuSystem.showAppsMenu();
-                        } else {
-                            originalHandleKeyPress(action);
-                        }
-                        break;
-
-                    case 'prgm':
-                        if (this.menuSystem) {
-                            this.menuSystem.showPrgmMenu();
-                        } else {
-                            originalHandleKeyPress(action);
-                        }
-                        break;
-
-                    case 'vars':
-                        if (this.menuSystem) {
-                            this.menuSystem.showVarsMenu();
-                        } else {
-                            originalHandleKeyPress(action);
-                        }
-                        break;
-
-                    default:
-                        originalHandleKeyPress(action);
-                }
+                // Appeler la fonction originale pour tout le reste
+                originalHandleKeyPress(action);
             };
 
             // Fonctions de gestion des modes
@@ -260,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         this.editorsModule.toggleYFunction(this.editorsModule.cursorY);
                         break;
                     default:
+                        originalHandleKeyPress(action);
                         break;
                 }
             }
@@ -346,21 +260,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Étendre handleSecondaryFunction
+            const originalHandleSecondary = calculator.handleSecondaryFunction.bind(calculator);
+
             calculator.handleSecondaryFunction = function(action) {
                 switch(action) {
                     case 'stat':
                         if (this.statModule) {
                             this.statModule.showCalcMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'math':
                         if (this.menuSystem) {
                             this.menuSystem.showTestMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'apps':
                         if (this.menuSystem) {
                             this.menuSystem.showAngleMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'prgm':
@@ -377,36 +299,50 @@ document.addEventListener('DOMContentLoaded', () => {
                                 '9: Circle(',
                                 '0: Text('
                             ]);
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'vars':
                         if (this.mathModule) {
                             this.mathModule.showDistrMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'window':
                         if (this.editorsModule) {
                             this.editorsModule.openTableSetup();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'zoom':
                         if (this.editorsModule) {
                             this.editorsModule.openFormatMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'trace':
                         if (this.editorsModule) {
                             this.editorsModule.openCalcMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'graph':
                         if (this.editorsModule) {
                             this.editorsModule.showTable();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case '0':
                         if (this.menuSystem) {
                             this.menuSystem.showCatalogMenu();
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     case 'add':
@@ -420,6 +356,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 '6: UnArchive',
                                 '7: Reset'
                             ]);
+                        } else {
+                            originalHandleSecondary(action);
                         }
                         break;
                     default:
@@ -428,6 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // Améliorer evaluateExpression pour supporter les nouvelles fonctions
+            const originalEvaluate = calculator.evaluateExpression.bind(calculator);
+
             calculator.evaluateExpression = function(expr) {
                 // Ajouter le support des nouvelles fonctions
                 expr = expr
@@ -480,17 +420,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.preventDefault();
                     switch(e.key.toLowerCase()) {
                         case 'y':
-                            if (calculator.editorsModule) {
-                                calculator.editorsModule.openYEditor();
-                            }
+                            calculator.handleKeyPress('y-vars');
                             break;
                         case 'w':
-                            if (calculator.editorsModule) {
-                                calculator.editorsModule.openWindowEditor();
-                            }
+                            calculator.handleKeyPress('window');
                             break;
                         case 'g':
-                            calculator.toggleGraphMode();
+                            calculator.handleKeyPress('graph');
                             break;
                         case 't':
                             if (calculator.editorsModule) {
@@ -498,19 +434,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             break;
                         case 'z':
-                            if (calculator.editorsModule) {
-                                calculator.editorsModule.openZoomMenu();
-                            }
+                            calculator.handleKeyPress('zoom');
                             break;
                         case 's':
-                            if (calculator.statModule) {
-                                calculator.statModule.showStatMenu();
-                            }
+                            calculator.handleKeyPress('stat');
                             break;
                         case 'm':
-                            if (calculator.mathModule) {
-                                calculator.mathModule.showMathMenu();
-                            }
+                            calculator.handleKeyPress('math');
                             break;
                     }
                 }
@@ -526,31 +456,26 @@ document.addEventListener('DOMContentLoaded', () => {
             function showHelp() {
                 const helpText = `TI-83 Plus - Aide Rapide
 
-RACCOURCIS CLAVIER:
+RACCOURCIS:
 Alt+Y: Y= Editor
-Alt+W: Window
-Alt+G: Graph
-Alt+T: Table
-Alt+Z: Zoom
-Alt+S: Stat
-Alt+M: Math
+Alt+W: WINDOW
+Alt+G: GRAPH
+Alt+T: TABLE
+Alt+Z: ZOOM
+Alt+S: STAT
+Alt+M: MATH
 F1: Aide
-
-NAVIGATION:
-▲▼: Navigate menus
-←→: Move in graph/trace
-ENTER: Confirm
-CLEAR: Cancel/Exit
 
 TOUCHES:
 Y=: Éditer fonctions
 WINDOW: Paramètres fenêtre
-GRAPH: Tracer graphique
+GRAPH: Tracer
 TRACE: Mode trace
 ZOOM: Options zoom
 STAT: Statistiques
 MATH: Fonctions math
-2nd+TRACE: CALC menu`;
+2nd+TRACE: CALC
+2nd+GRAPH: TABLE`;
 
                 calculator.currentInput = helpText;
                 calculator.updateDisplay();
@@ -563,7 +488,7 @@ MATH: Fonctions math
             // Message de bienvenue
             setTimeout(() => {
                 if (calculator.historyDisplay) {
-                    calculator.historyDisplay.textContent = 'TI-83 Plus v2.0\nPress F1 for help';
+                    calculator.historyDisplay.textContent = 'TI-83 Plus v2.0\nPress F1 for help\nCliquez sur Y= pour commencer';
                 }
             }, 1000);
 
@@ -578,10 +503,11 @@ MATH: Fonctions math
             console.log('  ✓ Menus MATH, STAT, CALC');
             console.log('  ✓ Éditeurs Y=, WINDOW, TABLE');
             console.log('💡 Appuyez sur F1 pour l\'aide');
+            console.log('💡 Cliquez sur les touches ou utilisez Alt+Lettre');
 
         } catch (error) {
             console.error('❌ Erreur lors de l\'initialisation:', error);
             console.error('Stack:', error.stack);
         }
-    }, 300); // Augmenté à 300ms pour laisser le temps au chargement
+    }, 300);
 });
