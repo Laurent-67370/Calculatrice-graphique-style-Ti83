@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test TI-83 Plus</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+        .test-section {
+            background: #34495e;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        #console {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 TI-83 Plus - Diagnostics</h1>
+
+    <div class="test-section">
+        <h2>État des modules</h2>
+        <div id="module-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Tests rapides</h2>
+        <button onclick="testYEditor()">Test Y= Editor</button>
+        <button onclick="testWindow()">Test WINDOW</button>
+        <button onclick="testGraph()">Test GRAPH</button>
+        <button onclick="testZoom()">Test ZOOM</button>
+        <button onclick="testStat()">Test STAT</button>
+        <button onclick="testMath()">Test MATH</button>
+        <button onclick="testTrace()">Test TRACE</button>
+        <button onclick="testCalc()">Test CALC</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Console</h2>
+        <div id="console"></div>
+    </div>
+
+    <script>
+        // Capturer les logs
+        const consoleDiv = document.getElementById('console');
+        const originalLog = console.log;
+        const originalError = console.error;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const msg = args.join(' ');
+            consoleDiv.innerHTML += `<div class="success">[LOG] ${msg}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            const msg = args.join(' ');
+            consoleDiv.innerHTML += `<div class="error">[ERROR] ${msg}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+
+        // Attendre le chargement
+        window.addEventListener('load', () => {
+            setTimeout(checkModules, 500);
+        });
+
+        function checkModules() {
+            const status = document.getElementById('module-status');
+            let html = '';
+
+            // Vérifier calculator
+            if (typeof window.calculator !== 'undefined') {
+                html += '<div class="success">✓ calculator chargé</div>';
+
+                // Vérifier les modules
+                if (calculator.statModule) {
+                    html += '<div class="success">  ✓ statModule présent</div>';
+                } else {
+                    html += '<div class="error">  ✗ statModule manquant</div>';
+                }
+
+                if (calculator.mathModule) {
+                    html += '<div class="success">  ✓ mathModule présent</div>';
+                } else {
+                    html += '<div class="error">  ✗ mathModule manquant</div>';
+                }
+
+                if (calculator.editorsModule) {
+                    html += '<div class="success">  ✓ editorsModule présent</div>';
+                } else {
+                    html += '<div class="error">  ✗ editorsModule manquant</div>';
+                }
+
+                if (calculator.menuSystem) {
+                    html += '<div class="success">  ✓ menuSystem présent</div>';
+                } else {
+                    html += '<div class="error">  ✗ menuSystem manquant</div>';
+                }
+
+                if (calculator.graphingEngine) {
+                    html += '<div class="success">  ✓ graphingEngine présent</div>';
+                } else {
+                    html += '<div class="error">  ✗ graphingEngine manquant</div>';
+                }
+            } else {
+                html += '<div class="error">✗ calculator NON chargé</div>';
+            }
+
+            // Vérifier graphingEngine
+            if (typeof window.graphingEngine !== 'undefined') {
+                html += '<div class="success">✓ graphingEngine global chargé</div>';
+            } else {
+                html += '<div class="error">✗ graphingEngine global NON chargé</div>';
+            }
+
+            status.innerHTML = html;
+        }
+
+        function testYEditor() {
+            console.log('Test Y= Editor...');
+            try {
+                if (calculator && calculator.editorsModule) {
+                    calculator.editorsModule.openYEditor();
+                    console.log('✓ Y= Editor ouvert');
+                } else {
+                    console.error('✗ editorsModule non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testWindow() {
+            console.log('Test WINDOW...');
+            try {
+                if (calculator && calculator.editorsModule) {
+                    calculator.editorsModule.openWindowEditor();
+                    console.log('✓ WINDOW Editor ouvert');
+                } else {
+                    console.error('✗ editorsModule non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testGraph() {
+            console.log('Test GRAPH...');
+            try {
+                if (calculator) {
+                    calculator.toggleGraphMode();
+                    console.log('✓ Mode graphique basculé');
+                } else {
+                    console.error('✗ calculator non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testZoom() {
+            console.log('Test ZOOM...');
+            try {
+                if (calculator && calculator.editorsModule) {
+                    calculator.editorsModule.openZoomMenu();
+                    console.log('✓ ZOOM Menu ouvert');
+                } else {
+                    console.error('✗ editorsModule non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testStat() {
+            console.log('Test STAT...');
+            try {
+                if (calculator && calculator.statModule) {
+                    calculator.statModule.showStatMenu();
+                    console.log('✓ STAT Menu ouvert');
+                } else {
+                    console.error('✗ statModule non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testMath() {
+            console.log('Test MATH...');
+            try {
+                if (calculator && calculator.mathModule) {
+                    calculator.mathModule.showMathMenu();
+                    console.log('✓ MATH Menu ouvert');
+                } else {
+                    console.error('✗ mathModule non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testTrace() {
+            console.log('Test TRACE...');
+            try {
+                if (calculator && calculator.graphingEngine) {
+                    calculator.isGraphMode = true;
+                    calculator.graphingEngine.enableTrace();
+                    console.log('✓ Mode TRACE activé');
+                } else {
+                    console.error('✗ graphingEngine non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+
+        function testCalc() {
+            console.log('Test CALC...');
+            try {
+                if (calculator && calculator.editorsModule) {
+                    calculator.editorsModule.openCalcMenu();
+                    console.log('✓ CALC Menu ouvert');
+                } else {
+                    console.error('✗ editorsModule non disponible');
+                }
+            } catch (e) {
+                console.error('✗ Erreur:', e.message);
+            }
+        }
+    </script>
+
+    <!-- Chargement des scripts de la calculatrice -->
+    <script src="calculator.js"></script>
+    <script src="graphing.js"></script>
+    <script src="statistics.js"></script>
+    <script src="math-functions.js"></script>
+    <script src="editors.js"></script>
+    <script src="menu-system.js"></script>
+    <script src="integration.js"></script>
+</body>
+</html>

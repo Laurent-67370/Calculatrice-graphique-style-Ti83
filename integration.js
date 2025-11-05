@@ -1,28 +1,73 @@
-// Fichier d'intégration - Connecte tous les modules
+// Fichier d'intégration corrigé - Connecte tous les modules
 document.addEventListener('DOMContentLoaded', () => {
-    // Attendre que la calculatrice soit initialisée
+    console.log('🔧 Initialisation de la calculatrice TI-83 Plus...');
+
+    // Attendre que tous les modules soient chargés
     setTimeout(() => {
-        if (window.calculator) {
-            // Initialiser tous les modules
-            calculator.statModule = new StatisticsModule(calculator);
-            calculator.mathModule = new MathFunctionsModule(calculator);
-            calculator.editorsModule = new EditorsModule(calculator);
-            calculator.menuSystem = new MenuSystem(calculator);
+        try {
+            // Vérifier que la calculatrice et le moteur graphique existent
+            if (!window.calculator) {
+                console.error('❌ Erreur: calculator non trouvé');
+                return;
+            }
+
+            if (!window.graphingEngine) {
+                console.error('❌ Erreur: graphingEngine non trouvé');
+                return;
+            }
+
+            console.log('✓ calculator et graphingEngine chargés');
 
             // Référence pour le moteur graphique
             calculator.graphingEngine = window.graphingEngine;
 
+            // Initialiser tous les modules
+            console.log('📦 Chargement des modules...');
+
+            try {
+                calculator.statModule = new StatisticsModule(calculator);
+                console.log('✓ Module statistiques chargé');
+            } catch (e) {
+                console.error('❌ Erreur module statistiques:', e);
+            }
+
+            try {
+                calculator.mathModule = new MathFunctionsModule(calculator);
+                console.log('✓ Module math chargé');
+            } catch (e) {
+                console.error('❌ Erreur module math:', e);
+            }
+
+            try {
+                calculator.editorsModule = new EditorsModule(calculator);
+                console.log('✓ Module éditeurs chargé');
+            } catch (e) {
+                console.error('❌ Erreur module éditeurs:', e);
+            }
+
+            try {
+                calculator.menuSystem = new MenuSystem(calculator);
+                console.log('✓ Système de menus chargé');
+            } catch (e) {
+                console.error('❌ Erreur système menus:', e);
+            }
+
             // Ajouter la méthode showMenu au calculateur
             calculator.showMenu = function(title, items, callback) {
-                this.menuSystem.showMenu(title, items, callback);
+                if (this.menuSystem) {
+                    this.menuSystem.showMenu(title, items, callback);
+                }
             };
 
-            // Étendre le gestionnaire de touches
+            // Sauvegarder les méthodes originales
             const originalHandleKeyPress = calculator.handleKeyPress.bind(calculator);
+            const originalHandleSecondary = calculator.handleSecondaryFunction.bind(calculator);
+            const originalEvaluate = calculator.evaluateExpression.bind(calculator);
 
+            // Étendre le gestionnaire de touches
             calculator.handleKeyPress = function(action) {
                 // Gérer les menus ouverts
-                if (this.menuSystem.currentMenu) {
+                if (this.menuSystem && this.menuSystem.currentMenu) {
                     switch(action) {
                         case 'up':
                             this.menuSystem.navigateMenu(-1);
@@ -42,84 +87,98 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Gérer les modes spéciaux d'édition
-                if (this.currentMode === 'Y_EDITOR') {
-                    handleYEditorMode.call(this, action);
-                    return;
-                }
-
-                if (this.currentMode === 'Y_EDIT') {
-                    handleYEditMode.call(this, action);
-                    return;
-                }
-
-                if (this.currentMode === 'WINDOW') {
-                    handleWindowMode.call(this, action);
-                    return;
-                }
-
-                if (this.currentMode === 'WINDOW_EDIT') {
-                    handleWindowEditMode.call(this, action);
-                    return;
-                }
-
-                if (this.currentMode === 'TABLE') {
-                    handleTableMode.call(this, action);
-                    return;
-                }
-
-                if (this.currentMode === 'STAT_EDIT') {
-                    handleStatEditMode.call(this, action);
-                    return;
-                }
-
-                if (this.currentMode === 'CALC_VALUE') {
-                    if (action === 'enter') {
-                        this.editorsModule.calcValueResult(parseFloat(this.currentInput));
+                if (this.editorsModule) {
+                    if (this.currentMode === 'Y_EDITOR') {
+                        handleYEditorMode.call(this, action);
                         return;
                     }
-                }
 
-                if (this.currentMode === 'CALC_DERIV') {
-                    if (action === 'enter') {
-                        this.editorsModule.calcDerivativeResult(parseFloat(this.currentInput));
+                    if (this.currentMode === 'Y_EDIT') {
+                        handleYEditMode.call(this, action);
                         return;
                     }
-                }
 
-                if (this.currentMode === 'CALC_INTEGRAL_LOWER') {
-                    if (action === 'enter') {
-                        this.integralLower = parseFloat(this.currentInput);
-                        this.currentInput = 'Upper=?';
-                        this.currentMode = 'CALC_INTEGRAL_UPPER';
-                        this.updateDisplay();
+                    if (this.currentMode === 'WINDOW') {
+                        handleWindowMode.call(this, action);
                         return;
                     }
-                }
 
-                if (this.currentMode === 'CALC_INTEGRAL_UPPER') {
-                    if (action === 'enter') {
-                        const upper = parseFloat(this.currentInput);
-                        this.editorsModule.calcIntegralResult(this.integralLower, upper);
+                    if (this.currentMode === 'WINDOW_EDIT') {
+                        handleWindowEditMode.call(this, action);
                         return;
+                    }
+
+                    if (this.currentMode === 'TABLE') {
+                        handleTableMode.call(this, action);
+                        return;
+                    }
+
+                    if (this.currentMode === 'STAT_EDIT') {
+                        handleStatEditMode.call(this, action);
+                        return;
+                    }
+
+                    if (this.currentMode === 'CALC_VALUE') {
+                        if (action === 'enter') {
+                            this.editorsModule.calcValueResult(parseFloat(this.currentInput));
+                            return;
+                        }
+                    }
+
+                    if (this.currentMode === 'CALC_DERIV') {
+                        if (action === 'enter') {
+                            this.editorsModule.calcDerivativeResult(parseFloat(this.currentInput));
+                            return;
+                        }
+                    }
+
+                    if (this.currentMode === 'CALC_INTEGRAL_LOWER') {
+                        if (action === 'enter') {
+                            this.integralLower = parseFloat(this.currentInput);
+                            this.currentInput = 'Upper=?';
+                            this.currentMode = 'CALC_INTEGRAL_UPPER';
+                            this.updateDisplay();
+                            return;
+                        }
+                    }
+
+                    if (this.currentMode === 'CALC_INTEGRAL_UPPER') {
+                        if (action === 'enter') {
+                            const upper = parseFloat(this.currentInput);
+                            this.editorsModule.calcIntegralResult(this.integralLower, upper);
+                            return;
+                        }
                     }
                 }
 
                 // Actions normales avec extensions
                 switch(action) {
                     case 'y-vars':
-                        this.editorsModule.openYEditor();
+                        if (this.editorsModule) {
+                            this.editorsModule.openYEditor();
+                        } else {
+                            console.log('Y= demandé');
+                        }
                         break;
 
                     case 'window':
-                        this.editorsModule.openWindowEditor();
+                        if (this.editorsModule) {
+                            this.editorsModule.openWindowEditor();
+                        } else {
+                            console.log('WINDOW demandé');
+                        }
                         break;
 
                     case 'zoom':
-                        this.editorsModule.openZoomMenu();
+                        if (this.editorsModule) {
+                            this.editorsModule.openZoomMenu();
+                        } else {
+                            console.log('ZOOM demandé');
+                        }
                         break;
 
                     case 'trace':
-                        if (this.isGraphMode) {
+                        if (this.isGraphMode && this.graphingEngine) {
                             this.graphingEngine.enableTrace();
                         }
                         break;
@@ -129,27 +188,51 @@ document.addEventListener('DOMContentLoaded', () => {
                         break;
 
                     case 'mode':
-                        this.menuSystem.showModeMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showModeMenu();
+                        } else {
+                            originalHandleKeyPress(action);
+                        }
                         break;
 
                     case 'stat':
-                        this.statModule.showStatMenu();
+                        if (this.statModule) {
+                            this.statModule.showStatMenu();
+                        } else {
+                            originalHandleKeyPress(action);
+                        }
                         break;
 
                     case 'math':
-                        this.mathModule.showMathMenu();
+                        if (this.mathModule) {
+                            this.mathModule.showMathMenu();
+                        } else {
+                            originalHandleKeyPress(action);
+                        }
                         break;
 
                     case 'apps':
-                        this.menuSystem.showAppsMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showAppsMenu();
+                        } else {
+                            originalHandleKeyPress(action);
+                        }
                         break;
 
                     case 'prgm':
-                        this.menuSystem.showPrgmMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showPrgmMenu();
+                        } else {
+                            originalHandleKeyPress(action);
+                        }
                         break;
 
                     case 'vars':
-                        this.menuSystem.showVarsMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showVarsMenu();
+                        } else {
+                            originalHandleKeyPress(action);
+                        }
                         break;
 
                     default:
@@ -158,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // Fonctions de gestion des modes
-
             function handleYEditorMode(action) {
                 switch(action) {
                     case 'up':
@@ -175,7 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         this.clear();
                         break;
                     case 'del':
-                        // Toggle fonction active/inactive
                         this.editorsModule.toggleYFunction(this.editorsModule.cursorY);
                         break;
                     default:
@@ -265,62 +346,81 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Étendre handleSecondaryFunction
-            const originalHandleSecondary = calculator.handleSecondaryFunction.bind(calculator);
-
             calculator.handleSecondaryFunction = function(action) {
                 switch(action) {
                     case 'stat':
-                        this.statModule.showCalcMenu();
+                        if (this.statModule) {
+                            this.statModule.showCalcMenu();
+                        }
                         break;
                     case 'math':
-                        this.menuSystem.showTestMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showTestMenu();
+                        }
                         break;
                     case 'apps':
-                        this.menuSystem.showAngleMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showAngleMenu();
+                        }
                         break;
                     case 'prgm':
-                        this.menuSystem.showMenu('DRAW', [
-                            '1: ClrDraw',
-                            '2: Line(',
-                            '3: Horizontal',
-                            '4: Vertical',
-                            '5: Tangent(',
-                            '6: DrawF',
-                            '7: Shade(',
-                            '8: DrawInv',
-                            '9: Circle(',
-                            '0: Text('
-                        ]);
+                        if (this.menuSystem) {
+                            this.menuSystem.showMenu('DRAW', [
+                                '1: ClrDraw',
+                                '2: Line(',
+                                '3: Horizontal',
+                                '4: Vertical',
+                                '5: Tangent(',
+                                '6: DrawF',
+                                '7: Shade(',
+                                '8: DrawInv',
+                                '9: Circle(',
+                                '0: Text('
+                            ]);
+                        }
                         break;
                     case 'vars':
-                        this.mathModule.showDistrMenu();
+                        if (this.mathModule) {
+                            this.mathModule.showDistrMenu();
+                        }
                         break;
                     case 'window':
-                        this.editorsModule.openTableSetup();
+                        if (this.editorsModule) {
+                            this.editorsModule.openTableSetup();
+                        }
                         break;
                     case 'zoom':
-                        this.editorsModule.openFormatMenu();
+                        if (this.editorsModule) {
+                            this.editorsModule.openFormatMenu();
+                        }
                         break;
                     case 'trace':
-                        this.editorsModule.openCalcMenu();
+                        if (this.editorsModule) {
+                            this.editorsModule.openCalcMenu();
+                        }
                         break;
                     case 'graph':
-                        this.editorsModule.showTable();
+                        if (this.editorsModule) {
+                            this.editorsModule.showTable();
+                        }
                         break;
                     case '0':
-                        this.menuSystem.showCatalogMenu();
+                        if (this.menuSystem) {
+                            this.menuSystem.showCatalogMenu();
+                        }
                         break;
                     case 'add':
-                        // MEM (Memory)
-                        this.menuSystem.showMenu('MEMORY', [
-                            '1: About',
-                            '2: Mem Mgmt/Del',
-                            '3: Clear Entries',
-                            '4: ClrAllLists',
-                            '5: Archive',
-                            '6: UnArchive',
-                            '7: Reset'
-                        ]);
+                        if (this.menuSystem) {
+                            this.menuSystem.showMenu('MEMORY', [
+                                '1: About',
+                                '2: Mem Mgmt/Del',
+                                '3: Clear Entries',
+                                '4: ClrAllLists',
+                                '5: Archive',
+                                '6: UnArchive',
+                                '7: Reset'
+                            ]);
+                        }
                         break;
                     default:
                         originalHandleSecondary(action);
@@ -328,8 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // Améliorer evaluateExpression pour supporter les nouvelles fonctions
-            const originalEvaluate = calculator.evaluateExpression.bind(calculator);
-
             calculator.evaluateExpression = function(expr) {
                 // Ajouter le support des nouvelles fonctions
                 expr = expr
@@ -343,18 +441,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     .replace(/max\(/g, 'Math.max(')
                     // Racine cubique
                     .replace(/∛\(/g, 'Math.cbrt(')
-                    .replace(/³√\(/g, 'Math.cbrt(')
-                    // Factorielle
-                    .replace(/(\d+)!/g, (match, n) => {
+                    .replace(/³√\(/g, 'Math.cbrt(');
+
+                // Factorielle
+                if (this.mathModule && /\d+!/.test(expr)) {
+                    expr = expr.replace(/(\d+)!/g, (match, n) => {
                         return this.mathModule.factorial(parseInt(n)).toString();
-                    })
-                    // Permutations et combinaisons
-                    .replace(/nPr\(([^,]+),([^)]+)\)/g, (match, n, r) => {
+                    });
+                }
+
+                // Permutations et combinaisons
+                if (this.mathModule) {
+                    expr = expr.replace(/nPr\(([^,]+),([^)]+)\)/g, (match, n, r) => {
                         return this.mathModule.nPr(parseFloat(n), parseFloat(r)).toString();
-                    })
-                    .replace(/nCr\(([^,]+),([^)]+)\)/g, (match, n, r) => {
+                    });
+                    expr = expr.replace(/nCr\(([^,]+),([^)]+)\)/g, (match, n, r) => {
                         return this.mathModule.nCr(parseFloat(n), parseFloat(r)).toString();
                     });
+                }
 
                 return originalEvaluate(expr);
             };
@@ -372,29 +476,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Raccourcis pour les fonctions courantes
-                if (e.altKey) {
+                if (e.altKey && !e.ctrlKey && !e.metaKey) {
                     e.preventDefault();
-                    switch(e.key) {
+                    switch(e.key.toLowerCase()) {
                         case 'y':
-                            calculator.editorsModule.openYEditor();
+                            if (calculator.editorsModule) {
+                                calculator.editorsModule.openYEditor();
+                            }
                             break;
                         case 'w':
-                            calculator.editorsModule.openWindowEditor();
+                            if (calculator.editorsModule) {
+                                calculator.editorsModule.openWindowEditor();
+                            }
                             break;
                         case 'g':
                             calculator.toggleGraphMode();
                             break;
                         case 't':
-                            calculator.editorsModule.showTable();
+                            if (calculator.editorsModule) {
+                                calculator.editorsModule.showTable();
+                            }
                             break;
                         case 'z':
-                            calculator.editorsModule.openZoomMenu();
+                            if (calculator.editorsModule) {
+                                calculator.editorsModule.openZoomMenu();
+                            }
                             break;
                         case 's':
-                            calculator.statModule.showStatMenu();
+                            if (calculator.statModule) {
+                                calculator.statModule.showStatMenu();
+                            }
                             break;
                         case 'm':
-                            calculator.mathModule.showMathMenu();
+                            if (calculator.mathModule) {
+                                calculator.mathModule.showMathMenu();
+                            }
                             break;
                     }
                 }
@@ -408,8 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Fonction d'aide
             function showHelp() {
-                const helpText = `
-TI-83 Plus - Aide Rapide
+                const helpText = `TI-83 Plus - Aide Rapide
 
 RACCOURCIS CLAVIER:
 Alt+Y: Y= Editor
@@ -427,15 +542,15 @@ NAVIGATION:
 ENTER: Confirm
 CLEAR: Cancel/Exit
 
-MODES DISPONIBLES:
-- Y= : Éditer les fonctions
-- WINDOW : Paramètres fenêtre
-- ZOOM : Zoom presets
-- TABLE : Table de valeurs
-- STAT : Statistiques
-- MATH : Fonctions mathématiques
-- CALC : Analyse graphique
-                `.trim();
+TOUCHES:
+Y=: Éditer fonctions
+WINDOW: Paramètres fenêtre
+GRAPH: Tracer graphique
+TRACE: Mode trace
+ZOOM: Options zoom
+STAT: Statistiques
+MATH: Fonctions math
+2nd+TRACE: CALC menu`;
 
                 calculator.currentInput = helpText;
                 calculator.updateDisplay();
@@ -447,19 +562,26 @@ MODES DISPONIBLES:
 
             // Message de bienvenue
             setTimeout(() => {
-                calculator.historyDisplay.textContent = 'TI-83 Plus Ready\nPress F1 for help';
+                if (calculator.historyDisplay) {
+                    calculator.historyDisplay.textContent = 'TI-83 Plus v2.0\nPress F1 for help';
+                }
             }, 1000);
 
-            console.log('✓ Tous les modules TI-83 Plus chargés');
-            console.log('✓ Fonctionnalités disponibles:');
-            console.log('  - Calcul scientifique avancé');
-            console.log('  - Mode graphique complet');
-            console.log('  - Statistiques et régressions');
-            console.log('  - Dérivées et intégrales numériques');
-            console.log('  - Nombres complexes');
-            console.log('  - Probabilités et combinatoire');
-            console.log('  - Menus MATH, STAT, CALC');
-            console.log('  - Éditeurs Y=, WINDOW, TABLE');
+            console.log('✅ Tous les modules TI-83 Plus chargés avec succès!');
+            console.log('📊 Fonctionnalités disponibles:');
+            console.log('  ✓ Calcul scientifique avancé');
+            console.log('  ✓ Mode graphique complet');
+            console.log('  ✓ Statistiques et régressions');
+            console.log('  ✓ Dérivées et intégrales');
+            console.log('  ✓ Nombres complexes');
+            console.log('  ✓ Probabilités');
+            console.log('  ✓ Menus MATH, STAT, CALC');
+            console.log('  ✓ Éditeurs Y=, WINDOW, TABLE');
+            console.log('💡 Appuyez sur F1 pour l\'aide');
+
+        } catch (error) {
+            console.error('❌ Erreur lors de l\'initialisation:', error);
+            console.error('Stack:', error.stack);
         }
-    }, 200);
+    }, 300); // Augmenté à 300ms pour laisser le temps au chargement
 });
