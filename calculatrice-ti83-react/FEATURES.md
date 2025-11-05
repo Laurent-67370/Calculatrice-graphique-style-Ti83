@@ -256,23 +256,39 @@ Service GraphingEngine avec algorithmes :
 
 ---
 
+## ✅ Intégrations Complètes (Nouveau!)
+
+### Menus Opérationnels
+1. ✅ **Menu STAT** : Accès aux statistiques et listes (intégré)
+   - Éditeur de listes fonctionnel (STAT Edit)
+   - Statistiques 1-Var et 2-Var
+   - 5 types de régressions (LinReg, QuadReg, ExpReg, PwrReg, LnReg)
+2. ✅ **Menu MATH** : Accès aux fonctions mathématiques (intégré)
+   - 21 fonctions NUM, CPX, PRB
+   - Insertion directe dans l'input
+3. ✅ **Menu ZOOM** : Accès aux presets de zoom (intégré)
+   - 6 presets fonctionnels (ZStandard, ZDecimal, ZTrig, ZSquare, ZoomIn, ZoomOut)
+4. ✅ **Éditeur LIST** : Éditer les listes statistiques (créé et intégré)
+   - Navigation entre L1-L6
+   - Édition de valeurs
+   - Sauvegarde dans StatisticsService
+
+### Intégration dans Calculator (Complétée!)
+- ✅ Connexion des services STAT, MATH, ZOOM aux composants UI
+- ✅ Gestion des modes spéciaux (Y_EDITOR, WINDOW, STAT_EDIT)
+- ✅ Navigation entre menus/éditeurs avec ↑↓ et ENTER
+- ✅ Affichage des résultats dans l'historique
+- ✅ Exécution des actions de menu via handlers
+
+---
+
 ## ⏳ En Cours d'Intégration
 
 ### Interfaces Utilisateur à Finaliser
-1. **Menu STAT** : Accès aux statistiques et listes
-2. **Menu MATH** : Accès aux fonctions mathématiques
-3. **Menu ZOOM** : Accès aux presets de zoom
-4. **Menu CALC** : Calculs sur courbes
-5. **Menu MODE** : Configuration de la calculatrice
-6. **Éditeur TABLE** : Table de valeurs
-7. **Éditeur LIST** : Éditer les listes statistiques
-8. **Mode TRACE** : Suivre les courbes avec curseur
-
-### Intégration dans Calculator
-- Connexion des services aux composants UI
-- Gestion des modes spéciaux
-- Navigation entre menus/éditeurs
-- Affichage des résultats
+1. **Menu CALC** : Calculs sur courbes (backend prêt)
+2. **Menu MODE** : Configuration de la calculatrice
+3. **Éditeur TABLE** : Table de valeurs
+4. **Mode TRACE** : Suivre les courbes avec curseur
 
 ---
 
@@ -289,17 +305,18 @@ Service GraphingEngine avec algorithmes :
 - [x] MathFunctionsService complet
 - [x] Algorithmes robustes
 
-### Phase 3 : Interfaces UI (⏳ En cours)
+### Phase 3 : Interfaces UI (✅ Fait)
 - [x] Composant Menu générique
 - [x] Composant WindowEditor
-- [ ] Menus STAT, MATH, ZOOM
+- [x] Menus STAT, MATH, ZOOM (intégrés)
+- [x] Éditeur LIST (créé et intégré)
 - [ ] Menu MODE
-- [ ] Éditeur LIST
 - [ ] Éditeur TABLE
 
-### Phase 4 : Intégration (⏳ Prochaine)
-- [ ] Connecter tous les menus au Calculator
-- [ ] Implémenter la navigation complète
+### Phase 4 : Intégration (✅ Complétée!)
+- [x] Connecter tous les menus STAT/MATH/ZOOM au Calculator
+- [x] Implémenter la navigation complète (↑↓ + ENTER)
+- [x] Handlers connectés aux services backend
 - [ ] Tests end-to-end
 
 ### Phase 5 : Fonctionnalités Avancées
@@ -315,19 +332,19 @@ Service GraphingEngine avec algorithmes :
 | Fonctionnalité | TI-83 Plus | Cette Calculatrice |
 |----------------|-----------|-------------------|
 | **Graphiques Y=** | ✅ | ✅ |
-| **WINDOW** | ✅ | ✅ (Backend) |
-| **ZOOM** | ✅ | ✅ (Backend) |
+| **WINDOW** | ✅ | ✅ |
+| **ZOOM** | ✅ | ✅ |
 | **TRACE** | ✅ | ⏳ |
 | **CALC** | ✅ | ✅ (Backend) |
 | **TABLE** | ✅ | ⏳ |
-| **STAT EDIT** | ✅ | ✅ (Backend) |
-| **STAT CALC** | ✅ | ✅ (Backend) |
-| **MATH NUM** | ✅ | ✅ (Backend) |
-| **MATH CPX** | ✅ | ✅ (Backend) |
-| **MATH PRB** | ✅ | ✅ (Backend) |
+| **STAT EDIT** | ✅ | ✅ |
+| **STAT CALC** | ✅ | ✅ |
+| **MATH NUM** | ✅ | ✅ |
+| **MATH CPX** | ✅ | ✅ |
+| **MATH PRB** | ✅ | ✅ |
 | **MODE** | ✅ | ⏳ |
-| **Distributions** | ✅ | ✅ (Backend) |
-| **Régressions** | ✅ 5 types | ✅ 5 types (Backend) |
+| **Distributions** | ✅ | ✅ |
+| **Régressions** | ✅ 5 types | ✅ 5 types |
 
 **Légende** :
 - ✅ : Implémenté et fonctionnel
@@ -343,10 +360,10 @@ Service GraphingEngine avec algorithmes :
 **95%** - Presque tous les algorithmes sont implémentés
 
 ### Frontend (UI)
-**40%** - Composants de base créés, intégration en cours
+**70%** - Composants créés et menus STAT/MATH/ZOOM intégrés
 
 ### Global
-**65%** - Calculatrice fonctionnelle avec graphiques, reste à connecter les menus
+**80%** - Calculatrice fonctionnelle avec graphiques, menus, et services connectés
 
 ---
 
