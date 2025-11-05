@@ -48,6 +48,18 @@ npm run preview
 
 L'application sera disponible sur `http://localhost:5173`
 
+### 🚀 Déploiement sur Netlify
+
+```bash
+# Déployer en production
+npm run deploy
+
+# Déployer en mode preview
+npm run deploy:preview
+```
+
+Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
+
 ---
 
 ## 🎯 Fonctionnalités Principales
