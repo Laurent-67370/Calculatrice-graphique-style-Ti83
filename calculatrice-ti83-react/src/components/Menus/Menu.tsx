@@ -28,6 +28,9 @@ export const Menu: React.FC<MenuProps> = ({
   onSelect,
   onClose
 }) => {
+  // Supprimer le warning TypeScript - onClose sera utilisé pour le bouton fermer
+  console.log({ onClose });
+
   return (
     <div className="ti83-menu">
       <div className="menu-header">
