@@ -16,13 +16,14 @@ import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
 import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems } from '../../data/menus';
 import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers } from '../../utils/menuHandlers';
-import { ListEditor } from '../Editors/ListEditor';
+import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
 export const Calculator: React.FC = () => {
   // Refs pour contrôler les éditeurs depuis le clavier virtuel
   const windowEditorRef = useRef<WindowEditorHandle>(null);
   const modeEditorRef = useRef<ModeEditorHandle>(null);
+  const listEditorRef = useRef<ListEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -210,16 +211,16 @@ export const Calculator: React.FC = () => {
         return;
       }
 
-      // Gérer CLEAR (sauf en mode WINDOW ou MODE qui ont leur propre gestion)
-      if (action === 'clear' && currentMode !== 'WINDOW' && currentMode !== 'MODE') {
+      // Gérer CLEAR (sauf en mode WINDOW, MODE, ou STAT_EDIT qui ont leur propre gestion)
+      if (action === 'clear' && currentMode !== 'WINDOW' && currentMode !== 'MODE' && currentMode !== 'STAT_EDIT') {
         clearInput();
         setMode('NORMAL');
         setCurrentMenu(null);
         return;
       }
 
-      // Gérer DEL
-      if (action === 'del') {
+      // Gérer DEL (sauf en mode STAT_EDIT qui a sa propre gestion)
+      if (action === 'del' && currentMode !== 'STAT_EDIT') {
         deleteLastChar();
         return;
       }
@@ -369,6 +370,52 @@ export const Calculator: React.FC = () => {
           // Sauvegarder les changements avant de fermer
           modeEditorRef.current.save();
           setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode STAT_EDIT - gérer la navigation via ref
+      if (currentMode === 'STAT_EDIT' && listEditorRef.current) {
+        if (action === 'up') {
+          listEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          listEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'left') {
+          listEditorRef.current.navigate('left');
+          return;
+        }
+        if (action === 'right') {
+          listEditorRef.current.navigate('right');
+          return;
+        }
+        if (action === 'enter') {
+          listEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'del') {
+          listEditorRef.current.handleDelete();
+          return;
+        }
+        if (action === 'clear') {
+          // CLEAR ferme l'éditeur
+          setMode('NORMAL');
+          return;
+        }
+        // Si c'est un chiffre ou signe négatif, l'envoyer au ListEditor
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'negative') {
+          listEditorRef.current.handleInput(action === 'negative' ? '-' : action);
+          return;
+        }
+        // Support pour le point décimal
+        if (action === 'left-paren') {
+          // Sur TI-83, on peut utiliser '.' pour le point décimal, mapper à left-paren temporairement
+          listEditorRef.current.handleInput('.');
           return;
         }
       }
@@ -626,6 +673,7 @@ export const Calculator: React.FC = () => {
     if (currentMode === 'STAT_EDIT') {
       return (
         <ListEditor
+          ref={listEditorRef}
           onClose={() => setMode('NORMAL')}
         />
       );
