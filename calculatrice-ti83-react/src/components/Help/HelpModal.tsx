@@ -49,6 +49,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               <h3>🔢 Calculs de base</h3>
               <ul>
                 <li><strong>Chiffres et opérateurs</strong> : Utilisez le clavier numérique et les touches +, −, ×, ÷</li>
+                <li><strong>Point décimal (.)</strong> : Touche dédiée pour les nombres décimaux (ex: 9.45)</li>
+                <li><strong>Virgule (,)</strong> : 2ND + 7 pour séparer les arguments (ex: max(5,3))</li>
                 <li><strong>ENTER</strong> : Valider un calcul</li>
                 <li><strong>DEL</strong> : Effacer le dernier caractère</li>
                 <li><strong>CLEAR</strong> : Effacer tout l'écran</li>
@@ -134,11 +136,22 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>CLEAR</strong> : Fermer l'éditeur</li>
               </ul>
 
-              <h3>🧮 Menu MATH</h3>
+              <h3>🧮 Menu MATH - Navigation Hiérarchique</h3>
               <ul>
-                <li><strong>NUM</strong> : Fonctions numériques (abs, round, min, max, etc.)</li>
-                <li><strong>CPX</strong> : Nombres complexes</li>
-                <li><strong>PRB</strong> : Probabilités (rand, nCr, nPr, factorielle)</li>
+                <li><strong>MATH</strong> : Ouvrir le menu avec 38 fonctions en 6 catégories</li>
+                <li><strong>↑ ↓</strong> : Naviguer dans les menus</li>
+                <li><strong>ENTER</strong> : Entrer dans un sous-menu (▶) ou sélectionner une fonction</li>
+                <li><strong>CLEAR</strong> : Revenir au menu parent ou fermer</li>
+              </ul>
+
+              <h4>Catégories disponibles :</h4>
+              <ul>
+                <li><strong>MATH (Principal)</strong> : ³√, logBASE, e^x, 10^x, hypot</li>
+                <li><strong>NUM ▶</strong> : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod</li>
+                <li><strong>CPX ▶</strong> : conj, real, imag, angle, abs, Rect, Polar</li>
+                <li><strong>PRB ▶</strong> : rand, nPr, nCr, !, randInt, randNorm, randBin</li>
+                <li><strong>ANGLE ▶</strong> : °→rad, rad→°, →DMS, →Dec</li>
+                <li><strong>TRIG ▶</strong> : sinh, cosh, tanh, asinh, acosh, atanh</li>
               </ul>
 
               <h3>🎨 Fonctionnalités supplémentaires</h3>
@@ -149,7 +162,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>Mode SECOND</strong> : S'éteint automatiquement après utilisation</li>
               </ul>
 
-              <h3>🎓 Exemples de fonctions</h3>
+              <h3>🎓 Exemples de fonctions graphiques</h3>
               <div className="help-examples">
                 <code>X^2</code> - Parabole<br/>
                 <code>sin(X)</code> - Sinus<br/>
@@ -159,6 +172,20 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <code>1/X</code> - Hyperbole<br/>
                 <code>e^X</code> - Exponentielle (2ND + LN + X)<br/>
                 <code>ln(X)</code> - Logarithme naturel<br/>
+              </div>
+
+              <h3>🧮 Exemples de calculs mathématiques</h3>
+              <div className="help-examples">
+                <code>max(5,3)</code> → 5<br/>
+                <code>min(2,8,15)</code> → 2<br/>
+                <code>abs(-10)</code> → 10<br/>
+                <code>gcd(24,18)</code> → 6 (PGCD)<br/>
+                <code>lcm(12,18)</code> → 36 (PPCM)<br/>
+                <code>nPr(10,3)</code> → 720 (Permutations)<br/>
+                <code>nCr(10,5)</code> → 252 (Combinaisons)<br/>
+                <code>iPart(3.14)</code> → 3<br/>
+                <code>round(3.7)</code> → 4<br/>
+                <code>hypot(3,4)</code> → 5<br/>
               </div>
 
               <h3>💡 Astuces</h3>

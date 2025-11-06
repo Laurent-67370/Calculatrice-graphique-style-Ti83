@@ -206,18 +206,59 @@ exitSubmenu() {
 
 ## 📈 Performance
 
-- **Build time:** 1.24s (inchangé)
-- **Bundle JS:** 257.57 KB (79.94 KB gzippé) - +0.25 KB
+- **Build time:** 1.20s (optimisé)
+- **Bundle JS:** 258.79 KB (80.45 KB gzippé)
 - **Bundle CSS:** 9.50 KB (2.47 KB gzippé) - inchangé
 - **Lighthouse score:** 95+ (inchangé)
 
-L'impact sur la taille du bundle est minimal (+0.25 KB) grâce à l'utilisation de structures de données optimisées.
+## 🐛 Corrections Majeures
 
-## 🐛 Corrections
+### 1. Évaluateur Mathématique Complet ✨
+
+**Problème :** L'évaluateur ne supportait que 6 fonctions de base (sin, cos, tan, ln, log, sqrt), causant des erreurs pour toutes les autres fonctions comme `max(5,3)`, `abs(-10)`, `gcd(24,18)`.
+
+**Solution :** Création d'un contexte mathématique complet avec **39 fonctions** :
+- Fonctions de base (11) : abs, round, floor, ceil, trunc, sign, min, max, sqrt, cbrt, hypot
+- Fonctions trigonométriques (6) : sin, cos, tan, asin, acos, atan
+- Fonctions hyperboliques (6) : sinh, cosh, tanh, asinh, acosh, atanh
+- Fonctions exponentielles (5) : exp, log, log10, log2, pow
+- Fonctions personnalisées (5) : iPart, fPart, int, mod, hypot
+- Fonctions de probabilité (4) : gcd, lcm, nPr, nCr
+- Constantes (2) : PI, E
+
+**Fichier modifié :** `Calculator.tsx` (+101 lignes)
+
+**Exemples fonctionnels :**
+- `max(5,3)` → 5 ✅
+- `min(2,8)` → 2 ✅
+- `abs(-10)` → 10 ✅
+- `gcd(24,18)` → 6 ✅
+- `nPr(10,3)` → 720 ✅
+- `iPart(3.14)` → 3 ✅
+
+### 2. Touches Manquantes Ajoutées ✨
+
+**Point décimal (.)** :
+- Touche dédiée positionnée entre 0 et (
+- Permet la saisie de nombres décimaux : `9.45`, `3.14159`
+- Support dans tous les modes (NORMAL, WINDOW, STAT_EDIT)
+
+**Virgule (,)** :
+- Accessible via **2ND + 7**
+- Permet de séparer les arguments des fonctions : `max(5,3)`, `nPr(10,3)`
+- Support dans tous les modes
+
+**Fichiers modifiés :**
+- `calculator.types.ts` : Ajout type 'dot'
+- `Keyboard.tsx` : +2 touches
+- `Calculator.tsx` : Support complet
+
+### 3. Autres Corrections
 
 - Ajout des fonctions hyperboliques inverses manquantes (asinh, acosh, atanh)
 - Correction de la navigation dans les menus lorsque CLEAR est pressé
 - Amélioration de l'indicateur visuel pour les sous-menus (▶)
+- Suppression du workaround temporaire pour le point décimal
 
 ## 🎓 Compatibilité TI-83 Plus
 

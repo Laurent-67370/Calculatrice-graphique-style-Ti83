@@ -48,16 +48,26 @@ Cette version apporte un **menu MATH hiérarchique complet** permettant de parco
 - **CLEAR** pour revenir en arrière ou fermer
 - Indicateur visuel **▶** pour les sous-menus
 
-#### 🔧 Nouvelles Fonctions
+#### 🔧 Corrections et Améliorations Majeures
 
-Ajout de 3 fonctions hyperboliques inverses :
+**1. Évaluateur Mathématique Complet ✨**
+- Support de **39 fonctions mathématiques** dans l'évaluateur
+- `max(5,3)`, `min(2,8)`, `abs(-10)` fonctionnent maintenant correctement
+- Fonctions de probabilité : `gcd(24,18)`, `lcm(12,18)`, `nPr(10,3)`, `nCr(10,5)`
+- Toutes les fonctions du menu MATH sont maintenant évaluables
+
+**2. Touches Manquantes Ajoutées ✨**
+- **Point décimal (.)** : Touche dédiée pour les nombres décimaux (9.45)
+- **Virgule (,)** : Accessible via **2nd + 7** pour séparer les arguments
+
+**3. Fonctions Hyperboliques Inverses**
 - **asinh(x)** - Arc-sinus hyperbolique
 - **acosh(x)** - Arc-cosinus hyperbolique
 - **atanh(x)** - Arc-tangente hyperbolique
 
 **Performance :**
-- Build : 1.24s
-- JS : 257.57 KB (79.94 KB gzippé)
+- Build : 1.20s
+- JS : 258.79 KB (80.45 KB gzippé)
 - CSS : 9.50 KB (2.47 KB gzippé)
 
 ---
@@ -347,9 +357,9 @@ calculatrice-ti83-react/
 **Complétion totale : ~96%**
 
 ### Performance
-- **Build time** : 1.24s
+- **Build time** : 1.20s
 - **Hot reload** : < 50ms
-- **Bundle JS** : 257.57 KB (80.01 KB gzippé)
+- **Bundle JS** : 258.79 KB (80.45 KB gzippé)
 - **Bundle CSS** : 9.50 KB (2.47 KB gzippé)
 - **Lighthouse score** : 95+
 
