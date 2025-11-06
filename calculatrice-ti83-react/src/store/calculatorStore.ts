@@ -60,7 +60,7 @@ interface CalculatorStore extends CalculatorState {
   menuSelectedIndex: number;
   setCurrentMenu: (menu: string | null) => void;
   setMenuSelectedIndex: (index: number) => void;
-  navigateMenu: (direction: 'up' | 'down') => void;
+  navigateMenu: (direction: 'up' | 'down', maxIndex: number) => void;
 
   // Reset complet
   reset: () => void;
@@ -239,9 +239,8 @@ export const useCalculatorStore = create<CalculatorStore>()(
       setMenuSelectedIndex: (index: number) =>
         set({ menuSelectedIndex: index }, false, 'setMenuSelectedIndex'),
 
-      navigateMenu: (direction: 'up' | 'down') =>
+      navigateMenu: (direction: 'up' | 'down', maxIndex: number) =>
         set((state) => {
-          const maxIndex = 10; // Sera ajusté dynamiquement selon le menu
           const newIndex = direction === 'down'
             ? (state.menuSelectedIndex + 1) % maxIndex
             : (state.menuSelectedIndex - 1 + maxIndex) % maxIndex;

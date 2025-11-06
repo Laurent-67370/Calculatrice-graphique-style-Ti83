@@ -15,7 +15,7 @@ interface MenuProps {
   title: string;
   items: MenuItem[];
   selectedIndex: number;
-  onNavigate: (direction: 'up' | 'down') => void;
+  onNavigate: (direction: 'up' | 'down', maxIndex: number) => void;
   onSelect: () => void;
   onClose: () => void;
 }
@@ -49,7 +49,7 @@ export const Menu: React.FC<MenuProps> = ({
                 const direction: 'up' | 'down' = index < selectedIndex ? 'up' : 'down';
                 const steps = Math.abs(index - selectedIndex);
                 for (let i = 0; i < steps; i++) {
-                  onNavigate(direction);
+                  onNavigate(direction, items.length);
                 }
               }
             }}

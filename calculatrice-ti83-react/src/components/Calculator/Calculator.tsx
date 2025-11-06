@@ -108,11 +108,11 @@ export const Calculator: React.FC = () => {
       // Si un menu est ouvert, gérer la navigation
       if (currentMenu) {
         if (action === 'up') {
-          navigateMenu('up');
+          navigateMenu('up', currentMenuItems.length);
           return;
         }
         if (action === 'down') {
-          navigateMenu('down');
+          navigateMenu('down', currentMenuItems.length);
           return;
         }
         if (action === 'clear') {
