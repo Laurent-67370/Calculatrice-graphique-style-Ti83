@@ -1,0 +1,80 @@
+═══════════════════════════════════════════════════════════════════
+  MISE À JOUR RAPIDE - Calculatrice TI-83 Plus
+═══════════════════════════════════════════════════════════════════
+
+🔄 DEUX MÉTHODES AU CHOIX :
+
+═══════════════════════════════════════════════════════════════════
+
+🤖 MÉTHODE AUTOMATIQUE (Recommandée)
+═══════════════════════════════════════════════════════════════════
+
+Linux/Mac :
+  ./update-deploy.sh
+
+Windows :
+  update-deploy.bat
+
+→ Le script fait tout automatiquement :
+  ✅ Récupère les mises à jour depuis GitHub
+  ✅ Installe les dépendances
+  ✅ Rebuild l'application
+  ✅ Crée les archives de déploiement
+
+Ensuite :
+  📤 Uploadez le contenu de dist/ sur votre serveur
+
+═══════════════════════════════════════════════════════════════════
+
+⚙️  MÉTHODE MANUELLE
+═══════════════════════════════════════════════════════════════════
+
+1. Récupérer les mises à jour
+   git pull origin main
+
+2. Installer les dépendances
+   cd calculatrice-ti83-react
+   npm install
+
+3. Rebuilder
+   npm run build
+
+4. Déployer
+   → Uploadez le contenu de dist/ via FTP
+   → Dans le dossier /public_html/calculatrice/
+
+═══════════════════════════════════════════════════════════════════
+
+📤 DÉPLOIEMENT SUR LE SERVEUR
+═══════════════════════════════════════════════════════════════════
+
+Via FTP (FileZilla, etc.) :
+  1. Connectez-vous au serveur
+  2. Allez dans /public_html/calculatrice/
+  3. SUPPRIMEZ tout le contenu ancien
+  4. Uploadez TOUT le contenu de dist/
+
+Via SSH :
+  scp calculatrice-ti83-deploy.tar.gz user@lhusser.fr:/tmp/
+  ssh user@lhusser.fr
+  rm -rf /var/www/html/calculatrice/*
+  tar -xzf /tmp/calculatrice-ti83-deploy.tar.gz -C /var/www/html/calculatrice/
+
+═══════════════════════════════════════════════════════════════════
+
+✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════
+
+1. Videz le cache navigateur (Ctrl+F5 / Cmd+Shift+R)
+2. Visitez : https://www.lhusser.fr/calculatrice/
+3. Vérifiez que tout fonctionne
+
+═══════════════════════════════════════════════════════════════════
+
+💾 CONSEIL : Sauvegardez l'ancienne version avant de mettre à jour !
+
+═══════════════════════════════════════════════════════════════════
+
+📖 Pour plus de détails : Consultez GUIDE_MISE_A_JOUR.md
+
+═══════════════════════════════════════════════════════════════════
