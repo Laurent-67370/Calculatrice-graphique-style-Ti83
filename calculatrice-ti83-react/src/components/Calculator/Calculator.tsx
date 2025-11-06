@@ -2,14 +2,14 @@
  * Composant principal de la calculatrice TI-83 Plus
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useCalculatorStore } from '../../store/calculatorStore';
 import { Display } from './Display';
 import { Keyboard } from './Keyboard';
 import { GraphCanvas } from '../Graph/GraphCanvas';
 import { TraceCanvas } from '../Graph/TraceCanvas';
 import { Menu } from '../Menus/Menu';
-import { WindowEditor } from '../Editors/WindowEditor';
+import { WindowEditor, type WindowEditorHandle } from '../Editors/WindowEditor';
 import { ModeEditor } from '../Editors/ModeEditor';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -20,6 +20,8 @@ import { ListEditor } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
 export const Calculator: React.FC = () => {
+  // Ref pour contrôler WindowEditor depuis le clavier virtuel
+  const windowEditorRef = useRef<WindowEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -304,6 +306,29 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // En mode WINDOW - gérer la navigation via ref
+      if (currentMode === 'WINDOW' && windowEditorRef.current) {
+        if (action === 'up') {
+          windowEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          windowEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          windowEditorRef.current.handleEnter();
+          return;
+        }
+        // Si c'est un chiffre, l'envoyer au WindowEditor
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'negative') {
+          windowEditorRef.current.handleInput(action === 'negative' ? '-' : action);
+          return;
+        }
+      }
+
       // En mode Y_EDITOR
       if (currentMode === 'Y_EDITOR') {
         if (action === 'enter') {
@@ -433,7 +458,8 @@ export const Calculator: React.FC = () => {
   useEffect(() => {
     // Ne pas écouter les événements clavier si un éditeur spécial est ouvert
     // Ces éditeurs gèrent leurs propres événements clavier
-    const editorModes = ['WINDOW', 'MODE', 'STAT_EDIT'];
+    // WINDOW est géré différemment via ref donc on ne l'inclut pas ici
+    const editorModes = ['MODE', 'STAT_EDIT'];
     if (editorModes.includes(currentMode)) {
       return;
     }
@@ -502,6 +528,7 @@ export const Calculator: React.FC = () => {
     if (currentMode === 'WINDOW') {
       return (
         <WindowEditor
+          ref={windowEditorRef}
           settings={windowSettings}
           onSave={(settings) => {
             setWindowSettings(settings);

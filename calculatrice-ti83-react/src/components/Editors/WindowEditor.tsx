@@ -3,7 +3,7 @@
  * Permet de modifier les paramètres de la fenêtre graphique
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from 'react';
 import type { WindowSettings } from '../../types';
 
 interface WindowEditorProps {
@@ -12,26 +12,74 @@ interface WindowEditorProps {
   onClose: () => void;
 }
 
-export const WindowEditor: React.FC<WindowEditorProps> = ({
+export interface WindowEditorHandle {
+  navigate: (direction: 'up' | 'down') => void;
+  handleEnter: () => void;
+  handleInput: (char: string) => void;
+  handleDelete: () => void;
+}
+
+export const WindowEditor = forwardRef<WindowEditorHandle, WindowEditorProps>(({
   settings,
   onSave,
   onClose
-}) => {
+}, ref) => {
   const [localSettings, setLocalSettings] = useState(settings);
   const [currentField, setCurrentField] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [editValue, setEditValue] = useState('');
 
-  const fields = [
+  // Mémoriser les champs pour éviter de recréer l'array à chaque render
+  const fields = useMemo(() => [
     { name: 'Xmin', key: 'xMin' as keyof WindowSettings },
     { name: 'Xmax', key: 'xMax' as keyof WindowSettings },
     { name: 'Xscl', key: 'xScale' as keyof WindowSettings },
     { name: 'Ymin', key: 'yMin' as keyof WindowSettings },
     { name: 'Ymax', key: 'yMax' as keyof WindowSettings },
     { name: 'Yscl', key: 'yScale' as keyof WindowSettings },
-  ];
+  ], []);
 
-  // Gérer les touches du clavier
+  // Exposer les méthodes au parent via ref
+  useImperativeHandle(ref, () => ({
+    navigate: (direction: 'up' | 'down') => {
+      if (!editMode) {
+        if (direction === 'up') {
+          setCurrentField((prev) => (prev - 1 + fields.length) % fields.length);
+        } else {
+          setCurrentField((prev) => (prev + 1) % fields.length);
+        }
+      }
+    },
+    handleEnter: () => {
+      if (!editMode) {
+        const field = fields[currentField];
+        setEditValue(localSettings[field.key].toString());
+        setEditMode(true);
+      } else {
+        // Sauvegarder la valeur
+        const field = fields[currentField];
+        const value = parseFloat(editValue);
+        if (!isNaN(value)) {
+          setLocalSettings((prev) => ({ ...prev, [field.key]: value }));
+        }
+        setEditMode(false);
+        setEditValue('');
+      }
+    },
+    handleInput: (char: string) => {
+      if (editMode) {
+        setEditValue((prev) => prev + char);
+      }
+    },
+    handleDelete: () => {
+      if (editMode && editValue.length > 0) {
+        setEditValue((prev) => prev.slice(0, -1));
+      }
+    },
+  }), [editMode, currentField, editValue, localSettings, fields]);
+
+  // Gérer les touches du clavier (événements natifs du navigateur uniquement)
+  // Note: Les touches du clavier virtuel TI-83 sont gérées par Calculator.tsx
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!editMode) {
@@ -137,4 +185,6 @@ export const WindowEditor: React.FC<WindowEditorProps> = ({
       </div>
     </div>
   );
-};
+});
+
+WindowEditor.displayName = 'WindowEditor';
