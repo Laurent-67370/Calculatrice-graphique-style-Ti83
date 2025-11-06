@@ -431,6 +431,13 @@ export const Calculator: React.FC = () => {
    * Gère les raccourcis clavier
    */
   useEffect(() => {
+    // Ne pas écouter les événements clavier si un éditeur spécial est ouvert
+    // Ces éditeurs gèrent leurs propres événements clavier
+    const editorModes = ['WINDOW', 'MODE', 'STAT_EDIT'];
+    if (editorModes.includes(currentMode)) {
+      return;
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const keyMap: Record<string, KeyAction> = {
         'Enter': 'enter',
@@ -466,7 +473,7 @@ export const Calculator: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPress]);
+  }, [handleKeyPress, currentMode]);
 
   // Préparer les fonctions pour le graphique
   const graphFunctionsData: GraphFunction[] = graphFunctions.map((expr, index) => ({
