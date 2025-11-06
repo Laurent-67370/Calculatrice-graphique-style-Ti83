@@ -204,8 +204,8 @@ export const Calculator: React.FC = () => {
         return;
       }
 
-      // Gérer CLEAR
-      if (action === 'clear') {
+      // Gérer CLEAR (sauf en mode WINDOW ou MODE qui ont leur propre gestion)
+      if (action === 'clear' && currentMode !== 'WINDOW' && currentMode !== 'MODE') {
         clearInput();
         setMode('NORMAL');
         setCurrentMenu(null);
@@ -321,6 +321,12 @@ export const Calculator: React.FC = () => {
           windowEditorRef.current.handleEnter();
           return;
         }
+        if (action === 'clear') {
+          // Sauvegarder les changements avant de fermer
+          windowEditorRef.current.save();
+          setMode('NORMAL');
+          return;
+        }
         // Si c'est un chiffre, l'envoyer au WindowEditor
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
@@ -342,6 +348,12 @@ export const Calculator: React.FC = () => {
         }
         if (action === 'enter' || action === 'left' || action === 'right') {
           modeEditorRef.current.toggle();
+          return;
+        }
+        if (action === 'clear') {
+          // Sauvegarder les changements avant de fermer
+          modeEditorRef.current.save();
+          setMode('NORMAL');
           return;
         }
       }

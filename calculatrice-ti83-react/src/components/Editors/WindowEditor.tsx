@@ -17,6 +17,7 @@ export interface WindowEditorHandle {
   handleEnter: () => void;
   handleInput: (char: string) => void;
   handleDelete: () => void;
+  save: () => void;
 }
 
 export const WindowEditor = forwardRef<WindowEditorHandle, WindowEditorProps>(({
@@ -76,7 +77,10 @@ export const WindowEditor = forwardRef<WindowEditorHandle, WindowEditorProps>(({
         setEditValue((prev) => prev.slice(0, -1));
       }
     },
-  }), [editMode, currentField, editValue, localSettings, fields]);
+    save: () => {
+      onSave(localSettings);
+    },
+  }), [editMode, currentField, editValue, localSettings, fields, onSave]);
 
   // Gérer les touches du clavier (événements natifs du navigateur uniquement)
   // Note: Les touches du clavier virtuel TI-83 sont gérées par Calculator.tsx

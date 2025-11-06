@@ -21,6 +21,7 @@ export interface ModeConfig {
 export interface ModeEditorHandle {
   navigate: (direction: 'up' | 'down') => void;
   toggle: () => void;
+  save: () => void;
 }
 
 export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
@@ -65,7 +66,14 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
       const nextIndex = (currentIndex + 1) % option.choices.length;
       option.setter(option.choices[nextIndex]);
     },
-  }), [selectedOption, options]);
+    save: () => {
+      onSave({
+        angleMode: localAngleMode,
+        floatMode: localFloatMode,
+        fixedDecimals: localFixedDecimals,
+      });
+    },
+  }), [selectedOption, options, localAngleMode, localFloatMode, localFixedDecimals, onSave]);
 
   // Gérer les touches du clavier
   useEffect(() => {
