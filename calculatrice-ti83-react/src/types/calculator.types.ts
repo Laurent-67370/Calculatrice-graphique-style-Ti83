@@ -9,6 +9,7 @@ export type CalculatorMode =
   | 'Y_EDIT'
   | 'WINDOW'
   | 'WINDOW_EDIT'
+  | 'MODE'
   | 'TABLE'
   | 'STAT'
   | 'STAT_EDIT'
@@ -22,7 +23,7 @@ export type CalculatorMode =
 // Actions possibles sur les touches
 export type KeyAction =
   | 'y-vars' | 'window' | 'zoom' | 'trace' | 'graph'
-  | 'stat' | 'math' | 'mode' | 'del' | 'clear'
+  | 'stat' | 'math' | 'calc' | 'mode' | 'del' | 'clear'
   | '2nd' | 'alpha' | 'apps' | 'prgm' | 'vars'
   | 'test' | 'angle' | 'draw' | 'distr' | 'matrix'
   | 'x' | 'sin' | 'cos' | 'tan' | 'pow'

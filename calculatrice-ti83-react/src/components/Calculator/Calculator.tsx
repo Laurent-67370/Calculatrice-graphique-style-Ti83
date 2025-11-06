@@ -9,11 +9,12 @@ import { Keyboard } from './Keyboard';
 import { GraphCanvas } from '../Graph/GraphCanvas';
 import { Menu } from '../Menus/Menu';
 import { WindowEditor } from '../Editors/WindowEditor';
+import { ModeEditor } from '../Editors/ModeEditor';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
-import { statMenuItems, mathMenuItems, zoomMenuItems } from '../../data/menus';
-import { createZoomHandlers, createMathHandlers, createStatHandlers } from '../../utils/menuHandlers';
+import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems } from '../../data/menus';
+import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers } from '../../utils/menuHandlers';
 import { ListEditor } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
@@ -35,6 +36,7 @@ export const Calculator: React.FC = () => {
     clearInput,
     addToHistory,
     setMode,
+    setConfig,
     toggleSecondFunction,
     toggleAlphaMode,
     setGraphMode,
@@ -56,6 +58,7 @@ export const Calculator: React.FC = () => {
     if (currentMenu === 'STAT') return statMenuItems;
     if (currentMenu === 'MATH') return mathMenuItems;
     if (currentMenu === 'ZOOM') return zoomMenuItems;
+    if (currentMenu === 'CALC') return calcMenuItems;
     return [];
   }, [currentMenu]);
 
@@ -73,6 +76,18 @@ export const Calculator: React.FC = () => {
   const statHandlers = useMemo(() =>
     createStatHandlers(addToHistory, setCurrentMenu, setMode as (mode: string) => void),
     [addToHistory, setCurrentMenu, setMode]
+  );
+
+  const calcHandlers = useMemo(() =>
+    createCalcHandlers(
+      graphFunctions,
+      activeFunctions,
+      windowSettings,
+      config.angleMode,
+      addToHistory,
+      setCurrentMenu
+    ),
+    [graphFunctions, activeFunctions, windowSettings, config.angleMode, addToHistory, setCurrentMenu]
   );
 
   /**
@@ -110,6 +125,8 @@ export const Calculator: React.FC = () => {
               handler = (mathHandlers as any)[currentItem.id];
             } else if (currentMenu === 'STAT') {
               handler = (statHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'CALC') {
+              handler = (calcHandlers as any)[currentItem.id];
             }
 
             // Exécuter le handler s'il existe
@@ -190,6 +207,20 @@ export const Calculator: React.FC = () => {
       // Gérer MATH
       if (action === 'math') {
         setCurrentMenu('MATH');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer CALC (2ND + TRACE sur TI-83)
+      if (action === 'calc') {
+        setCurrentMenu('CALC');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer MODE
+      if (action === 'mode') {
+        setMode('MODE');
         setGraphMode(false);
         return;
       }
@@ -304,6 +335,7 @@ export const Calculator: React.FC = () => {
       zoomHandlers,
       mathHandlers,
       statHandlers,
+      calcHandlers,
     ]
   );
 
@@ -378,6 +410,22 @@ export const Calculator: React.FC = () => {
           settings={windowSettings}
           onSave={(settings) => {
             setWindowSettings(settings);
+            setMode('NORMAL');
+          }}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si l'éditeur MODE est ouvert
+    if (currentMode === 'MODE') {
+      return (
+        <ModeEditor
+          angleMode={config.angleMode}
+          floatMode={config.floatMode}
+          fixedDecimals={config.fixedDecimals}
+          onSave={(modeConfig) => {
+            setConfig(modeConfig);
             setMode('NORMAL');
           }}
           onClose={() => setMode('NORMAL')}

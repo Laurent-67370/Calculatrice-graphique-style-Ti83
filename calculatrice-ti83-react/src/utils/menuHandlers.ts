@@ -268,6 +268,165 @@ export const createStatHandlers = (
 });
 
 /**
+ * Handlers pour le menu CALC (calculs sur courbes)
+ */
+export const createCalcHandlers = (
+  graphFunctions: string[],
+  activeFunctions: boolean[],
+  windowSettings: any,
+  angleMode: 'DEGREE' | 'RADIAN',
+  addToHistory: (entry: string) => void,
+  setCurrentMenu: (menu: string | null) => void
+) => ({
+  'value': () => {
+    // Calculer f(x) pour un X donné
+    // TODO: Implémenter avec prompt utilisateur
+    addToHistory('value: Entrez X avec prompt');
+    setCurrentMenu(null);
+  },
+
+  'zero': () => {
+    // Trouver le zéro de la fonction active
+    try {
+      const activeFuncIndex = activeFunctions.findIndex(active => active);
+      if (activeFuncIndex === -1) {
+        addToHistory('Erreur: Aucune fonction active');
+        setCurrentMenu(null);
+        return;
+      }
+
+      const expression = graphFunctions[activeFuncIndex];
+      const xStart = (windowSettings.xMin + windowSettings.xMax) / 2;
+
+      const result = graphingEngine.findZero(expression, xStart, angleMode);
+
+      if (result) {
+        addToHistory(`Zero trouvé:`);
+        addToHistory(`X=${result.x.toFixed(6)}`);
+        addToHistory(`Y=${result.y.toFixed(6)}`);
+      } else {
+        addToHistory('Aucun zéro trouvé dans cet intervalle');
+      }
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors de la recherche de zéro');
+      setCurrentMenu(null);
+    }
+  },
+
+  'minimum': () => {
+    // Trouver le minimum de la fonction active
+    try {
+      const activeFuncIndex = activeFunctions.findIndex(active => active);
+      if (activeFuncIndex === -1) {
+        addToHistory('Erreur: Aucune fonction active');
+        setCurrentMenu(null);
+        return;
+      }
+
+      const expression = graphFunctions[activeFuncIndex];
+
+      const result = graphingEngine.findMinimum(
+        expression,
+        windowSettings.xMin,
+        windowSettings.xMax,
+        angleMode
+      );
+
+      if (result) {
+        addToHistory(`Minimum trouvé:`);
+        addToHistory(`X=${result.x.toFixed(6)}`);
+        addToHistory(`Y=${result.y.toFixed(6)}`);
+      } else {
+        addToHistory('Aucun minimum trouvé');
+      }
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors de la recherche de minimum');
+      setCurrentMenu(null);
+    }
+  },
+
+  'maximum': () => {
+    // Trouver le maximum de la fonction active
+    try {
+      const activeFuncIndex = activeFunctions.findIndex(active => active);
+      if (activeFuncIndex === -1) {
+        addToHistory('Erreur: Aucune fonction active');
+        setCurrentMenu(null);
+        return;
+      }
+
+      const expression = graphFunctions[activeFuncIndex];
+
+      const result = graphingEngine.findMaximum(
+        expression,
+        windowSettings.xMin,
+        windowSettings.xMax,
+        angleMode
+      );
+
+      if (result) {
+        addToHistory(`Maximum trouvé:`);
+        addToHistory(`X=${result.x.toFixed(6)}`);
+        addToHistory(`Y=${result.y.toFixed(6)}`);
+      } else {
+        addToHistory('Aucun maximum trouvé');
+      }
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors de la recherche de maximum');
+      setCurrentMenu(null);
+    }
+  },
+
+  'intersect': () => {
+    // Trouver l'intersection de deux fonctions
+    // TODO: Implémenter recherche d'intersection
+    addToHistory('intersect: À implémenter');
+    setCurrentMenu(null);
+  },
+
+  'dy-dx': () => {
+    // Calculer la dérivée en un point
+    // TODO: Implémenter avec prompt pour X
+    addToHistory('dy/dx: À implémenter avec prompt');
+    setCurrentMenu(null);
+  },
+
+  'integral': () => {
+    // Calculer l'intégrale définie
+    try {
+      const activeFuncIndex = activeFunctions.findIndex(active => active);
+      if (activeFuncIndex === -1) {
+        addToHistory('Erreur: Aucune fonction active');
+        setCurrentMenu(null);
+        return;
+      }
+
+      const expression = graphFunctions[activeFuncIndex];
+
+      // Utiliser les bornes de la fenêtre ou un sous-intervalle
+      const a = windowSettings.xMin;
+      const b = windowSettings.xMax;
+
+      const result = graphingEngine.integrate(expression, a, b, angleMode);
+
+      addToHistory(`∫f(x)dx de ${a.toFixed(2)} à ${b.toFixed(2)}:`);
+      addToHistory(`Résultat = ${result.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors du calcul de l\'intégrale');
+      setCurrentMenu(null);
+    }
+  },
+});
+
+/**
  * Fonction utilitaire pour obtenir le handler d'un menu
  */
 export const getMenuHandler = (

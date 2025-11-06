@@ -471,3 +471,69 @@ body {
 .row-value {
   flex: 1;
 }
+
+/* Mode Editor */
+.mode-editor {
+  width: 100%;
+  height: 100%;
+  background-color: var(--ti83-screen-bg);
+  color: var(--ti83-screen-text);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  padding: 8px;
+}
+
+.mode-editor .editor-header h3 {
+  margin: 0;
+  padding: 4px 0;
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--ti83-screen-text);
+}
+
+.mode-content {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+.mode-row.selected {
+  background-color: rgba(0, 0, 0, 0.15);
+  outline: 1px solid var(--ti83-screen-text);
+}
+
+.mode-label {
+  min-width: 80px;
+  font-weight: bold;
+}
+
+.mode-choices {
+  display: flex;
+  gap: 12px;
+}
+
+.mode-choice {
+  padding: 2px 8px;
+  border: 1px solid transparent;
+}
+
+.mode-choice.active {
+  border: 1px solid var(--ti83-screen-text);
+  background-color: rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+
+.mode-value {
+  font-weight: bold;
+}
