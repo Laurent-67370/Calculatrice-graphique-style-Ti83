@@ -13,6 +13,8 @@ interface KeyboardProps {
 
 interface Key {
   action: KeyAction;
+  secondAction?: KeyAction;
+  alphaAction?: KeyAction;
   primary: string;
   second?: string;
   alpha?: string;
@@ -22,60 +24,60 @@ interface Key {
 
 const keyLayout: Key[][] = [
   [
-    { action: 'y-vars', primary: 'Y=', second: 'STAT PLOT', color: 'blue' },
-    { action: 'window', primary: 'WINDOW', second: 'TBLSET', color: 'blue' },
-    { action: 'zoom', primary: 'ZOOM', second: 'FORMAT', color: 'blue' },
-    { action: 'trace', primary: 'TRACE', second: 'CALC', color: 'blue' },
-    { action: 'graph', primary: 'GRAPH', second: 'TABLE', color: 'blue' },
+    { action: 'y-vars', secondAction: 'stat-plot', primary: 'Y=', second: 'STAT PLOT', color: 'blue' },
+    { action: 'window', secondAction: 'tblset', primary: 'WINDOW', second: 'TBLSET', color: 'blue' },
+    { action: 'zoom', secondAction: 'format', primary: 'ZOOM', second: 'FORMAT', color: 'blue' },
+    { action: 'trace', secondAction: 'calc', primary: 'TRACE', second: 'CALC', color: 'blue' },
+    { action: 'graph', secondAction: 'table', primary: 'GRAPH', second: 'TABLE', color: 'blue' },
   ],
   [
     { action: '2nd', primary: '2ND', color: 'blue' },
-    { action: 'mode', primary: 'MODE', second: 'QUIT', color: 'gray' },
-    { action: 'del', primary: 'DEL', second: 'INS', color: 'gray' },
+    { action: 'mode', secondAction: 'quit', primary: 'MODE', second: 'QUIT', color: 'gray' },
+    { action: 'del', secondAction: 'ins', primary: 'DEL', second: 'INS', color: 'gray' },
     { action: 'alpha', primary: 'ALPHA', color: 'blue' },
     { action: 'stat', primary: 'STAT', color: 'blue' },
   ],
   [
-    { action: 'math', primary: 'MATH', second: 'TEST', color: 'gray' },
-    { action: 'apps', primary: 'APPS', second: 'ANGLE', color: 'gray' },
-    { action: 'prgm', primary: 'PRGM', second: 'DRAW', color: 'gray' },
-    { action: 'vars', primary: 'VARS', second: 'DISTR', color: 'gray' },
+    { action: 'math', secondAction: 'test', primary: 'MATH', second: 'TEST', color: 'gray' },
+    { action: 'apps', secondAction: 'angle', primary: 'APPS', second: 'ANGLE', color: 'gray' },
+    { action: 'prgm', secondAction: 'draw', primary: 'PRGM', second: 'DRAW', color: 'gray' },
+    { action: 'vars', secondAction: 'distr', primary: 'VARS', second: 'DISTR', color: 'gray' },
     { action: 'clear', primary: 'CLEAR', color: 'gray' },
   ],
   [
-    { action: 'x', primary: 'X,T,θ,n', second: 'LINK', alpha: 'X' },
-    { action: 'sin', primary: 'SIN', second: 'SIN⁻¹', alpha: 'S' },
-    { action: 'cos', primary: 'COS', second: 'COS⁻¹', alpha: 'T' },
-    { action: 'tan', primary: 'TAN', second: 'TAN⁻¹', alpha: 'U' },
-    { action: 'pow', primary: '^', second: 'π', alpha: 'V' },
+    { action: 'x', secondAction: 'link', primary: 'X,T,θ,n', second: 'LINK', alpha: 'X' },
+    { action: 'sin', secondAction: 'asin', primary: 'SIN', second: 'SIN⁻¹', alpha: 'S' },
+    { action: 'cos', secondAction: 'acos', primary: 'COS', second: 'COS⁻¹', alpha: 'T' },
+    { action: 'tan', secondAction: 'atan', primary: 'TAN', second: 'TAN⁻¹', alpha: 'U' },
+    { action: 'pow', secondAction: 'pi', primary: '^', second: 'π', alpha: 'V' },
   ],
   [
-    { action: 'sqrt', primary: '√', second: 'x²', alpha: 'W' },
+    { action: 'sqrt', secondAction: 'square', primary: '√', second: 'x²', alpha: 'W' },
     { action: '7', primary: '7', second: 'u', alpha: 'A' },
     { action: '8', primary: '8', second: 'v', alpha: 'B' },
     { action: '9', primary: '9', second: 'w', alpha: 'C' },
-    { action: 'divide', primary: '÷', second: 'e', alpha: 'D' },
+    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e', alpha: 'D' },
   ],
   [
-    { action: 'ln', primary: 'LN', second: 'eˣ', alpha: 'X' },
+    { action: 'ln', secondAction: 'exp-func', primary: 'LN', second: 'eˣ', alpha: 'X' },
     { action: '4', primary: '4', alpha: 'E' },
     { action: '5', primary: '5', alpha: 'F' },
     { action: '6', primary: '6', alpha: 'G' },
-    { action: 'multiply', primary: '×', second: '[', alpha: 'H' },
+    { action: 'multiply', secondAction: 'left-brace', primary: '×', second: '[', alpha: 'H' },
   ],
   [
-    { action: 'log', primary: 'LOG', second: '10ˣ', alpha: 'Y' },
+    { action: 'log', secondAction: 'power10', primary: 'LOG', second: '10ˣ', alpha: 'Y' },
     { action: '1', primary: '1', alpha: 'I' },
     { action: '2', primary: '2', alpha: 'J' },
     { action: '3', primary: '3', alpha: 'K' },
-    { action: 'subtract', primary: '−', second: ']', alpha: 'L' },
+    { action: 'subtract', secondAction: 'right-brace', primary: '−', second: ']', alpha: 'L' },
   ],
   [
-    { action: 'negative', primary: '(−)', second: 'ANS', alpha: 'Z' },
+    { action: 'negative', secondAction: 'ans', primary: '(−)', second: 'ANS', alpha: 'Z' },
     { action: '0', primary: '0', alpha: ' ' },
-    { action: 'left-paren', primary: '(', second: '{', alpha: 'M' },
-    { action: 'right-paren', primary: ')', second: '}', alpha: 'N' },
-    { action: 'add', primary: '+', second: 'MEM', alpha: 'O' },
+    { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'M' },
+    { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'N' },
+    { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: 'O' },
   ],
   [
     { action: 'left', primary: '←' },
@@ -119,6 +121,19 @@ export const Keyboard: React.FC<KeyboardProps> = ({
     return classes.join(' ');
   };
 
+  const handleKeyClick = (key: Key) => {
+    // Déterminer quelle action envoyer
+    let actionToSend = key.action;
+
+    if (isSecondActive && key.secondAction) {
+      actionToSend = key.secondAction;
+    } else if (isAlphaActive && key.alphaAction) {
+      actionToSend = key.alphaAction;
+    }
+
+    onKeyPress(actionToSend);
+  };
+
   return (
     <div className="ti83-keyboard">
       {keyLayout.map((row, rowIndex) => (
@@ -127,7 +142,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
             <button
               key={keyIndex}
               className={getKeyClass(key)}
-              onClick={() => onKeyPress(key.action)}
+              onClick={() => handleKeyClick(key)}
               type="button"
             >
               <div className="key-primary">{getKeyDisplay(key)}</div>

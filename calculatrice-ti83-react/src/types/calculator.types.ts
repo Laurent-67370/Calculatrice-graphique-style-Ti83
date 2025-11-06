@@ -32,7 +32,11 @@ export type KeyAction =
   | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   | 'add' | 'subtract' | 'multiply' | 'divide'
   | 'left-paren' | 'right-paren' | 'comma' | 'negative'
-  | 'enter' | 'up' | 'down' | 'left' | 'right';
+  | 'enter' | 'up' | 'down' | 'left' | 'right'
+  // Actions secondaires
+  | 'quit' | 'ins' | 'table' | 'tblset' | 'format' | 'stat-plot'
+  | 'asin' | 'acos' | 'atan' | 'square' | 'exp-func' | 'power10'
+  | 'ans' | 'left-brace' | 'right-brace' | 'mem' | 'link';
 
 // Configuration de l'écran
 export interface DisplayConfig {

@@ -105,6 +105,12 @@ export const Calculator: React.FC = () => {
    */
   const handleKeyPress = useCallback(
     (action: KeyAction) => {
+      // Désactiver automatiquement les modes SECOND et ALPHA après cette action
+      // (sauf si c'est la touche 2nd ou alpha elle-même)
+      const shouldDeactivateModes = action !== '2nd' && action !== 'alpha';
+      const wasSecondActive = isSecondFunction;
+      const wasAlphaActive = isAlphaMode;
+
       // Si un menu est ouvert, gérer la navigation
       if (currentMenu) {
         if (action === 'up') {
@@ -307,6 +313,15 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer QUIT (2ND + MODE)
+      if (action === 'quit') {
+        // Fermer l'éditeur actuel et revenir en mode normal
+        setMode('NORMAL');
+        setGraphMode(false);
+        setCurrentMenu(null);
+        return;
+      }
+
       // En mode WINDOW - gérer la navigation via ref
       if (currentMode === 'WINDOW' && windowEditorRef.current) {
         if (action === 'up') {
@@ -400,14 +415,24 @@ export const Calculator: React.FC = () => {
           'divide': '÷',
           'left-paren': '(',
           'right-paren': ')',
+          'left-brace': '{',
+          'right-brace': '}',
           'pow': '^',
           'x': 'X',
           'sin': 'sin(',
           'cos': 'cos(',
           'tan': 'tan(',
+          'asin': 'asin(',
+          'acos': 'acos(',
+          'atan': 'atan(',
           'sqrt': '√(',
+          'square': '^2',
           'ln': 'ln(',
           'log': 'log(',
+          'pi': 'π',
+          'exp': 'e',
+          'exp-func': 'e^',
+          'power10': '10^',
         };
 
         if (operatorMap[action]) {
@@ -440,6 +465,16 @@ export const Calculator: React.FC = () => {
             setInput('ERREUR');
           }
           return;
+        }
+      }
+
+      // Désactiver automatiquement le mode SECOND ou ALPHA après utilisation
+      if (shouldDeactivateModes) {
+        if (wasSecondActive) {
+          toggleSecondFunction();
+        }
+        if (wasAlphaActive) {
+          toggleAlphaMode();
         }
       }
     },
@@ -478,6 +513,8 @@ export const Calculator: React.FC = () => {
       mathHandlers,
       statHandlers,
       calcHandlers,
+      isSecondFunction,
+      isAlphaMode,
     ]
   );
 
