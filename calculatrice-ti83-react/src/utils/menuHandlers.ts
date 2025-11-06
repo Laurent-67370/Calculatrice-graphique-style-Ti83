@@ -265,6 +265,113 @@ export const createStatHandlers = (
       setCurrentMenu(null);
     }
   },
+
+  'med-med': () => {
+    try {
+      const result = statisticsService.medianMedianRegression('L1', 'L2');
+
+      addToHistory('Med-Med (L1,L2)');
+      addToHistory(result.equation);
+      addToHistory(`a=${result.a.toFixed(6)}`);
+      addToHistory(`b=${result.b.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur: Données insuffisantes');
+      setCurrentMenu(null);
+    }
+  },
+
+  'cubicreg': () => {
+    try {
+      const result = statisticsService.cubicRegression('L1', 'L2');
+
+      addToHistory('CubicReg (L1,L2)');
+      addToHistory(result.equation);
+      addToHistory(`a=${result.a.toFixed(6)}`);
+      addToHistory(`b=${result.b.toFixed(6)}`);
+      if (result.c) addToHistory(`c=${result.c.toFixed(6)}`);
+      if (result.d) addToHistory(`d=${result.d.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur: Données insuffisantes');
+      setCurrentMenu(null);
+    }
+  },
+
+  'quartreg': () => {
+    try {
+      const result = statisticsService.quarticRegression('L1', 'L2');
+
+      addToHistory('QuartReg (L1,L2)');
+      addToHistory(result.equation);
+      addToHistory(`a=${result.a.toFixed(6)}`);
+      addToHistory(`b=${result.b.toFixed(6)}`);
+      if (result.c) addToHistory(`c=${result.c.toFixed(6)}`);
+      if (result.d) addToHistory(`d=${result.d.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur: Données insuffisantes');
+      setCurrentMenu(null);
+    }
+  },
+
+  'linreg-ab': () => {
+    try {
+      // LinReg(a+bx) est identique à LinReg(ax+b), juste avec notation différente
+      const result = statisticsService.linearRegression('L1', 'L2');
+
+      addToHistory('LinReg(a+bx) (L1,L2)');
+      // Inverser l'affichage : a est l'ordonnée, b est la pente
+      addToHistory(`y=${result.b.toFixed(4)}+${result.a.toFixed(4)}x`);
+      addToHistory(`a=${result.b.toFixed(6)}`);
+      addToHistory(`b=${result.a.toFixed(6)}`);
+      if (result.r) addToHistory(`r=${result.r.toFixed(6)}`);
+      if (result.r2) addToHistory(`r²=${result.r2.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur: Données insuffisantes');
+      setCurrentMenu(null);
+    }
+  },
+
+  'sinreg': () => {
+    try {
+      const result = statisticsService.sinusoidalRegression('L1', 'L2');
+
+      addToHistory('SinReg (L1,L2)');
+      addToHistory(result.equation);
+      addToHistory(`a=${result.a.toFixed(6)}`);
+      addToHistory(`b=${result.b.toFixed(6)}`);
+      if (result.c) addToHistory(`c=${result.c.toFixed(6)}`);
+      if (result.d) addToHistory(`d=${result.d.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur: Données insuffisantes');
+      setCurrentMenu(null);
+    }
+  },
+
+  'logistic': () => {
+    try {
+      const result = statisticsService.logisticRegression('L1', 'L2');
+
+      addToHistory('Logistic (L1,L2)');
+      addToHistory(result.equation);
+      addToHistory(`a=${result.a.toFixed(6)}`);
+      addToHistory(`b=${result.b.toFixed(6)}`);
+      if (result.c) addToHistory(`c=${result.c.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur: Données insuffisantes');
+      setCurrentMenu(null);
+    }
+  },
 });
 
 /**
