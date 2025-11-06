@@ -22,71 +22,105 @@ export const ListEditor: React.FC<ListEditorProps> = ({ onClose }) => {
     setValues(listValues.length > 0 ? listValues : [0, 0, 0, 0, 0]); // Au moins 5 lignes vides
   }, [currentList]);
 
-  const handleNavigate = (direction: 'up' | 'down' | 'left' | 'right') => {
-    if (direction === 'up' && selectedRow > 0) {
-      setSelectedRow(selectedRow - 1);
-    } else if (direction === 'down' && selectedRow < values.length - 1) {
-      setSelectedRow(selectedRow + 1);
-    } else if (direction === 'left') {
-      // Changer de liste vers la gauche
-      const lists: ('L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L6')[] = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
-      const currentIndex = lists.indexOf(currentList);
-      if (currentIndex > 0) {
-        setCurrentList(lists[currentIndex - 1]);
-        setSelectedRow(0);
+  // Gérer les touches du clavier
+  useEffect(() => {
+    const lists: ('L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L6')[] = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!editMode) {
+        // Mode navigation
+        switch (e.key) {
+          case 'ArrowUp':
+            e.preventDefault();
+            if (selectedRow > 0) {
+              setSelectedRow(selectedRow - 1);
+            }
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            if (selectedRow < values.length - 1) {
+              setSelectedRow(selectedRow + 1);
+            }
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            // Changer de liste vers la gauche
+            const currentIndexLeft = lists.indexOf(currentList);
+            if (currentIndexLeft > 0) {
+              setCurrentList(lists[currentIndexLeft - 1]);
+              setSelectedRow(0);
+            }
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            // Changer de liste vers la droite
+            const currentIndexRight = lists.indexOf(currentList);
+            if (currentIndexRight < lists.length - 1) {
+              setCurrentList(lists[currentIndexRight + 1]);
+              setSelectedRow(0);
+            }
+            break;
+          case 'Enter':
+            e.preventDefault();
+            // Commencer l'édition
+            setEditValue(values[selectedRow]?.toString() || '0');
+            setEditMode(true);
+            break;
+          case 'Escape':
+            e.preventDefault();
+            onClose();
+            break;
+          case 'c': // Clear list
+            e.preventDefault();
+            statisticsService.clearList(currentList);
+            setValues([0, 0, 0, 0, 0]);
+            setSelectedRow(0);
+            break;
+          default:
+            break;
+        }
+      } else {
+        // Mode édition
+        switch (e.key) {
+          case 'Enter':
+            e.preventDefault();
+            // Sauvegarder la valeur
+            const newValue = parseFloat(editValue);
+            if (!isNaN(newValue)) {
+              const newValues = [...values];
+              newValues[selectedRow] = newValue;
+              setValues(newValues);
+              statisticsService.setList(currentList, newValues.filter(v => v !== 0 || selectedRow < newValues.length - 1));
+            }
+            setEditMode(false);
+            setEditValue('');
+            break;
+          case 'Backspace':
+          case 'Delete':
+            e.preventDefault();
+            if (editValue.length > 0) {
+              setEditValue((prev) => prev.slice(0, -1));
+            }
+            break;
+          case 'Escape':
+            e.preventDefault();
+            setEditMode(false);
+            setEditValue('');
+            break;
+          default:
+            // Accepter les chiffres, point décimal, et signe moins
+            if (e.key.match(/^[0-9.\-]$/)) {
+              e.preventDefault();
+              setEditValue((prev) => prev + e.key);
+            }
+            break;
+        }
       }
-    } else if (direction === 'right') {
-      // Changer de liste vers la droite
-      const lists: ('L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L6')[] = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
-      const currentIndex = lists.indexOf(currentList);
-      if (currentIndex < lists.length - 1) {
-        setCurrentList(lists[currentIndex + 1]);
-        setSelectedRow(0);
-      }
-    }
-  };
+    };
 
-  const handleEdit = () => {
-    if (!editMode) {
-      setEditValue(values[selectedRow]?.toString() || '0');
-      setEditMode(true);
-    }
-  };
-
-  const handleSave = () => {
-    if (editMode) {
-      const newValue = parseFloat(editValue);
-      if (!isNaN(newValue)) {
-        const newValues = [...values];
-        newValues[selectedRow] = newValue;
-        setValues(newValues);
-        statisticsService.setList(currentList, newValues.filter(v => v !== 0 || selectedRow < newValues.length - 1));
-      }
-      setEditMode(false);
-      setEditValue('');
-    }
-  };
-
-  const handleInput = (char: string) => {
-    if (editMode) {
-      setEditValue((prev) => prev + char);
-    }
-  };
-
-  const handleDelete = () => {
-    if (editMode && editValue.length > 0) {
-      setEditValue((prev) => prev.slice(0, -1));
-    }
-  };
-
-  const handleClearList = () => {
-    statisticsService.clearList(currentList);
-    setValues([0, 0, 0, 0, 0]);
-    setSelectedRow(0);
-  };
-
-  // Supprimer warnings
-  console.log({ onClose, handleNavigate, handleEdit, handleSave, handleInput, handleDelete, handleClearList });
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [editMode, selectedRow, values, currentList, editValue, onClose]);
 
   return (
     <div className="list-editor">
@@ -123,9 +157,9 @@ export const ListEditor: React.FC<ListEditorProps> = ({ onClose }) => {
 
       <div className="editor-footer">
         {editMode ? (
-          <span>ENTER: Sauver | DEL: Effacer</span>
+          <span>ENTER: Sauver | DEL: Effacer | ESC: Annuler</span>
         ) : (
-          <span>↑↓: Naviguer | ←→: Changer liste | ENTER: Éditer | CLEAR: Fermer</span>
+          <span>↑↓: Naviguer | ←→: Changer liste | ENTER: Éditer | C: Clear | ESC: Fermer</span>
         )}
       </div>
     </div>

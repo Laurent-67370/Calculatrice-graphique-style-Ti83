@@ -3,7 +3,7 @@
  * Permet de modifier les paramètres de la fenêtre graphique
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { WindowSettings } from '../../types';
 
 interface WindowEditorProps {
@@ -31,55 +31,80 @@ export const WindowEditor: React.FC<WindowEditorProps> = ({
     { name: 'Yscl', key: 'yScale' as keyof WindowSettings },
   ];
 
-  const handleNavigate = (direction: 'up' | 'down') => {
-    if (!editMode) {
-      setCurrentField((prev) =>
-        direction === 'down'
-          ? (prev + 1) % fields.length
-          : (prev - 1 + fields.length) % fields.length
-      );
-    }
-  };
-
-  const handleEdit = () => {
-    if (!editMode) {
-      const field = fields[currentField];
-      setEditValue(localSettings[field.key].toString());
-      setEditMode(true);
-    }
-  };
-
-  const handleSaveField = () => {
-    if (editMode) {
-      const field = fields[currentField];
-      const value = parseFloat(editValue);
-      if (!isNaN(value)) {
-        setLocalSettings((prev) => ({ ...prev, [field.key]: value }));
+  // Gérer les touches du clavier
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!editMode) {
+        // Mode navigation
+        switch (e.key) {
+          case 'ArrowUp':
+            e.preventDefault();
+            setCurrentField((prev) => (prev - 1 + fields.length) % fields.length);
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            setCurrentField((prev) => (prev + 1) % fields.length);
+            break;
+          case 'Enter':
+            e.preventDefault();
+            // Commencer l'édition
+            const field = fields[currentField];
+            setEditValue(localSettings[field.key].toString());
+            setEditMode(true);
+            break;
+          case 'g': // GRAPH key pour sauvegarder
+          case 's': // Ou 's' pour save
+            e.preventDefault();
+            onSave(localSettings);
+            onClose();
+            break;
+          case 'Escape':
+            e.preventDefault();
+            onClose();
+            break;
+          default:
+            break;
+        }
+      } else {
+        // Mode édition
+        switch (e.key) {
+          case 'Enter':
+            e.preventDefault();
+            // Sauvegarder la valeur
+            const field = fields[currentField];
+            const value = parseFloat(editValue);
+            if (!isNaN(value)) {
+              setLocalSettings((prev) => ({ ...prev, [field.key]: value }));
+            }
+            setEditMode(false);
+            setEditValue('');
+            break;
+          case 'Backspace':
+          case 'Delete':
+            e.preventDefault();
+            if (editValue.length > 0) {
+              setEditValue((prev) => prev.slice(0, -1));
+            }
+            break;
+          case 'Escape':
+            e.preventDefault();
+            setEditMode(false);
+            setEditValue('');
+            break;
+          default:
+            // Accepter les chiffres, point décimal, et signe moins
+            if (e.key.match(/^[0-9.\-]$/)) {
+              e.preventDefault();
+              setEditValue((prev) => prev + e.key);
+            }
+            break;
+        }
       }
-      setEditMode(false);
-      setEditValue('');
-    }
-  };
+    };
 
-  const handleSaveAll = () => {
-    onSave(localSettings);
-    onClose();
-  };
-
-  const handleInput = (char: string) => {
-    if (editMode) {
-      setEditValue((prev) => prev + char);
-    }
-  };
-
-  const handleDelete = () => {
-    if (editMode && editValue.length > 0) {
-      setEditValue((prev) => prev.slice(0, -1));
-    }
-  };
-
-  // Supprimer les warnings TypeScript - ces fonctions seront connectées dans l'intégration
-  console.log({ handleNavigate, handleEdit, handleSaveField, handleSaveAll, handleInput, handleDelete });
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [editMode, currentField, editValue, localSettings, fields, onSave, onClose]);
 
   return (
     <div className="window-editor">
@@ -105,9 +130,9 @@ export const WindowEditor: React.FC<WindowEditorProps> = ({
 
       <div className="editor-footer">
         {editMode ? (
-          <span>ENTER: Valider | DEL: Effacer</span>
+          <span>ENTER: Valider | DEL: Effacer | ESC: Annuler</span>
         ) : (
-          <span>↑↓: Naviguer | ENTER: Modifier | GRAPH: Sauver</span>
+          <span>↑↓: Naviguer | ENTER: Modifier | G/S: Sauver | ESC: Fermer</span>
         )}
       </div>
     </div>
