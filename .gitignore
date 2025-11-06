@@ -1,6 +1,9 @@
-# Deployment archives
+# Deployment archives (allow specific deployment files)
 *.tar.gz
 *.zip
+# Exception: Allow deployment archives at root
+!calculatrice-ti83-deploy.tar.gz
+!calculatrice-ti83-deploy.zip
 
 # OS files
 .DS_Store
