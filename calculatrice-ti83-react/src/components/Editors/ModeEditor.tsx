@@ -2,7 +2,7 @@
  * Éditeur de MODE - Configuration de la calculatrice
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from 'react';
 
 interface ModeEditorProps {
   angleMode: 'DEGREE' | 'RADIAN';
@@ -18,19 +18,24 @@ export interface ModeConfig {
   fixedDecimals: number;
 }
 
-export const ModeEditor: React.FC<ModeEditorProps> = ({
+export interface ModeEditorHandle {
+  navigate: (direction: 'up' | 'down') => void;
+  toggle: () => void;
+}
+
+export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
   angleMode,
   floatMode,
   fixedDecimals,
   onSave,
   onClose,
-}) => {
+}, ref) => {
   const [localAngleMode, setLocalAngleMode] = useState<'DEGREE' | 'RADIAN'>(angleMode);
   const [localFloatMode, setLocalFloatMode] = useState<'FLOAT' | 'FIXED'>(floatMode);
   const [localFixedDecimals] = useState(fixedDecimals);
   const [selectedOption, setSelectedOption] = useState(0);
 
-  const options = [
+  const options = useMemo(() => [
     {
       name: 'Angle',
       choices: ['RADIAN', 'DEGREE'],
@@ -43,7 +48,24 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
       current: localFloatMode,
       setter: (value: string) => setLocalFloatMode(value as 'FLOAT' | 'FIXED'),
     },
-  ];
+  ], [localAngleMode, localFloatMode]);
+
+  // Exposer les méthodes au parent via ref
+  useImperativeHandle(ref, () => ({
+    navigate: (direction: 'up' | 'down') => {
+      if (direction === 'up') {
+        setSelectedOption((prev) => (prev - 1 + options.length) % options.length);
+      } else {
+        setSelectedOption((prev) => (prev + 1) % options.length);
+      }
+    },
+    toggle: () => {
+      const option = options[selectedOption];
+      const currentIndex = option.choices.indexOf(option.current);
+      const nextIndex = (currentIndex + 1) % option.choices.length;
+      option.setter(option.choices[nextIndex]);
+    },
+  }), [selectedOption, options]);
 
   // Gérer les touches du clavier
   useEffect(() => {
@@ -129,4 +151,6 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ModeEditor.displayName = 'ModeEditor';

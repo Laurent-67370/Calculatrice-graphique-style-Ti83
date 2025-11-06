@@ -10,7 +10,7 @@ import { GraphCanvas } from '../Graph/GraphCanvas';
 import { TraceCanvas } from '../Graph/TraceCanvas';
 import { Menu } from '../Menus/Menu';
 import { WindowEditor, type WindowEditorHandle } from '../Editors/WindowEditor';
-import { ModeEditor } from '../Editors/ModeEditor';
+import { ModeEditor, type ModeEditorHandle } from '../Editors/ModeEditor';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
@@ -20,8 +20,9 @@ import { ListEditor } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
 export const Calculator: React.FC = () => {
-  // Ref pour contrôler WindowEditor depuis le clavier virtuel
+  // Refs pour contrôler les éditeurs depuis le clavier virtuel
   const windowEditorRef = useRef<WindowEditorHandle>(null);
+  const modeEditorRef = useRef<ModeEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -329,6 +330,22 @@ export const Calculator: React.FC = () => {
         }
       }
 
+      // En mode MODE - gérer la navigation via ref
+      if (currentMode === 'MODE' && modeEditorRef.current) {
+        if (action === 'up') {
+          modeEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          modeEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter' || action === 'left' || action === 'right') {
+          modeEditorRef.current.toggle();
+          return;
+        }
+      }
+
       // En mode Y_EDITOR
       if (currentMode === 'Y_EDITOR') {
         if (action === 'enter') {
@@ -458,8 +475,8 @@ export const Calculator: React.FC = () => {
   useEffect(() => {
     // Ne pas écouter les événements clavier si un éditeur spécial est ouvert
     // Ces éditeurs gèrent leurs propres événements clavier
-    // WINDOW est géré différemment via ref donc on ne l'inclut pas ici
-    const editorModes = ['MODE', 'STAT_EDIT'];
+    // WINDOW et MODE sont gérés via ref donc on ne les inclut pas ici
+    const editorModes = ['STAT_EDIT'];
     if (editorModes.includes(currentMode)) {
       return;
     }
@@ -543,6 +560,7 @@ export const Calculator: React.FC = () => {
     if (currentMode === 'MODE') {
       return (
         <ModeEditor
+          ref={modeEditorRef}
           angleMode={config.angleMode}
           floatMode={config.floatMode}
           fixedDecimals={config.fixedDecimals}
