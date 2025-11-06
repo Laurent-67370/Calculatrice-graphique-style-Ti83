@@ -56,6 +56,9 @@ export const Menu: React.FC<MenuProps> = ({
           >
             <span className="menu-number">{index + 1}:</span>
             <span className="menu-label">{item.label}</span>
+            {item.submenu && item.submenu.length > 0 && (
+              <span className="menu-arrow">▶</span>
+            )}
           </div>
         ))}
       </div>

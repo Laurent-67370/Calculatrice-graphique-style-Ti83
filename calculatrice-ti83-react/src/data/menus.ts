@@ -24,6 +24,14 @@ export const statMenuItems: MenuItem[] = [
 
 // Menu MATH
 export const mathMenuItems: MenuItem[] = [
+  // Sous-menu principal MATH
+  { id: 'cbrt', label: '³√(', action: () => {} },
+  { id: 'log-base', label: 'logBASE(', action: () => {} },
+  { id: 'exp', label: 'e^(', action: () => {} },
+  { id: 'pow10', label: '10^(', action: () => {} },
+  { id: 'hypot', label: 'hypot(', action: () => {} },
+
+  // Sous-menu NUM
   { id: 'math-num', label: 'NUM', action: () => {}, submenu: [
     { id: 'abs', label: 'abs(', action: () => {} },
     { id: 'round', label: 'round(', action: () => {} },
@@ -34,24 +42,51 @@ export const mathMenuItems: MenuItem[] = [
     { id: 'max', label: 'max(', action: () => {} },
     { id: 'lcm', label: 'lcm(', action: () => {} },
     { id: 'gcd', label: 'gcd(', action: () => {} },
+    { id: 'ceil', label: 'ceil(', action: () => {} },
+    { id: 'floor', label: 'floor(', action: () => {} },
+    { id: 'sign', label: 'sign(', action: () => {} },
+    { id: 'trunc', label: 'trunc(', action: () => {} },
+    { id: 'mod', label: 'mod(', action: () => {} },
   ]},
+
+  // Sous-menu CPX
   { id: 'math-cpx', label: 'CPX', action: () => {}, submenu: [
     { id: 'conj', label: 'conj(', action: () => {} },
     { id: 'real', label: 'real(', action: () => {} },
     { id: 'imag', label: 'imag(', action: () => {} },
     { id: 'angle', label: 'angle(', action: () => {} },
-    { id: 'abs', label: 'abs(', action: () => {} },
-    { id: 'rect', label: 'Rect', action: () => {} },
-    { id: 'polar', label: 'Polar', action: () => {} },
+    { id: 'abs-cpx', label: 'abs(', action: () => {} },
+    { id: 'rect', label: 'Rect(', action: () => {} },
+    { id: 'polar', label: 'Polar(', action: () => {} },
   ]},
+
+  // Sous-menu PRB
   { id: 'math-prb', label: 'PRB', action: () => {}, submenu: [
     { id: 'rand', label: 'rand', action: () => {} },
-    { id: 'npr', label: 'nPr', action: () => {} },
-    { id: 'ncr', label: 'nCr', action: () => {} },
+    { id: 'npr', label: 'nPr(', action: () => {} },
+    { id: 'ncr', label: 'nCr(', action: () => {} },
     { id: 'factorial', label: '!', action: () => {} },
     { id: 'randint', label: 'randInt(', action: () => {} },
     { id: 'randnorm', label: 'randNorm(', action: () => {} },
-    { id: 'randsamp', label: 'randSamp(', action: () => {} },
+    { id: 'randbin', label: 'randBin(', action: () => {} },
+  ]},
+
+  // Sous-menu ANGLE
+  { id: 'math-angle', label: 'ANGLE', action: () => {}, submenu: [
+    { id: 'deg-to-rad', label: '°→rad', action: () => {} },
+    { id: 'rad-to-deg', label: 'rad→°', action: () => {} },
+    { id: 'dms', label: '→DMS', action: () => {} },
+    { id: 'dec', label: '→Dec', action: () => {} },
+  ]},
+
+  // Sous-menu TRIG
+  { id: 'math-trig', label: 'TRIG', action: () => {}, submenu: [
+    { id: 'sinh', label: 'sinh(', action: () => {} },
+    { id: 'cosh', label: 'cosh(', action: () => {} },
+    { id: 'tanh', label: 'tanh(', action: () => {} },
+    { id: 'asinh', label: 'asinh(', action: () => {} },
+    { id: 'acosh', label: 'acosh(', action: () => {} },
+    { id: 'atanh', label: 'atanh(', action: () => {} },
   ]},
 ];
 

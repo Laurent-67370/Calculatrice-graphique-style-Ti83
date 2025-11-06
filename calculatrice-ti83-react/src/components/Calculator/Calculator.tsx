@@ -61,8 +61,11 @@ export const Calculator: React.FC = () => {
     setWindowSettings,
     currentMenu,
     menuSelectedIndex,
+    menuStack,
     setCurrentMenu,
     navigateMenu,
+    enterSubmenu,
+    exitSubmenu,
   } = useCalculatorStore();
 
   // Supprimer warnings pour services importés
@@ -70,12 +73,17 @@ export const Calculator: React.FC = () => {
 
   // Obtenir les items du menu actuel AVANT handleKeyPress
   const currentMenuItems = useMemo(() => {
+    // Si on est dans un sous-menu, utiliser le dernier item du stack
+    if (menuStack.length > 0) {
+      return menuStack[menuStack.length - 1];
+    }
+    // Sinon, utiliser le menu racine
     if (currentMenu === 'STAT') return statMenuItems;
     if (currentMenu === 'MATH') return mathMenuItems;
     if (currentMenu === 'ZOOM') return zoomMenuItems;
     if (currentMenu === 'CALC') return calcMenuItems;
     return [];
-  }, [currentMenu]);
+  }, [currentMenu, menuStack]);
 
   // Créer les handlers pour les menus
   const zoomHandlers = useMemo(() =>
@@ -127,14 +135,22 @@ export const Calculator: React.FC = () => {
           return;
         }
         if (action === 'clear') {
-          setCurrentMenu(null);
+          // Si on est dans un sous-menu, revenir au menu parent
+          // Sinon, fermer complètement le menu
+          exitSubmenu();
           return;
         }
         if (action === 'enter') {
           // Exécuter l'action du menu sélectionné
           const currentItem = currentMenuItems[menuSelectedIndex];
           if (currentItem) {
-            // Déterminer le handler approprié selon le menu
+            // Si l'item a un sous-menu, entrer dedans
+            if (currentItem.submenu && currentItem.submenu.length > 0) {
+              enterSubmenu(currentItem.submenu);
+              return;
+            }
+
+            // Sinon, déterminer le handler approprié selon le menu
             let handler;
             if (currentMenu === 'ZOOM') {
               handler = (zoomHandlers as any)[currentItem.id];

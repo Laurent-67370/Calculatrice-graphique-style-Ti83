@@ -125,6 +125,38 @@ export const createMathHandlers = (
   'randint': () => { appendInput('randInt('); setCurrentMenu(null); },
   'randnorm': () => { appendInput('randNorm('); setCurrentMenu(null); },
   'randsamp': () => { appendInput('randSamp('); setCurrentMenu(null); },
+  'randbin': () => { appendInput('randBin('); setCurrentMenu(null); },
+
+  // Menu MATH principal
+  'cbrt': () => { appendInput('cbrt('); setCurrentMenu(null); },
+  'log-base': () => { appendInput('logBASE('); setCurrentMenu(null); },
+  'exp': () => { appendInput('e^('); setCurrentMenu(null); },
+  'pow10': () => { appendInput('10^('); setCurrentMenu(null); },
+  'hypot': () => { appendInput('hypot('); setCurrentMenu(null); },
+
+  // Menu NUM supplémentaire
+  'ceil': () => { appendInput('ceil('); setCurrentMenu(null); },
+  'floor': () => { appendInput('floor('); setCurrentMenu(null); },
+  'sign': () => { appendInput('sign('); setCurrentMenu(null); },
+  'trunc': () => { appendInput('trunc('); setCurrentMenu(null); },
+  'mod': () => { appendInput('mod('); setCurrentMenu(null); },
+
+  // Menu CPX supplémentaire
+  'abs-cpx': () => { appendInput('abs('); setCurrentMenu(null); },
+
+  // Menu ANGLE
+  'deg-to-rad': () => { appendInput('°→rad('); setCurrentMenu(null); },
+  'rad-to-deg': () => { appendInput('rad→°('); setCurrentMenu(null); },
+  'dms': () => { appendInput('→DMS('); setCurrentMenu(null); },
+  'dec': () => { appendInput('→Dec('); setCurrentMenu(null); },
+
+  // Menu TRIG
+  'sinh': () => { appendInput('sinh('); setCurrentMenu(null); },
+  'cosh': () => { appendInput('cosh('); setCurrentMenu(null); },
+  'tanh': () => { appendInput('tanh('); setCurrentMenu(null); },
+  'asinh': () => { appendInput('asinh('); setCurrentMenu(null); },
+  'acosh': () => { appendInput('acosh('); setCurrentMenu(null); },
+  'atanh': () => { appendInput('atanh('); setCurrentMenu(null); },
 });
 
 /**

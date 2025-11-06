@@ -58,9 +58,12 @@ interface CalculatorStore extends CalculatorState {
   // Actions pour les menus
   currentMenu: string | null;
   menuSelectedIndex: number;
+  menuStack: any[][]; // Stack de menus pour gérer les sous-menus
   setCurrentMenu: (menu: string | null) => void;
   setMenuSelectedIndex: (index: number) => void;
   navigateMenu: (direction: 'up' | 'down', maxIndex: number) => void;
+  enterSubmenu: (submenu: any[]) => void;
+  exitSubmenu: () => void;
 
   // Reset complet
   reset: () => void;
@@ -232,9 +235,10 @@ export const useCalculatorStore = create<CalculatorStore>()(
       // État et actions pour les menus
       currentMenu: null,
       menuSelectedIndex: 0,
+      menuStack: [],
 
       setCurrentMenu: (menu: string | null) =>
-        set({ currentMenu: menu, menuSelectedIndex: 0 }, false, 'setCurrentMenu'),
+        set({ currentMenu: menu, menuSelectedIndex: 0, menuStack: [] }, false, 'setCurrentMenu'),
 
       setMenuSelectedIndex: (index: number) =>
         set({ menuSelectedIndex: index }, false, 'setMenuSelectedIndex'),
@@ -246,6 +250,26 @@ export const useCalculatorStore = create<CalculatorStore>()(
             : (state.menuSelectedIndex - 1 + maxIndex) % maxIndex;
           return { menuSelectedIndex: newIndex };
         }, false, 'navigateMenu'),
+
+      enterSubmenu: (submenu: any[]) =>
+        set((state) => ({
+          menuStack: [...state.menuStack, submenu],
+          menuSelectedIndex: 0,
+        }), false, 'enterSubmenu'),
+
+      exitSubmenu: () =>
+        set((state) => {
+          if (state.menuStack.length === 0) {
+            // Si on est au niveau racine, fermer le menu
+            return { currentMenu: null, menuSelectedIndex: 0 };
+          }
+          // Sinon, revenir au menu parent
+          const newStack = state.menuStack.slice(0, -1);
+          return {
+            menuStack: newStack,
+            menuSelectedIndex: 0,
+          };
+        }, false, 'exitSubmenu'),
 
       // Reset complet
       reset: () =>

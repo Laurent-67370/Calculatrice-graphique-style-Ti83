@@ -279,6 +279,21 @@ export class MathFunctionsService {
     return this.sinh(x) / this.cosh(x);
   }
 
+  // Fonctions hyperboliques inverses
+  asinh(x: number): number {
+    return Math.log(x + Math.sqrt(x * x + 1));
+  }
+
+  acosh(x: number): number {
+    if (x < 1) throw new Error('x ≥ 1 requis pour acosh');
+    return Math.log(x + Math.sqrt(x * x - 1));
+  }
+
+  atanh(x: number): number {
+    if (x <= -1 || x >= 1) throw new Error('-1 < x < 1 requis pour atanh');
+    return 0.5 * Math.log((1 + x) / (1 - x));
+  }
+
   /**
    * Autres fonctions utiles
    */

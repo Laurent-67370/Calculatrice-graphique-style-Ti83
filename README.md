@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 18**, **TypeScript 5.6**, et **Vite**.
 
-![Version](https://img.shields.io/badge/version-2.0.4-blue)
+![Version](https://img.shields.io/badge/version-2.0.5-blue)
 ![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
@@ -14,39 +14,50 @@ Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'inte
 
 Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une architecture moderne, type-safe et performante.
 
-**🎯 État du Projet : ~94% Complété**
+**🎯 État du Projet : ~96% Complété**
 - ✅ Backend (Services) : 100%
 - ✅ Frontend (UI/UX) : 95%
 - ✅ Menu STAT : **100% complet** (14/14 fonctions) 🎉
 - ✅ Menu CALC : **100% complet** (7/7 fonctions) 🎉
+- ✅ Menu MATH : **100% complet** (38 fonctions, 6 catégories) 🎉
 - ✅ Prêt pour production
 
 **📍 Démo en ligne :** [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
 
 ---
 
-## 🎉 Nouveautés Version 2.0.4
+## 🎉 Nouveautés Version 2.0.5
 
-### Menu CALC 100% Complet !
+### Menu MATH Interactif Complet ! 🎯
 
-Cette version complète à **100%** le menu CALC avec l'implémentation de 3 fonctions manquantes :
+Cette version apporte un **menu MATH hiérarchique complet** permettant de parcourir et sélectionner toutes les fonctions mathématiques, organisées en 6 catégories comme sur une vraie TI-83 Plus :
 
-1. **value** - Calculer f(x) pour une valeur donnée
-2. **dy/dx** - Dérivée numérique (différences centrées)
-3. **intersect** - Intersection de deux fonctions (Newton-Raphson)
+#### 📂 6 Catégories de Fonctions
 
-### 15 Nouvelles Fonctions MATH
+1. **MATH (Principal)** - 5 fonctions : ³√, logBASE, e^x, 10^x, hypot
+2. **NUM** - 14 fonctions : abs, round, iPart, fPart, int, min, max, lcm, gcd, ceil, floor, sign, trunc, mod
+3. **CPX** - 7 fonctions : conj, real, imag, angle, abs, Rect, Polar
+4. **PRB** - 7 fonctions : rand, nPr, nCr, !, randInt, randNorm, randBin
+5. **ANGLE** - 4 fonctions : °→rad, rad→°, →DMS, →Dec
+6. **TRIG** - 6 fonctions : sinh, cosh, tanh, asinh, acosh, atanh
 
-Ajout de fonctions mathématiques avancées :
-- **ceil, floor, sign, trunc** - Arrondis et troncature
-- **hypot, cbrt, exp, pow10** - Fonctions exponentielles
-- **logBase** - Logarithme en base quelconque
-- **degreesToRadians, radiansToDegrees** - Conversions angulaires
-- **randNorm, randBin** - Distributions aléatoires
+#### ✨ Navigation Hiérarchique
+
+- **↑/↓** pour naviguer dans les menus
+- **ENTER** pour sélectionner ou entrer dans un sous-menu (▶)
+- **CLEAR** pour revenir en arrière ou fermer
+- Indicateur visuel **▶** pour les sous-menus
+
+#### 🔧 Nouvelles Fonctions
+
+Ajout de 3 fonctions hyperboliques inverses :
+- **asinh(x)** - Arc-sinus hyperbolique
+- **acosh(x)** - Arc-cosinus hyperbolique
+- **atanh(x)** - Arc-tangente hyperbolique
 
 **Performance :**
 - Build : 1.24s
-- JS : 255.17 KB (79.21 KB gzippé)
+- JS : 257.57 KB (79.94 KB gzippé)
 - CSS : 9.50 KB (2.47 KB gzippé)
 
 ---
@@ -162,30 +173,64 @@ tar -xzf /tmp/calculatrice-ti83-deploy.tar.gz -C /var/www/html/calculatrice/
 - **Édition interactive** : Ajout, modification, suppression
 - **Navigation fluide** : ↑↓ entre les valeurs
 
-### ✅ Menu MATH
+### ✅ Menu MATH - 100% Complet ! 🎉
 
-#### NUM (Fonctions numériques)
+Menu hiérarchique avec **38 fonctions** réparties en **6 catégories** :
+
+#### MATH (Principal) - 5 fonctions
+- **³√()** - Racine cubique
+- **logBASE()** - Logarithme en base quelconque
+- **e^()** - Exponentielle base e
+- **10^()** - Puissance de 10
+- **hypot()** - Hypoténuse √(x²+y²)
+
+#### NUM (Fonctions numériques) ▶ - 14 fonctions
 - **abs()** - Valeur absolue
 - **round()** - Arrondi
 - **iPart()** - Partie entière
 - **fPart()** - Partie fractionnaire
+- **int()** - Troncature
 - **min()** - Minimum
 - **max()** - Maximum
-- **gcd()** - Plus grand commun diviseur
+- **lcm()** - PPCM
+- **gcd()** - PGCD
+- **ceil()** - Arrondi supérieur ✨ **Nouveau !**
+- **floor()** - Arrondi inférieur ✨ **Nouveau !**
+- **sign()** - Signe (-1, 0, 1) ✨ **Nouveau !**
+- **trunc()** - Troncature décimale ✨ **Nouveau !**
+- **mod()** - Modulo ✨ **Nouveau !**
 
-#### CPX (Nombres complexes)
+#### CPX (Nombres complexes) ▶ - 7 fonctions
 - **conj()** - Conjugué
 - **real()** - Partie réelle
 - **imag()** - Partie imaginaire
 - **angle()** - Argument
 - **abs()** - Module
+- **Rect()** - Polaire → Rectangulaire
+- **Polar()** - Rectangulaire → Polaire
 
-#### PRB (Probabilités)
-- **!** - Factorielle
-- **nPr** - Arrangements
-- **nCr** - Combinaisons
+#### PRB (Probabilités) ▶ - 7 fonctions
 - **rand** - Nombre aléatoire
+- **nPr()** - Permutations
+- **nCr()** - Combinaisons
+- **!** - Factorielle
 - **randInt()** - Entier aléatoire
+- **randNorm()** - Distribution normale
+- **randBin()** - Distribution binomiale
+
+#### ANGLE (Conversions) ▶ - 4 fonctions ✨ **Nouveau !**
+- **°→rad** - Degrés → Radians
+- **rad→°** - Radians → Degrés
+- **→DMS** - Conversion DMS
+- **→Dec** - Conversion Décimal
+
+#### TRIG (Hyperboliques) ▶ - 6 fonctions ✨ **Nouveau !**
+- **sinh()** - Sinus hyperbolique
+- **cosh()** - Cosinus hyperbolique
+- **tanh()** - Tangente hyperbolique
+- **asinh()** - Arc-sinus hyperbolique
+- **acosh()** - Arc-cosinus hyperbolique
+- **atanh()** - Arc-tangente hyperbolique
 
 ### ✅ Distributions
 
@@ -283,27 +328,28 @@ calculatrice-ti83-react/
 ## 📊 Statistiques du Projet
 
 ### Code
-- **4,556+ lignes** de TypeScript
+- **4,750+ lignes** de TypeScript
 - **540+ lignes** de CSS
 - **14 composants** React
 - **3 services** backend
-- **115+ fonctions** mathématiques
+- **118 fonctions** mathématiques
 
 ### Fonctionnalités
 - ✅ **Calculatrice de base** : 100%
 - ✅ **Mode graphique** : 95%
 - ✅ **Statistiques (STAT)** : **100%** (14/14)
 - ✅ **Calculs (CALC)** : **100%** (7/7)
-- ✅ **Math avancées** : 95%
+- ✅ **Menu MATH** : **100%** (38 fonctions, 6 catégories)
+- ✅ **Math avancées** : 98%
 - ✅ **Éditeurs** : 95%
 - ⬜ **Programmation** : 0% (non prévu)
 
-**Complétion totale : ~94%**
+**Complétion totale : ~96%**
 
 ### Performance
 - **Build time** : 1.24s
 - **Hot reload** : < 50ms
-- **Bundle JS** : 255.17 KB (79.21 KB gzippé)
+- **Bundle JS** : 257.57 KB (80.01 KB gzippé)
 - **Bundle CSS** : 9.50 KB (2.47 KB gzippé)
 - **Lighthouse score** : 95+
 
@@ -313,7 +359,8 @@ calculatrice-ti83-react/
 
 ### Guides Disponibles
 
-- **[RELEASE_NOTES_v2.0.4.md](./RELEASE_NOTES_v2.0.4.md)** - Notes de version v2.0.4 (dernière)
+- **[RELEASE_NOTES_v2.0.5.md](./RELEASE_NOTES_v2.0.5.md)** - Notes de version v2.0.5 (dernière) ✨
+- **[RELEASE_NOTES_v2.0.4.md](./RELEASE_NOTES_v2.0.4.md)** - Notes de version v2.0.4
 - **[RELEASE_NOTES_v2.0.3.md](./RELEASE_NOTES_v2.0.3.md)** - Notes de version v2.0.3
 - **[DOWNLOAD_AND_DEPLOY.md](./DOWNLOAD_AND_DEPLOY.md)** - Guide de téléchargement et déploiement
 - **[GITHUB_RELEASE_INSTRUCTIONS.md](./GITHUB_RELEASE_INSTRUCTIONS.md)** - Instructions pour créer une release
@@ -405,7 +452,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.0.4** | **6 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.0.5** | **6 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
