@@ -75,6 +75,7 @@ const keyLayout: Key[][] = [
   [
     { action: 'negative', secondAction: 'ans', primary: '(−)', second: 'ANS', alpha: 'Z' },
     { action: '0', primary: '0', alpha: ' ' },
+    { action: 'dot', primary: '.', alpha: ':' },
     { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'M' },
     { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'N' },
     { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: 'O' },

@@ -366,8 +366,8 @@ export const Calculator: React.FC = () => {
         // Si c'est un chiffre, l'envoyer au WindowEditor
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
-            action === 'negative') {
-          windowEditorRef.current.handleInput(action === 'negative' ? '-' : action);
+            action === 'negative' || action === 'dot') {
+          windowEditorRef.current.handleInput(action === 'negative' ? '-' : action === 'dot' ? '.' : action);
           return;
         }
       }
@@ -428,14 +428,8 @@ export const Calculator: React.FC = () => {
         // Si c'est un chiffre ou signe négatif, l'envoyer au ListEditor
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
-            action === 'negative') {
-          listEditorRef.current.handleInput(action === 'negative' ? '-' : action);
-          return;
-        }
-        // Support pour le point décimal
-        if (action === 'left-paren') {
-          // Sur TI-83, on peut utiliser '.' pour le point décimal, mapper à left-paren temporairement
-          listEditorRef.current.handleInput('.');
+            action === 'negative' || action === 'dot') {
+          listEditorRef.current.handleInput(action === 'negative' ? '-' : action === 'dot' ? '.' : action);
           return;
         }
       }
@@ -485,6 +479,7 @@ export const Calculator: React.FC = () => {
           'left-brace': '{',
           'right-brace': '}',
           'pow': '^',
+          'dot': '.',
           'x': 'X',
           'sin': 'sin(',
           'cos': 'cos(',
