@@ -1,0 +1,83 @@
+═══════════════════════════════════════════════════════════════════
+  🚀 PRÊT À DÉPLOYER - Version 2.0.2 avec AIDE INTÉGRÉE
+═══════════════════════════════════════════════════════════════════
+
+✅ Build terminé avec succès !
+📦 Archives créées et prêtes
+
+NOUVEAUTÉS de cette version :
+  ⭐ Bouton d'aide "?" sur la calculatrice
+  ⭐ Modal d'aide complet avec 3 onglets
+  ⭐ Interface épurée (texte du bas supprimé)
+
+═══════════════════════════════════════════════════════════════════
+
+📤 COMMENT DÉPLOYER SUR www.lhusser.fr/calculatrice/
+═══════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : Connexion
+  → Ouvrez FileZilla (ou votre client FTP)
+  → Connectez-vous à lhusser.fr
+
+ÉTAPE 2 : Navigation
+  → Sur le serveur, allez dans : /public_html/calculatrice/
+
+ÉTAPE 3 : Nettoyage
+  → SUPPRIMEZ tout le contenu de ce dossier
+  → Sélectionnez tout (Ctrl+A)
+  → Supprimer
+
+ÉTAPE 4 : Upload
+  → Sur votre PC, ouvrez :
+    Calculatrice-graphique-style-Ti83/calculatrice-ti83-react/dist/
+
+  → Sélectionnez TOUT le contenu de dist/ :
+    • index.html
+    • vite.svg
+    • _redirects
+    • assets/ (dossier complet)
+
+  → Glissez-déposez dans /public_html/calculatrice/
+
+ÉTAPE 5 : Vérification
+  → Ouvrez : https://www.lhusser.fr/calculatrice/
+  → Videz le cache : Ctrl+Shift+R (ou Ctrl+F5)
+  → Cliquez sur le bouton "?" en haut à droite
+  → Le modal d'aide devrait s'ouvrir !
+
+═══════════════════════════════════════════════════════════════════
+
+📁 STRUCTURE FINALE sur le serveur :
+
+/public_html/calculatrice/
+  ├── index.html
+  ├── vite.svg
+  ├── _redirects
+  └── assets/
+      ├── index-DpKtdQXP.css
+      └── index-Cv5yUlbk.js
+
+═══════════════════════════════════════════════════════════════════
+
+⚠️  IMPORTANT :
+  → NE PAS uploader le dossier "dist" lui-même
+  → Uploader UNIQUEMENT son CONTENU
+  → Les fichiers doivent être DIRECTEMENT dans /calculatrice/
+
+═══════════════════════════════════════════════════════════════════
+
+📊 Taille du déploiement : 247 KB (très léger !)
+
+═══════════════════════════════════════════════════════════════════
+
+✨ Après le déploiement, testez :
+  1. La calculatrice fonctionne
+  2. Le bouton "?" est visible
+  3. Le modal d'aide s'ouvre
+  4. Les graphiques fonctionnent (Y=, X^2, GRAPH)
+
+═══════════════════════════════════════════════════════════════════
+
+🎉 C'est prêt ! Déployez maintenant !
+
+═══════════════════════════════════════════════════════════════════
