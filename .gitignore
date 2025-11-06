@@ -6,6 +6,8 @@
 !calculatrice-ti83-deploy.zip
 !calculatrice-ti83-deploy-v*.tar.gz
 !calculatrice-ti83-deploy-v*.zip
+!calculatrice-ti83-pwa-v*.tar.gz
+!calculatrice-ti83-pwa-v*.zip
 
 # OS files
 .DS_Store

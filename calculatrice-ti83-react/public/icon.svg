@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Background calculatrice -->
+  <rect width="512" height="512" fill="#1a1a1a" rx="80"/>
+
+  <!-- Écran -->
+  <rect x="56" y="56" width="400" height="120" fill="#8BA870" rx="8"/>
+  <rect x="64" y="64" width="384" height="104" fill="#9db991" rx="4"/>
+
+  <!-- Texte sur l'écran "TI-83" -->
+  <text x="256" y="110" font-family="monospace" font-size="32" font-weight="bold" fill="#1a1a1a" text-anchor="middle">TI-83</text>
+  <text x="256" y="145" font-family="monospace" font-size="20" fill="#1a1a1a" text-anchor="middle">Plus</text>
+
+  <!-- Grille de touches -->
+  <!-- Ligne 1 (touches de fonction) -->
+  <rect x="70" y="210" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="145" y="210" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="220" y="210" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="295" y="210" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="370" y="210" width="60" height="40" fill="#2a2a2a" rx="6"/>
+
+  <!-- Ligne 2 -->
+  <rect x="70" y="265" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="145" y="265" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="220" y="265" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="295" y="265" width="60" height="40" fill="#2a2a2a" rx="6"/>
+  <rect x="370" y="265" width="60" height="40" fill="#2a2a2a" rx="6"/>
+
+  <!-- Ligne 3 (touches numériques) -->
+  <circle cx="100" cy="335" r="28" fill="#3a3a3a"/>
+  <circle cx="175" cy="335" r="28" fill="#3a3a3a"/>
+  <circle cx="250" cy="335" r="28" fill="#3a3a3a"/>
+  <circle cx="325" cy="335" r="28" fill="#3a3a3a"/>
+  <circle cx="400" cy="335" r="28" fill="#4a4a4a"/>
+
+  <!-- Ligne 4 -->
+  <circle cx="100" cy="395" r="28" fill="#3a3a3a"/>
+  <circle cx="175" cy="395" r="28" fill="#3a3a3a"/>
+  <circle cx="250" cy="395" r="28" fill="#3a3a3a"/>
+  <circle cx="325" cy="395" r="28" fill="#3a3a3a"/>
+  <circle cx="400" cy="395" r="28" fill="#4a4a4a"/>
+
+  <!-- Ligne 5 -->
+  <circle cx="100" cy="455" r="28" fill="#3a3a3a"/>
+  <circle cx="175" cy="455" r="28" fill="#3a3a3a"/>
+  <circle cx="250" cy="455" r="28" fill="#3a3a3a"/>
+  <circle cx="325" cy="455" r="28" fill="#3a3a3a"/>
+  <circle cx="400" cy="455" r="28" fill="#4a4a4a"/>
+
+  <!-- Chiffres sur les touches -->
+  <text x="100" y="345" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">7</text>
+  <text x="175" y="345" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">8</text>
+  <text x="250" y="345" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">9</text>
+  <text x="325" y="345" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">÷</text>
+
+  <text x="100" y="405" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
+  <text x="175" y="405" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
+  <text x="250" y="405" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">6</text>
+  <text x="325" y="405" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">×</text>
+
+  <text x="100" y="465" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+  <text x="175" y="465" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
+  <text x="250" y="465" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+  <text x="325" y="465" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">−</text>
+  <text x="400" y="405" font-family="Arial" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle">+</text>
+</svg>
