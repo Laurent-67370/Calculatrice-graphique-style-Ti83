@@ -366,8 +366,13 @@ export const Calculator: React.FC = () => {
         // Si c'est un chiffre, l'envoyer au WindowEditor
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
-            action === 'negative' || action === 'dot') {
-          windowEditorRef.current.handleInput(action === 'negative' ? '-' : action === 'dot' ? '.' : action);
+            action === 'negative' || action === 'dot' || action === 'comma') {
+          windowEditorRef.current.handleInput(
+            action === 'negative' ? '-' :
+            action === 'dot' ? '.' :
+            action === 'comma' ? ',' :
+            action
+          );
           return;
         }
       }
@@ -428,8 +433,13 @@ export const Calculator: React.FC = () => {
         // Si c'est un chiffre ou signe négatif, l'envoyer au ListEditor
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
-            action === 'negative' || action === 'dot') {
-          listEditorRef.current.handleInput(action === 'negative' ? '-' : action === 'dot' ? '.' : action);
+            action === 'negative' || action === 'dot' || action === 'comma') {
+          listEditorRef.current.handleInput(
+            action === 'negative' ? '-' :
+            action === 'dot' ? '.' :
+            action === 'comma' ? ',' :
+            action
+          );
           return;
         }
       }
@@ -480,6 +490,7 @@ export const Calculator: React.FC = () => {
           'right-brace': '}',
           'pow': '^',
           'dot': '.',
+          'comma': ',',
           'x': 'X',
           'sin': 'sin(',
           'cos': 'cos(',

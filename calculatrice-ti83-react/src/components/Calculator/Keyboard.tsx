@@ -53,7 +53,7 @@ const keyLayout: Key[][] = [
   ],
   [
     { action: 'sqrt', secondAction: 'square', primary: '√', second: 'x²', alpha: 'W' },
-    { action: '7', primary: '7', second: 'u', alpha: 'A' },
+    { action: '7', secondAction: 'comma', primary: '7', second: ',', alpha: 'A' },
     { action: '8', primary: '8', second: 'v', alpha: 'B' },
     { action: '9', primary: '9', second: 'w', alpha: 'C' },
     { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e', alpha: 'D' },
