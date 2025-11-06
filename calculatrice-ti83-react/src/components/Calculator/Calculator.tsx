@@ -516,24 +516,115 @@ export const Calculator: React.FC = () => {
         // Gérer ENTER pour évaluer
         if (action === 'enter' && currentMode === 'NORMAL') {
           try {
-            // Évaluation simple pour la démo
-            const expr = currentInput
+            // Créer un contexte avec toutes les fonctions mathématiques
+            const mathContext = {
+              // Fonctions de base
+              abs: Math.abs,
+              round: Math.round,
+              floor: Math.floor,
+              ceil: Math.ceil,
+              trunc: Math.trunc,
+              sign: Math.sign,
+              min: Math.min,
+              max: Math.max,
+              sqrt: Math.sqrt,
+              cbrt: Math.cbrt,
+
+              // Fonctions trigonométriques
+              sin: Math.sin,
+              cos: Math.cos,
+              tan: Math.tan,
+              asin: Math.asin,
+              acos: Math.acos,
+              atan: Math.atan,
+
+              // Fonctions hyperboliques
+              sinh: Math.sinh,
+              cosh: Math.cosh,
+              tanh: Math.tanh,
+              asinh: Math.asinh,
+              acosh: Math.acosh,
+              atanh: Math.atanh,
+
+              // Fonctions exponentielles et logarithmes
+              exp: Math.exp,
+              log: Math.log,
+              log10: Math.log10,
+              log2: Math.log2,
+              pow: Math.pow,
+
+              // Fonctions personnalisées du service
+              iPart: (x: number) => Math.floor(x),
+              fPart: (x: number) => x - Math.floor(x),
+              int: (x: number) => Math.trunc(x),
+              mod: (a: number, b: number) => ((a % b) + b) % b,
+              hypot: Math.hypot,
+
+              // Fonctions de probabilité via le service
+              gcd: (a: number, b: number) => {
+                a = Math.abs(Math.floor(a));
+                b = Math.abs(Math.floor(b));
+                while (b !== 0) {
+                  const temp = b;
+                  b = a % b;
+                  a = temp;
+                }
+                return a;
+              },
+              lcm: (a: number, b: number) => {
+                const gcdVal = mathContext.gcd(a, b);
+                return Math.abs((a * b) / gcdVal);
+              },
+              nPr: (n: number, r: number) => {
+                n = Math.floor(n);
+                r = Math.floor(r);
+                if (r < 0 || r > n) throw new Error('0 ≤ r ≤ n requis');
+                let result = 1;
+                for (let i = 0; i < r; i++) {
+                  result *= (n - i);
+                }
+                return result;
+              },
+              nCr: (n: number, r: number) => {
+                n = Math.floor(n);
+                r = Math.floor(r);
+                if (r < 0 || r > n) throw new Error('0 ≤ r ≤ n requis');
+                if (r > n - r) r = n - r;
+                let result = 1;
+                for (let i = 0; i < r; i++) {
+                  result *= (n - i);
+                  result /= (i + 1);
+                }
+                return Math.round(result);
+              },
+
+              // Constantes
+              PI: Math.PI,
+              E: Math.E,
+            };
+
+            // Préparer l'expression
+            let expr = currentInput
               .replace(/×/g, '*')
               .replace(/÷/g, '/')
-              .replace(/π/g, Math.PI.toString())
+              .replace(/π/g, 'PI')
               .replace(/\^/g, '**')
-              .replace(/√\(/g, 'Math.sqrt(')
-              .replace(/sin\(/g, 'Math.sin(')
-              .replace(/cos\(/g, 'Math.cos(')
-              .replace(/tan\(/g, 'Math.tan(')
-              .replace(/ln\(/g, 'Math.log(')
-              .replace(/log\(/g, 'Math.log10(')
+              .replace(/√\(/g, 'sqrt(')
+              .replace(/³√\(/g, 'cbrt(')
               .replace(/X/g, '0'); // Pour l'instant, X = 0 en mode normal
 
-            const result = Function('"use strict"; return (' + expr + ')')();
+            // Créer une fonction avec le contexte mathématique
+            const funcBody = Object.keys(mathContext)
+              .map(key => `const ${key} = mathContext.${key};`)
+              .join('\n') + '\nreturn (' + expr + ');';
+
+            const evalFunc = new Function('mathContext', funcBody);
+            const result = evalFunc(mathContext);
+
             addToHistory(`${currentInput} = ${result}`);
             setInput(result.toString());
           } catch (error) {
+            console.error('Erreur d\'évaluation:', error);
             addToHistory(`${currentInput} = ERREUR`);
             setInput('ERREUR');
           }
