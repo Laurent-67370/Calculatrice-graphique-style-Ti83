@@ -15,6 +15,11 @@ interface CalculatorStore extends CalculatorState {
   // Configuration
   config: CalculatorConfig;
 
+  // État du mode TRACE
+  isTraceMode: boolean;
+  traceX: number;
+  traceFunctionIndex: number;
+
   // Actions pour l'affichage
   setInput: (input: string) => void;
   appendInput: (value: string) => void;
@@ -28,6 +33,9 @@ interface CalculatorStore extends CalculatorState {
   toggleSecondFunction: () => void;
   toggleAlphaMode: () => void;
   setGraphMode: (isGraph: boolean) => void;
+  setTraceMode: (isTrace: boolean) => void;
+  setTraceX: (x: number) => void;
+  setTraceFunctionIndex: (index: number) => void;
 
   // Actions pour les fonctions graphiques
   setCurrentFunction: (index: number) => void;
@@ -97,6 +105,11 @@ export const useCalculatorStore = create<CalculatorStore>()(
       ...initialState,
       config: initialConfig,
 
+      // État initial du mode TRACE
+      isTraceMode: false,
+      traceX: 0,
+      traceFunctionIndex: 0,
+
       // Actions pour l'affichage
       setInput: (input: string) =>
         set({ currentInput: input }, false, 'setInput'),
@@ -142,6 +155,15 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       setGraphMode: (isGraph: boolean) =>
         set({ isGraphMode: isGraph }, false, 'setGraphMode'),
+
+      setTraceMode: (isTrace: boolean) =>
+        set({ isTraceMode: isTrace }, false, 'setTraceMode'),
+
+      setTraceX: (x: number) =>
+        set({ traceX: x }, false, 'setTraceX'),
+
+      setTraceFunctionIndex: (index: number) =>
+        set({ traceFunctionIndex: index }, false, 'setTraceFunctionIndex'),
 
       // Actions pour les fonctions graphiques
       setCurrentFunction: (index: number) =>

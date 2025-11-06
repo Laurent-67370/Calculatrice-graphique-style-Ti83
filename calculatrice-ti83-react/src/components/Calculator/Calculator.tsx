@@ -7,6 +7,7 @@ import { useCalculatorStore } from '../../store/calculatorStore';
 import { Display } from './Display';
 import { Keyboard } from './Keyboard';
 import { GraphCanvas } from '../Graph/GraphCanvas';
+import { TraceCanvas } from '../Graph/TraceCanvas';
 import { Menu } from '../Menus/Menu';
 import { WindowEditor } from '../Editors/WindowEditor';
 import { ModeEditor } from '../Editors/ModeEditor';
@@ -26,6 +27,9 @@ export const Calculator: React.FC = () => {
     isSecondFunction,
     isAlphaMode,
     isGraphMode,
+    isTraceMode,
+    traceX,
+    traceFunctionIndex,
     graphFunctions,
     activeFunctions,
     windowSettings,
@@ -40,6 +44,9 @@ export const Calculator: React.FC = () => {
     toggleSecondFunction,
     toggleAlphaMode,
     setGraphMode,
+    setTraceMode,
+    setTraceX,
+    setTraceFunctionIndex,
     setFunctionExpression,
     currentFunction,
     setCurrentFunction,
@@ -143,6 +150,46 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer les touches fléchées en mode TRACE
+      if (isTraceMode && isGraphMode) {
+        if (action === 'left') {
+          // Déplacer le curseur vers la gauche
+          const step = (windowSettings.xMax - windowSettings.xMin) / 100; // 1% de la plage
+          setTraceX(Math.max(windowSettings.xMin, traceX - step));
+          return;
+        }
+        if (action === 'right') {
+          // Déplacer le curseur vers la droite
+          const step = (windowSettings.xMax - windowSettings.xMin) / 100;
+          setTraceX(Math.min(windowSettings.xMax, traceX + step));
+          return;
+        }
+        if (action === 'up') {
+          // Passer à la fonction suivante
+          const activeIndices = activeFunctions
+            .map((active, index) => (active ? index : -1))
+            .filter(index => index !== -1);
+          if (activeIndices.length > 1) {
+            const currentPos = activeIndices.indexOf(traceFunctionIndex);
+            const nextPos = (currentPos + 1) % activeIndices.length;
+            setTraceFunctionIndex(activeIndices[nextPos]);
+          }
+          return;
+        }
+        if (action === 'down') {
+          // Passer à la fonction précédente
+          const activeIndices = activeFunctions
+            .map((active, index) => (active ? index : -1))
+            .filter(index => index !== -1);
+          if (activeIndices.length > 1) {
+            const currentPos = activeIndices.indexOf(traceFunctionIndex);
+            const nextPos = (currentPos - 1 + activeIndices.length) % activeIndices.length;
+            setTraceFunctionIndex(activeIndices[nextPos]);
+          }
+          return;
+        }
+      }
+
       // Gérer 2ND et ALPHA
       if (action === '2nd') {
         toggleSecondFunction();
@@ -171,6 +218,38 @@ export const Calculator: React.FC = () => {
       // Gérer GRAPH
       if (action === 'graph') {
         setGraphMode(true);
+        setTraceMode(false);
+        setMode('NORMAL');
+        return;
+      }
+
+      // Gérer TRACE
+      if (action === 'trace') {
+        // Activer le mode TRACE si on est en mode graphique ou passer en mode graphique avec TRACE
+        if (isGraphMode) {
+          // Basculer le mode TRACE
+          setTraceMode(!isTraceMode);
+          // Initialiser le curseur au milieu de la fenêtre
+          if (!isTraceMode) {
+            const midX = (windowSettings.xMin + windowSettings.xMax) / 2;
+            setTraceX(midX);
+            // Trouver la première fonction active
+            const firstActiveIndex = activeFunctions.findIndex(active => active);
+            if (firstActiveIndex !== -1) {
+              setTraceFunctionIndex(firstActiveIndex);
+            }
+          }
+        } else {
+          // Si pas en mode graphique, activer graphique + trace
+          setGraphMode(true);
+          setTraceMode(true);
+          const midX = (windowSettings.xMin + windowSettings.xMax) / 2;
+          setTraceX(midX);
+          const firstActiveIndex = activeFunctions.findIndex(active => active);
+          if (firstActiveIndex !== -1) {
+            setTraceFunctionIndex(firstActiveIndex);
+          }
+        }
         setMode('NORMAL');
         return;
       }
@@ -315,10 +394,15 @@ export const Calculator: React.FC = () => {
       currentMode,
       currentFunction,
       graphFunctions,
+      activeFunctions,
       currentMenu,
       currentMenuItems,
       menuSelectedIndex,
       windowSettings,
+      isGraphMode,
+      isTraceMode,
+      traceX,
+      traceFunctionIndex,
       appendInput,
       clearInput,
       deleteLastChar,
@@ -328,9 +412,13 @@ export const Calculator: React.FC = () => {
       toggleSecondFunction,
       toggleAlphaMode,
       setGraphMode,
+      setTraceMode,
+      setTraceX,
+      setTraceFunctionIndex,
       setFunctionExpression,
       setCurrentFunction,
       setCurrentMenu,
+      setWindowSettings,
       navigateMenu,
       zoomHandlers,
       mathHandlers,
@@ -444,6 +532,19 @@ export const Calculator: React.FC = () => {
 
     // Si mode graphique
     if (isGraphMode) {
+      // Si mode TRACE activé, utiliser TraceCanvas
+      if (isTraceMode) {
+        return (
+          <TraceCanvas
+            functions={graphFunctionsData}
+            window={windowSettings}
+            angleMode={config.angleMode}
+            traceX={traceX}
+            traceFunctionIndex={traceFunctionIndex}
+          />
+        );
+      }
+      // Sinon, affichage graphique normal
       return (
         <GraphCanvas
           functions={graphFunctionsData}

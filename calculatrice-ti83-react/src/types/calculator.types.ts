@@ -18,7 +18,8 @@ export type CalculatorMode =
   | 'CALC_DERIV'
   | 'CALC_INTEGRAL_LOWER'
   | 'CALC_INTEGRAL_UPPER'
-  | 'ZOOM';
+  | 'ZOOM'
+  | 'TRACE';
 
 // Actions possibles sur les touches
 export type KeyAction =
