@@ -20,13 +20,19 @@ interface CalculatorStore extends CalculatorState {
   traceX: number;
   traceFunctionIndex: number;
 
+  // État de l'input
+  isInputResult: boolean; // Indique si l'input actuel est un résultat de calcul
+  cursorPosition: number; // Position du curseur dans l'input
+
   // Actions pour l'affichage
   setInput: (input: string) => void;
+  setInputResult: (input: string) => void; // Marque l'input comme résultat de calcul
   appendInput: (value: string) => void;
   clearInput: () => void;
   deleteLastChar: () => void;
   addToHistory: (entry: string) => void;
   clearHistory: () => void;
+  setCursorPosition: (position: number) => void;
 
   // Actions pour les modes
   setMode: (mode: CalculatorMode) => void;
@@ -113,24 +119,59 @@ export const useCalculatorStore = create<CalculatorStore>()(
       traceX: 0,
       traceFunctionIndex: 0,
 
+      // État initial de l'input
+      isInputResult: false,
+      cursorPosition: 1, // Au début, curseur à la fin de "0"
+
       // Actions pour l'affichage
       setInput: (input: string) =>
-        set({ currentInput: input }, false, 'setInput'),
+        set({ currentInput: input, isInputResult: false, cursorPosition: input.length }, false, 'setInput'),
+
+      setInputResult: (input: string) =>
+        set({ currentInput: input, isInputResult: true, cursorPosition: input.length }, false, 'setInputResult'),
 
       appendInput: (value: string) =>
-        set((state) => ({
-          currentInput: state.currentInput === '0' ? value : state.currentInput + value,
-        }), false, 'appendInput'),
+        set((state) => {
+          // Si l'input actuel est un résultat, remplacer par la nouvelle valeur
+          if (state.isInputResult) {
+            return {
+              currentInput: value,
+              isInputResult: false,
+              cursorPosition: value.length,
+            };
+          }
+
+          // Sinon, insérer à la position du curseur
+          const before = state.currentInput.slice(0, state.cursorPosition);
+          const after = state.currentInput.slice(state.cursorPosition);
+          const newInput = state.currentInput === '0' ? value : before + value + after;
+
+          return {
+            currentInput: newInput,
+            isInputResult: false,
+            cursorPosition: state.currentInput === '0' ? value.length : state.cursorPosition + value.length,
+          };
+        }, false, 'appendInput'),
 
       deleteLastChar: () =>
-        set((state) => ({
-          currentInput: state.currentInput.length > 1
-            ? state.currentInput.slice(0, -1)
-            : '0',
-        }), false, 'deleteLastChar'),
+        set((state) => {
+          if (state.cursorPosition === 0) return state; // Rien à supprimer avant le curseur
+
+          const newInput = state.currentInput.length > 1
+            ? state.currentInput.slice(0, state.cursorPosition - 1) + state.currentInput.slice(state.cursorPosition)
+            : '0';
+
+          return {
+            currentInput: newInput,
+            cursorPosition: newInput === '0' ? 1 : Math.max(0, state.cursorPosition - 1),
+          };
+        }, false, 'deleteLastChar'),
 
       clearInput: () =>
-        set({ currentInput: '0' }, false, 'clearInput'),
+        set({ currentInput: '0', cursorPosition: 1 }, false, 'clearInput'),
+
+      setCursorPosition: (position: number) =>
+        set({ cursorPosition: position }, false, 'setCursorPosition'),
 
       addToHistory: (entry: string) =>
         set((state) => ({

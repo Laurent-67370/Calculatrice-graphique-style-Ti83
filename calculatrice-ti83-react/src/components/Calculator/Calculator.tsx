@@ -42,7 +42,9 @@ export const Calculator: React.FC = () => {
     activeFunctions,
     windowSettings,
     config,
+    // cursorPosition et setCursorPosition sont gérés automatiquement par le store
     setInput,
+    setInputResult,
     appendInput,
     deleteLastChar,
     clearInput,
@@ -622,7 +624,7 @@ export const Calculator: React.FC = () => {
             const result = evalFunc(mathContext);
 
             addToHistory(`${currentInput} = ${result}`);
-            setInput(result.toString());
+            setInputResult(result.toString()); // Marquer comme résultat pour le remplacer lors du prochain input
           } catch (error) {
             console.error('Erreur d\'évaluation:', error);
             addToHistory(`${currentInput} = ERREUR`);
@@ -660,6 +662,7 @@ export const Calculator: React.FC = () => {
       clearInput,
       deleteLastChar,
       setInput,
+      setInputResult,
       addToHistory,
       setMode,
       toggleSecondFunction,
