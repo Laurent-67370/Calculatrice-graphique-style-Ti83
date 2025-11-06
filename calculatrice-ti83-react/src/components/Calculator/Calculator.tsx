@@ -2,7 +2,7 @@
  * Composant principal de la calculatrice TI-83 Plus
  */
 
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useCalculatorStore } from '../../store/calculatorStore';
 import { Display } from './Display';
 import { Keyboard } from './Keyboard';
@@ -11,6 +11,7 @@ import { TraceCanvas } from '../Graph/TraceCanvas';
 import { Menu } from '../Menus/Menu';
 import { WindowEditor, type WindowEditorHandle } from '../Editors/WindowEditor';
 import { ModeEditor, type ModeEditorHandle } from '../Editors/ModeEditor';
+import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
@@ -20,6 +21,9 @@ import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
 export const Calculator: React.FC = () => {
+  // State pour le modal d'aide
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+
   // Refs pour contrôler les éditeurs depuis le clavier virtuel
   const windowEditorRef = useRef<WindowEditorHandle>(null);
   const modeEditorRef = useRef<ModeEditorHandle>(null);
@@ -718,6 +722,15 @@ export const Calculator: React.FC = () => {
   return (
     <div className="ti83-calculator">
       <div className="ti83-body">
+        {/* Bouton d'aide */}
+        <button
+          className="calculator-help-button"
+          onClick={() => setIsHelpOpen(true)}
+          title="Aide à l'utilisation"
+        >
+          ?
+        </button>
+
         {/* Écran */}
         <div className="ti83-screen">
           {renderScreen()}
@@ -730,6 +743,12 @@ export const Calculator: React.FC = () => {
           isAlphaActive={isAlphaMode}
         />
       </div>
+
+      {/* Modal d'aide */}
+      <HelpModal
+        isOpen={isHelpOpen}
+        onClose={() => setIsHelpOpen(false)}
+      />
     </div>
   );
 };
