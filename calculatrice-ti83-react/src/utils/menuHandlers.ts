@@ -387,9 +387,32 @@ export const createCalcHandlers = (
 ) => ({
   'value': () => {
     // Calculer f(x) pour un X donné
-    // TODO: Implémenter avec prompt utilisateur
-    addToHistory('value: Entrez X avec prompt');
-    setCurrentMenu(null);
+    try {
+      const activeFuncIndex = activeFunctions.findIndex(active => active);
+      if (activeFuncIndex === -1) {
+        addToHistory('Erreur: Aucune fonction active');
+        setCurrentMenu(null);
+        return;
+      }
+
+      const expression = graphFunctions[activeFuncIndex];
+      // Utiliser le centre de la fenêtre comme valeur par défaut
+      const x = (windowSettings.xMin + windowSettings.xMax) / 2;
+
+      const result = graphingEngine.calculateValue(expression, x, angleMode);
+
+      if (result && result.y !== undefined && result.y !== null) {
+        addToHistory(`f(${x.toFixed(4)}):`);
+        addToHistory(`Y=${result.y.toFixed(6)}`);
+      } else {
+        addToHistory('Erreur: Valeur indéfinie');
+      }
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors du calcul de la valeur');
+      setCurrentMenu(null);
+    }
   },
 
   'zero': () => {
@@ -492,16 +515,68 @@ export const createCalcHandlers = (
 
   'intersect': () => {
     // Trouver l'intersection de deux fonctions
-    // TODO: Implémenter recherche d'intersection
-    addToHistory('intersect: À implémenter');
-    setCurrentMenu(null);
+    try {
+      const activeFuncs = activeFunctions
+        .map((active, index) => ({ active, index, expr: graphFunctions[index] }))
+        .filter(f => f.active && f.expr);
+
+      if (activeFuncs.length < 2) {
+        addToHistory('Erreur: Au moins 2 fonctions actives requises');
+        setCurrentMenu(null);
+        return;
+      }
+
+      // Utiliser les deux premières fonctions actives
+      const func1 = activeFuncs[0].expr;
+      const func2 = activeFuncs[1].expr;
+
+      const result = graphingEngine.findIntersection(
+        func1,
+        func2,
+        windowSettings.xMin,
+        windowSettings.xMax,
+        angleMode
+      );
+
+      if (result && result.y !== null) {
+        addToHistory(`Intersection trouvée:`);
+        addToHistory(`X=${result.x.toFixed(6)}`);
+        addToHistory(`Y=${result.y.toFixed(6)}`);
+      } else {
+        addToHistory('Aucune intersection trouvée dans cet intervalle');
+      }
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors de la recherche d\'intersection');
+      setCurrentMenu(null);
+    }
   },
 
   'dy-dx': () => {
     // Calculer la dérivée en un point
-    // TODO: Implémenter avec prompt pour X
-    addToHistory('dy/dx: À implémenter avec prompt');
-    setCurrentMenu(null);
+    try {
+      const activeFuncIndex = activeFunctions.findIndex(active => active);
+      if (activeFuncIndex === -1) {
+        addToHistory('Erreur: Aucune fonction active');
+        setCurrentMenu(null);
+        return;
+      }
+
+      const expression = graphFunctions[activeFuncIndex];
+      // Utiliser le centre de la fenêtre comme point d'évaluation
+      const x = (windowSettings.xMin + windowSettings.xMax) / 2;
+
+      const derivative = graphingEngine.derivative(expression, x, angleMode);
+
+      addToHistory(`dy/dx en X=${x.toFixed(4)}:`);
+      addToHistory(`Dérivée = ${derivative.toFixed(6)}`);
+
+      setCurrentMenu(null);
+    } catch (error) {
+      addToHistory('Erreur lors du calcul de la dérivée');
+      setCurrentMenu(null);
+    }
   },
 
   'integral': () => {

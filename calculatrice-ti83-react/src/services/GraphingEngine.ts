@@ -475,6 +475,101 @@ export class GraphingEngine {
       yScale: window.yScale * factor,
     };
   }
+
+  /**
+   * Calcule la dérivée numérique en un point (dy/dx)
+   * Utilise la méthode des différences centrées
+   */
+  derivative(
+    expression: string,
+    x: number,
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE',
+    h = 1e-6
+  ): number {
+    try {
+      const yPlus = this.evaluateFunction(expression, x + h, angleMode);
+      const yMinus = this.evaluateFunction(expression, x - h, angleMode);
+      return (yPlus - yMinus) / (2 * h);
+    } catch (error) {
+      throw new Error('Erreur lors du calcul de la dérivée');
+    }
+  }
+
+  /**
+   * Trouve l'intersection de deux fonctions
+   * Utilise la méthode de Newton-Raphson sur f(x) - g(x) = 0
+   */
+  findIntersection(
+    expression1: string,
+    expression2: string,
+    xMin: number,
+    xMax: number,
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE',
+    maxIterations = 100
+  ): FunctionEvaluation | null {
+    // Créer la fonction différence h(x) = f(x) - g(x)
+    const differenceFunc = (x: number): number => {
+      const y1 = this.evaluateFunction(expression1, x, angleMode);
+      const y2 = this.evaluateFunction(expression2, x, angleMode);
+      return y1 - y2;
+    };
+
+    // Chercher plusieurs points de départ
+    const numStarts = 5;
+    const step = (xMax - xMin) / numStarts;
+
+    for (let i = 0; i < numStarts; i++) {
+      let x = xMin + i * step + step / 2;
+
+      try {
+        // Méthode de Newton-Raphson
+        for (let iter = 0; iter < maxIterations; iter++) {
+          const h = 1e-6;
+          const y = differenceFunc(x);
+
+          if (Math.abs(y) < 1e-6) {
+            // Vérifier que c'est dans l'intervalle
+            if (x >= xMin && x <= xMax) {
+              const y1 = this.evaluateFunction(expression1, x, angleMode);
+              return { x, y: y1 };
+            }
+            break;
+          }
+
+          // Calculer la dérivée numériquement
+          const yPlus = differenceFunc(x + h);
+          const derivative = (yPlus - y) / h;
+
+          if (Math.abs(derivative) < 1e-10) {
+            break; // Dérivée trop petite
+          }
+
+          const xNew = x - y / derivative;
+
+          // Vérifier la convergence
+          if (Math.abs(xNew - x) < 1e-8) {
+            if (xNew >= xMin && xNew <= xMax && Math.abs(differenceFunc(xNew)) < 1e-6) {
+              const y1 = this.evaluateFunction(expression1, xNew, angleMode);
+              return { x: xNew, y: y1 };
+            }
+            break;
+          }
+
+          x = xNew;
+
+          // Arrêter si on sort de l'intervalle
+          if (x < xMin || x > xMax) {
+            break;
+          }
+        }
+      } catch (error) {
+        // Essayer le prochain point de départ
+        continue;
+      }
+    }
+
+    return null; // Aucune intersection trouvée
+  }
 }
 
 // Export singleton

@@ -317,6 +317,79 @@ export class MathFunctionsService {
   remainder(a: number, b: number): number {
     return a % b;
   }
+
+  // Arrondi supérieur (ceil)
+  ceil(x: number): number {
+    return Math.ceil(x);
+  }
+
+  // Arrondi inférieur (floor)
+  floor(x: number): number {
+    return Math.floor(x);
+  }
+
+  // Signe d'un nombre (-1, 0, 1)
+  sign(x: number): number {
+    return Math.sign(x);
+  }
+
+  // Troncature (supprime la partie décimale)
+  trunc(x: number): number {
+    return Math.trunc(x);
+  }
+
+  // Hypoténuse : √(x² + y²)
+  hypot(x: number, y: number): number {
+    return Math.hypot(x, y);
+  }
+
+  // Logarithme en base quelconque
+  logBase(x: number, base: number): number {
+    return Math.log(x) / Math.log(base);
+  }
+
+  // Cube root (racine cubique)
+  cbrt(x: number): number {
+    return Math.cbrt(x);
+  }
+
+  // Exponentiation e^x
+  exp(x: number): number {
+    return Math.exp(x);
+  }
+
+  // Puissance de 10 : 10^x
+  pow10(x: number): number {
+    return Math.pow(10, x);
+  }
+
+  // Conversion degrés → radians
+  degreesToRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
+
+  // Conversion radians → degrés
+  radiansToDegrees(radians: number): number {
+    return radians * (180 / Math.PI);
+  }
+
+  // Nombre aléatoire normal (distribution normale)
+  randNorm(μ = 0, σ = 1): number {
+    // Box-Muller transform
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    return μ + σ * z0;
+  }
+
+  // Nombre aléatoire binomial
+  randBin(n: number, p: number): number {
+    let count = 0;
+    for (let i = 0; i < n; i++) {
+      if (Math.random() < p) count++;
+    }
+    return count;
+  }
 }
 
 // Export singleton

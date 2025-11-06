@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 18**, **TypeScript 5.6**, et **Vite**.
 
-![Version](https://img.shields.io/badge/version-2.0.3-blue)
+![Version](https://img.shields.io/badge/version-2.0.4-blue)
 ![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
@@ -14,32 +14,39 @@ Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'inte
 
 Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une architecture moderne, type-safe et performante.
 
-**🎯 État du Projet : ~92% Complété**
+**🎯 État du Projet : ~94% Complété**
 - ✅ Backend (Services) : 100%
 - ✅ Frontend (UI/UX) : 95%
 - ✅ Menu STAT : **100% complet** (14/14 fonctions) 🎉
+- ✅ Menu CALC : **100% complet** (7/7 fonctions) 🎉
 - ✅ Prêt pour production
 
 **📍 Démo en ligne :** [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
 
 ---
 
-## 🎉 Nouveautés Version 2.0.3
+## 🎉 Nouveautés Version 2.0.4
 
-### Menu STAT 100% Complet !
+### Menu CALC 100% Complet !
 
-Cette version complète à **100%** le menu STAT avec l'ajout de 6 nouvelles fonctions de régression avancées :
+Cette version complète à **100%** le menu CALC avec l'implémentation de 3 fonctions manquantes :
 
-1. **Med-Med** - Régression médiane-médiane (résistante aux outliers)
-2. **CubicReg** - Régression cubique (y = ax³ + bx² + cx + d)
-3. **QuartReg** - Régression quartique (degré 4)
-4. **LinReg(a+bx)** - Régression linéaire (notation alternative)
-5. **SinReg** - Régression sinusoïdale (y = a·sin(bx+c)+d)
-6. **Logistic** - Régression logistique (courbe en S)
+1. **value** - Calculer f(x) pour une valeur donnée
+2. **dy/dx** - Dérivée numérique (différences centrées)
+3. **intersect** - Intersection de deux fonctions (Newton-Raphson)
+
+### 15 Nouvelles Fonctions MATH
+
+Ajout de fonctions mathématiques avancées :
+- **ceil, floor, sign, trunc** - Arrondis et troncature
+- **hypot, cbrt, exp, pow10** - Fonctions exponentielles
+- **logBase** - Logarithme en base quelconque
+- **degreesToRadians, radiansToDegrees** - Conversions angulaires
+- **randNorm, randBin** - Distributions aléatoires
 
 **Performance :**
-- Build : 1.13s
-- JS : 252.94 KB (78.45 KB gzippé)
+- Build : 1.24s
+- JS : 255.17 KB (79.21 KB gzippé)
 - CSS : 9.50 KB (2.47 KB gzippé)
 
 ---
@@ -187,12 +194,15 @@ tar -xzf /tmp/calculatrice-ti83-deploy.tar.gz -C /var/www/html/calculatrice/
 - **binompdf()** - Loi binomiale (densité)
 - **binomcdf()** - Loi binomiale (cumulative)
 
-### ✅ Menu CALC (Calculs sur courbes)
+### ✅ Menu CALC (Calculs sur courbes) - 100% Complet ! 🎉
 
-- **zero** - Recherche de zéro
-- **minimum** - Recherche de minimum
+- **value** - Calculer f(x) ✨ **Nouveau !**
+- **zero** - Recherche de zéro (Newton-Raphson)
+- **minimum** - Recherche de minimum (section dorée)
 - **maximum** - Recherche de maximum
-- **∫f(x)dx** - Intégrale définie
+- **intersect** - Intersection de 2 fonctions ✨ **Nouveau !**
+- **dy/dx** - Dérivée numérique ✨ **Nouveau !**
+- **∫f(x)dx** - Intégrale définie (règle de Simpson)
 
 ### ✅ Éditeur MODE
 
@@ -273,26 +283,27 @@ calculatrice-ti83-react/
 ## 📊 Statistiques du Projet
 
 ### Code
-- **4,385+ lignes** de TypeScript
+- **4,556+ lignes** de TypeScript
 - **540+ lignes** de CSS
 - **14 composants** React
 - **3 services** backend
-- **58+ fonctions** mathématiques
+- **115+ fonctions** mathématiques
 
 ### Fonctionnalités
 - ✅ **Calculatrice de base** : 100%
 - ✅ **Mode graphique** : 95%
-- ✅ **Statistiques** : **100%** (14/14)
-- ✅ **Math avancées** : 90%
+- ✅ **Statistiques (STAT)** : **100%** (14/14)
+- ✅ **Calculs (CALC)** : **100%** (7/7)
+- ✅ **Math avancées** : 95%
 - ✅ **Éditeurs** : 95%
 - ⬜ **Programmation** : 0% (non prévu)
 
-**Complétion totale : ~92%**
+**Complétion totale : ~94%**
 
 ### Performance
-- **Build time** : 1.13s
+- **Build time** : 1.24s
 - **Hot reload** : < 50ms
-- **Bundle JS** : 252.94 KB (78.45 KB gzippé)
+- **Bundle JS** : 255.17 KB (79.21 KB gzippé)
 - **Bundle CSS** : 9.50 KB (2.47 KB gzippé)
 - **Lighthouse score** : 95+
 
@@ -302,7 +313,8 @@ calculatrice-ti83-react/
 
 ### Guides Disponibles
 
-- **[RELEASE_NOTES_v2.0.3.md](./RELEASE_NOTES_v2.0.3.md)** - Notes de version complètes
+- **[RELEASE_NOTES_v2.0.4.md](./RELEASE_NOTES_v2.0.4.md)** - Notes de version v2.0.4 (dernière)
+- **[RELEASE_NOTES_v2.0.3.md](./RELEASE_NOTES_v2.0.3.md)** - Notes de version v2.0.3
 - **[DOWNLOAD_AND_DEPLOY.md](./DOWNLOAD_AND_DEPLOY.md)** - Guide de téléchargement et déploiement
 - **[GITHUB_RELEASE_INSTRUCTIONS.md](./GITHUB_RELEASE_INSTRUCTIONS.md)** - Instructions pour créer une release
 
@@ -393,7 +405,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.0.3** | **6 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.0.4** | **6 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
