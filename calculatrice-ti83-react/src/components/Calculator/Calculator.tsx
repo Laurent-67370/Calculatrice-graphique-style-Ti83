@@ -58,6 +58,7 @@ export const Calculator: React.FC = () => {
     lastAnswer,
     isInputResult,
     matrices,
+    variables,
     // cursorPosition et setCursorPosition sont gérés automatiquement par le store
     setInput,
     setInputResult,
@@ -85,6 +86,8 @@ export const Calculator: React.FC = () => {
     navigateMenu,
     enterSubmenu,
     exitSubmenu,
+    setVariable,
+    getVariable,
   } = useCalculatorStore();
 
   // Supprimer warnings pour services importés
@@ -178,6 +181,13 @@ export const Calculator: React.FC = () => {
               handler = (statHandlers as any)[currentItem.id];
             } else if (currentMenu === 'CALC') {
               handler = (calcHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'RCL') {
+              // Menu RCL : insérer la variable sélectionnée dans l'input
+              const varName = currentItem.label;
+              handler = () => {
+                appendInput(varName);
+                setCurrentMenu(null);
+              };
             }
 
             // Exécuter le handler s'il existe
@@ -725,8 +735,16 @@ export const Calculator: React.FC = () => {
         }
 
         if (action === 'rcl') {
-          // RCL rappelle une variable (pour l'instant, juste ignorer)
-          console.log('RCL non implémenté');
+          // RCL : ouvrir un menu pour sélectionner une variable
+          const varLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+          const rclMenuItems = varLetters.map(letter => ({
+            id: `var-${letter}`,
+            label: letter,
+            value: getVariable(letter),
+          }));
+
+          setCurrentMenu('RCL');
+          enterSubmenu(rclMenuItems);
           return;
         }
 
@@ -745,8 +763,20 @@ export const Calculator: React.FC = () => {
         // Gérer ENTER pour évaluer
         if (action === 'enter' && currentMode === 'NORMAL') {
           try {
+            // Détecter si c'est un stockage de variable (→)
+            const storeMatch = currentInput.match(/^(.+)→([A-Z])$/);
+
+            let expr = currentInput;
+            let varName: string | null = null;
+
+            if (storeMatch) {
+              // C'est un stockage de variable : expression→VarName
+              expr = storeMatch[1].trim();
+              varName = storeMatch[2];
+            }
+
             // Préparer l'expression
-            let expr = currentInput
+            expr = expr
               .replace(/×/g, '*')
               .replace(/÷/g, '/')
               .replace(/π/g, 'pi')
@@ -763,6 +793,13 @@ export const Calculator: React.FC = () => {
               // Constantes
               e: Math.E,
             };
+
+            // Ajouter les variables utilisateur au scope
+            Object.entries(variables).forEach(([name, value]) => {
+              if (typeof value === 'number') {
+                scope[name] = value;
+              }
+            });
 
             // Ajouter les matrices au scope
             matrixNames.forEach(name => {
@@ -817,8 +854,16 @@ export const Calculator: React.FC = () => {
               resultStr = result.toString();
             }
 
-            addToHistory(`${currentInput} = ${resultStr}`);
-            setInputResult(resultStr); // Marquer comme résultat pour le remplacer lors du prochain input
+            // Si c'est un stockage de variable, stocker la valeur
+            if (varName && typeof result === 'number') {
+              setVariable(varName, result);
+              addToHistory(`${currentInput} = ${resultStr}`);
+              setInputResult(resultStr); // Afficher le résultat
+            } else {
+              addToHistory(`${currentInput} = ${resultStr}`);
+              setInputResult(resultStr); // Marquer comme résultat pour le remplacer lors du prochain input
+            }
+
             setLastAnswer(resultStr); // Sauvegarder le résultat pour la touche ANS
           } catch (error) {
             console.error('Erreur d\'évaluation:', error);
@@ -846,6 +891,7 @@ export const Calculator: React.FC = () => {
       lastAnswer,
       isInputResult,
       matrices,
+      variables,
       appendInput,
       clearInput,
       deleteLastChar,
@@ -858,6 +904,7 @@ export const Calculator: React.FC = () => {
       toggleAlphaMode,
       setGraphMode,
       setTraceMode,
+      setVariable,
       setTraceX,
       setTraceFunctionIndex,
       setFunctionExpression,
@@ -865,6 +912,8 @@ export const Calculator: React.FC = () => {
       setCurrentMenu,
       setWindowSettings,
       navigateMenu,
+      enterSubmenu,
+      getVariable,
       zoomHandlers,
       mathHandlers,
       statHandlers,
