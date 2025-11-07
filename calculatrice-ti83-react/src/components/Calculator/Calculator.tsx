@@ -538,6 +538,20 @@ export const Calculator: React.FC = () => {
           return;
         }
 
+        // Opérateurs arithmétiques qui continuent le calcul avec le résultat
+        const arithmeticOperators: Record<string, string> = {
+          'add': '+',
+          'subtract': '−',
+          'multiply': '×',
+          'divide': '÷',
+        };
+
+        if (arithmeticOperators[action] && isInputResult && currentMode === 'NORMAL') {
+          // Si l'input actuel est un résultat, continuer avec ce résultat
+          setInput(`${currentInput}${arithmeticOperators[action]}`);
+          return;
+        }
+
         const operatorMap: Record<string, string> = {
           // Opérateurs arithmétiques
           'add': '+',
