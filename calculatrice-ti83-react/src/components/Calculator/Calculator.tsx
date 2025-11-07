@@ -235,10 +235,7 @@ export const Calculator: React.FC = () => {
       if (action.startsWith('alpha-')) {
         const letter = action.substring(6); // Extraire la lettre après "alpha-"
         appendInput(letter);
-        // Désactiver le mode alpha après avoir tapé une lettre (comportement TI-83)
-        if (isAlphaMode) {
-          toggleAlphaMode();
-        }
+        // Note: Le mode alpha est désactivé automatiquement par handleKeyPressWithAutoDeactivate
         return;
       }
 
