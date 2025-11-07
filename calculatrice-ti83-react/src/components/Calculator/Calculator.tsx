@@ -11,6 +11,8 @@ import { TraceCanvas } from '../Graph/TraceCanvas';
 import { Menu } from '../Menus/Menu';
 import { WindowEditor, type WindowEditorHandle } from '../Editors/WindowEditor';
 import { ModeEditor, type ModeEditorHandle } from '../Editors/ModeEditor';
+import { MemEditor, type MemEditorHandle } from '../Editors/MemEditor';
+import { MatrixEditor, type MatrixEditorHandle } from '../Editors/MatrixEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -27,6 +29,8 @@ export const Calculator: React.FC = () => {
   // Refs pour contrôler les éditeurs depuis le clavier virtuel
   const windowEditorRef = useRef<WindowEditorHandle>(null);
   const modeEditorRef = useRef<ModeEditorHandle>(null);
+  const memEditorRef = useRef<MemEditorHandle>(null);
+  const matrixEditorRef = useRef<MatrixEditorHandle>(null);
   const listEditorRef = useRef<ListEditorHandle>(null);
   const {
     currentInput,
@@ -348,6 +352,20 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer MEM (2ND + +)
+      if (action === 'mem') {
+        setMode('MEM');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer MATRIX (2ND + X⁻¹)
+      if (action === 'matrix') {
+        setMode('MATRIX');
+        setGraphMode(false);
+        return;
+      }
+
       // Gérer QUIT (2ND + MODE)
       if (action === 'quit') {
         // Fermer l'éditeur actuel et revenir en mode normal
@@ -408,6 +426,46 @@ export const Calculator: React.FC = () => {
         if (action === 'clear') {
           // Sauvegarder les changements avant de fermer
           modeEditorRef.current.save();
+          setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode MEM - gérer la navigation via ref
+      if (currentMode === 'MEM' && memEditorRef.current) {
+        if (action === 'up') {
+          memEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          memEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          memEditorRef.current.select();
+          return;
+        }
+        if (action === 'clear') {
+          setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode MATRIX - gérer la navigation via ref
+      if (currentMode === 'MATRIX' && matrixEditorRef.current) {
+        if (action === 'up') {
+          matrixEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          matrixEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          matrixEditorRef.current.select();
+          return;
+        }
+        if (action === 'clear') {
           setMode('NORMAL');
           return;
         }
@@ -915,6 +973,30 @@ export const Calculator: React.FC = () => {
             setMode('NORMAL');
           }}
           onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si l'éditeur MEM est ouvert
+    if (currentMode === 'MEM') {
+      return (
+        <MemEditor
+          ref={memEditorRef}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si l'éditeur MATRIX est ouvert
+    if (currentMode === 'MATRIX') {
+      return (
+        <MatrixEditor
+          ref={matrixEditorRef}
+          onClose={() => setMode('NORMAL')}
+          onEditMatrix={(matrixName) => {
+            // Placeholder pour l'édition d'une matrice
+            alert(`Editing matrix ${matrixName}\n(Matrix editor not yet fully implemented)`);
+          }}
         />
       );
     }

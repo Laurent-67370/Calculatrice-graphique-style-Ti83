@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.5-blue)
+![Version](https://img.shields.io/badge/version-2.2.6-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -25,6 +25,64 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 - ✅ Prêt pour production
 
 **📍 Démo en ligne :** [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
+
+---
+
+## 🧠 Version 2.2.6 - Fonctions MEM & MATRIX ! 📊
+
+### 🚀 Nouvelles Fonctionnalités
+
+Ajout de deux menus essentiels de la TI-83 Plus :
+
+#### 🧠 Menu MEM (2ND + +)
+Accédez à la **gestion de la mémoire** :
+- 📊 **Affichage en temps réel** : RAM libre / RAM utilisée
+- 🔍 **About** : Informations détaillées sur la mémoire
+- ✅ **Check RAM** : Vérifier le statut de la RAM
+- 🔄 **Reset** : Réinitialiser la mémoire
+- 🗑️ **Delete** : Supprimer des variables
+- 📝 **Clear Entries** : Effacer l'historique
+
+#### 📊 Menu MATRIX (2ND + X⁻¹)
+Accédez à la **gestion des matrices** :
+- 📋 **Onglet NAMES** : Sélectionner une matrice ([A] à [J])
+- 🧮 **Onglet MATH** : Opérations mathématiques (det, transpose, dim, fill, etc.)
+- ✏️ **Onglet EDIT** : Éditer une matrice
+- ↔️ **Navigation** : Flèches ↑↓←→ pour naviguer entre onglets
+
+### ✨ Comment Utiliser
+
+**Menu MEM** :
+```
+2ND + + → Menu MEM s'ouvre
+↑↓ → Naviguer dans les options
+ENTER → Sélectionner
+CLEAR → Quitter
+```
+
+**Menu MATRIX** :
+```
+2ND + X⁻¹ → Menu MATRIX s'ouvre
+↑↓ → Naviguer dans la liste
+←→ → Changer d'onglet (NAMES/MATH/EDIT)
+ENTER → Sélectionner
+CLEAR → Quitter
+```
+
+### 🎯 Matrices Disponibles
+
+- **10 matrices** : [A], [B], [C], [D], [E], [F], [G], [H], [I], [J]
+- **Opérations MATH** : det(, T (transpose), dim(, Fill(, identity(, randM(, augment(, etc.
+- **Interface intuitive** avec navigation multi-onglets
+
+### 📦 Hérite de toutes les fonctionnalités v2.2.5
+
+- ✅ Puissance intelligente (^)
+- ✅ Opérateurs intelligents (+, -, ×, ÷)
+- ✅ Modes SECOND et ALPHA auto-désactivés
+- ✅ Corrections ln, log, e^, x (minuscule/majuscule)
+
+**📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.6.md](./DEPLOYMENT_PWA_v2.2.6.md)
 
 ---
 
