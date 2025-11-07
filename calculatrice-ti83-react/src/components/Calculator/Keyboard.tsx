@@ -140,15 +140,16 @@ export const Keyboard: React.FC<KeyboardProps> = ({
 
   const handleKeyClick = (key: Key) => {
     // Déterminer quelle action envoyer
-    let actionToSend = key.action;
+    let actionToSend: string = key.action;
 
     if (isSecondActive && key.secondAction) {
       actionToSend = key.secondAction;
-    } else if (isAlphaActive && key.alphaAction) {
-      actionToSend = key.alphaAction;
+    } else if (isAlphaActive && key.alpha) {
+      // En mode ALPHA, envoyer la lettre directement
+      actionToSend = `alpha-${key.alpha}`;
     }
 
-    onKeyPress(actionToSend);
+    onKeyPress(actionToSend as KeyAction);
   };
 
   return (

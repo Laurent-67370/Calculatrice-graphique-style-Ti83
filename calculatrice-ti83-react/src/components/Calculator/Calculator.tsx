@@ -233,6 +233,17 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer les lettres en mode ALPHA
+      if (action.startsWith('alpha-')) {
+        const letter = action.substring(6); // Extraire la lettre après "alpha-"
+        appendInput(letter);
+        // Désactiver le mode alpha après avoir tapé une lettre (comportement TI-83)
+        if (isAlphaMode) {
+          toggleAlphaMode();
+        }
+        return;
+      }
+
       // Gérer CLEAR (sauf en mode WINDOW, MODE, ou STAT_EDIT qui ont leur propre gestion)
       if (action === 'clear' && currentMode !== 'WINDOW' && currentMode !== 'MODE' && currentMode !== 'STAT_EDIT') {
         clearInput();

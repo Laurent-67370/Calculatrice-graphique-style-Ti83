@@ -49,7 +49,13 @@ export type KeyAction =
   | 'ans' | 'left-brace' | 'right-brace' | 'mem' | 'link'
   | 'ee' | 'catalog' | 'entry' | 'list'
   | 'left-bracket' | 'right-bracket' | 'left-brace-small' | 'right-brace-small'
-  | 'u' | 'v' | 'w' | 'i';
+  | 'u' | 'v' | 'w' | 'i'
+  // Actions pour le mode ALPHA
+  | 'alpha-A' | 'alpha-B' | 'alpha-C' | 'alpha-D' | 'alpha-E' | 'alpha-F' | 'alpha-G'
+  | 'alpha-H' | 'alpha-I' | 'alpha-J' | 'alpha-K' | 'alpha-L' | 'alpha-M' | 'alpha-N'
+  | 'alpha-O' | 'alpha-P' | 'alpha-Q' | 'alpha-R' | 'alpha-S' | 'alpha-T'
+  | 'alpha-U' | 'alpha-V' | 'alpha-W' | 'alpha-X' | 'alpha-Y' | 'alpha-Z'
+  | 'alpha-θ' | 'alpha-n' | 'alpha- ' | 'alpha-:';
 
 // Configuration de l'écran
 export interface DisplayConfig {
