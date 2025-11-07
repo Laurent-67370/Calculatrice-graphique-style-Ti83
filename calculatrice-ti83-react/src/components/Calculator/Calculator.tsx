@@ -714,6 +714,7 @@ export const Calculator: React.FC = () => {
               // Constantes
               PI: Math.PI,
               E: Math.E,
+              e: Math.E,  // Nombre d'Euler (aussi en minuscule)
             };
 
             // Préparer l'expression
