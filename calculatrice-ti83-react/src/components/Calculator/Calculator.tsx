@@ -539,6 +539,7 @@ export const Calculator: React.FC = () => {
           'subtract': '−',
           'multiply': '×',
           'divide': '÷',
+          'pow': '^',
         };
 
         if (arithmeticOperators[action] && isInputResult && currentMode === 'NORMAL') {
