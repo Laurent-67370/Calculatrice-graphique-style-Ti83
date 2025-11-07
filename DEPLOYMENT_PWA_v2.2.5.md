@@ -172,7 +172,7 @@ Après déploiement, votre répertoire `/calculatrice/` devrait contenir :
 ├── vite.svg                           (1.5 KB)
 ├── _redirects                         (24 bytes)
 └── assets/
-    ├── index-DfABt6kj.js              (271.42 KB) ⭐ NOUVEAU (Puissance intelligente)
+    ├── index-BoO2-U_a.js              (271.44 KB) ⭐ NOUVEAU (Puissance intelligente + Corrections ln/log/e^/x)
     ├── index-DpKtdQXP.css             (9.5 KB)
     └── workbox-window.prod.es5-CwtvwXb3.js   (5.76 KB)
 ```
@@ -251,7 +251,7 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 **Solutions :**
 1. **Videz le cache** : Ctrl+Shift+R (hard reload)
 2. **Mettez à jour le SW** : DevTools → Application → Service Workers → Update
-3. **Vérifiez les fichiers** : Le fichier JS doit être `index-DfABt6kj.js` (271.42 KB)
+3. **Vérifiez les fichiers** : Le fichier JS doit être `index-BoO2-U_a.js` (271.44 KB)
 4. **Désinstallez et réinstallez** l'app Android
 
 ---
@@ -260,8 +260,12 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 
 ### Fichiers Modifiés
 
-- ✅ `index-DfABt6kj.js` (271.42 KB) - Puissance intelligente
-- ✅ Calculator.tsx - Ajout de 'pow': '^' aux arithmeticOperators
+- ✅ `index-BoO2-U_a.js` (271.44 KB) - Puissance intelligente + Corrections (ln, log, e^, x)
+- ✅ Calculator.tsx - Ajout de 'pow': '^' aux arithmeticOperators + Corrections mathContext
+  - Ajout de `ln: Math.log` (logarithme naturel)
+  - Correction de `log: Math.log10` (logarithme base 10)
+  - Ajout de `e: Math.E` (constante d'Euler en minuscule)
+  - Correction du remplacement de x : `/[Xx]/g` (minuscule et majuscule)
 - ✅ HelpModal.tsx - Version 2.2.5
 - ✅ README.md - Section v2.2.5
 
@@ -270,7 +274,7 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 - **Build total** : 372 KB
 - **Archive ZIP** : 144 KB
 - **Archive TAR.GZ** : 145 KB
-- **JavaScript** : 271.42 KB (+0.01 KB depuis v2.2.4)
+- **JavaScript** : 271.44 KB (+0.03 KB depuis v2.2.4 - Corrections incluses)
 - **Précache** : 336.39 KB (13 fichiers)
 
 ### Changements Fonctionnels
@@ -278,6 +282,7 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 - **Amélioration importante** : Touche puissance (^) réutilise le résultat
 - **Cohérence complète** : Tous les opérateurs (+, -, ×, ÷, ^) sont intelligents
 - **Calculs en chaîne** : Encore plus fluides avec les puissances
+- **Corrections critiques** : ln, log, x (minuscule) et e (minuscule) fonctionnent correctement
 
 ---
 
@@ -288,6 +293,13 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 - ✅ **Touche puissance (^) intelligente** - Réutilise automatiquement le résultat
 - ✅ Comportement cohérent avec tous les opérateurs arithmétiques
 - ✅ Exemple : `8 = 8` puis `^ 2` → `8^2 = 64`
+
+### Corrections Critiques
+
+- ✅ **Fonction ln** - Logarithme naturel maintenant fonctionnel (ln(10) = 2.302...)
+- ✅ **Fonction log** - Corrigé pour utiliser base 10 (log(100) = 2)
+- ✅ **Variable x** - Gère maintenant x minuscule et X majuscule (2^x, e^x)
+- ✅ **Constante e** - Supporte e minuscule et E majuscule (e^2, E^2)
 
 ### Hérite de toutes les fonctionnalités précédentes
 

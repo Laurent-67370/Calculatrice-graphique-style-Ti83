@@ -660,7 +660,8 @@ export const Calculator: React.FC = () => {
 
               // Fonctions exponentielles et logarithmes
               exp: Math.exp,
-              log: Math.log,
+              ln: Math.log,      // Logarithme naturel (ln)
+              log: Math.log10,   // Logarithme base 10 (log)
               log10: Math.log10,
               log2: Math.log2,
               pow: Math.pow,
@@ -713,6 +714,7 @@ export const Calculator: React.FC = () => {
               // Constantes
               PI: Math.PI,
               E: Math.E,
+              e: Math.E,  // Nombre d'Euler (aussi en minuscule)
             };
 
             // Préparer l'expression
@@ -723,7 +725,7 @@ export const Calculator: React.FC = () => {
               .replace(/\^/g, '**')
               .replace(/√\(/g, 'sqrt(')
               .replace(/³√\(/g, 'cbrt(')
-              .replace(/X/g, '0'); // Pour l'instant, X = 0 en mode normal
+              .replace(/[Xx]/g, '0'); // Pour l'instant, X = 0 en mode normal (majuscule et minuscule)
 
             // Créer une fonction avec le contexte mathématique
             const funcBody = Object.keys(mathContext)
