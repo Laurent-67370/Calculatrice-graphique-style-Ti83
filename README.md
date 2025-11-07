@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.1-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -28,7 +28,36 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 
 ---
 
-## 🎉 Nouveautés Version 2.2.0 - Clavier TI-83 Plus Exact ! ⌨️
+## 🔧 Version 2.2.1 - Correction Mode ALPHA ! 🔤
+
+### 🐛 Bug Critique Corrigé
+
+Le mode ALPHA affichait les lettres sur le clavier mais **insérait les chiffres à la place** !
+
+#### Avant (v2.2.0)
+- ❌ `ALPHA` + `+` (lettre A) → Insérait `+` au lieu de `A`
+- ❌ `ALPHA` + `7` (lettre T) → Insérait `7` au lieu de `T`
+- ❌ Impossible de saisir les lettres dans les expressions
+
+#### Maintenant (v2.2.1)
+- ✅ `ALPHA` + `+` (lettre A) → Insère correctement `A`
+- ✅ Toutes les lettres A-Z fonctionnent parfaitement
+- ✅ Le mode se désactive automatiquement après chaque lettre
+- ✅ Support de θ (theta), n, : (deux-points), espace
+- ✅ Comportement 100% conforme à la TI-83 Plus réelle
+
+### 📝 Corrections Apportées
+
+- **Keyboard.tsx** : Envoi de `alpha-X` quand une touche est pressée en mode ALPHA
+- **calculator.types.ts** : Ajout de 30 types d'actions `alpha-A` à `alpha-Z`
+- **Calculator.tsx** : Détection et insertion de la lettre correspondante
+- **Désactivation auto** : Le mode ALPHA s'éteint après chaque lettre
+
+**📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.1.md](./DEPLOYMENT_PWA_v2.2.1.md)
+
+---
+
+## 🎉 Version 2.2.0 - Clavier TI-83 Plus Exact ! ⌨️
 
 ### ⌨️ Clavier Réorganisé
 
@@ -126,10 +155,10 @@ npm run preview
 
 ### Télécharger les Archives PWA
 
-Les archives de déploiement PWA v2.1.0 sont disponibles sur GitHub :
+Les archives de déploiement PWA v2.2.1 sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.1.0.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/scientific-calculator-ti83-011CUqMQSu5obWhYPHKhcTN3/calculatrice-ti83-pwa-v2.1.0.zip) (142 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.1.0.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/scientific-calculator-ti83-011CUqMQSu5obWhYPHKhcTN3/calculatrice-ti83-pwa-v2.1.0.tar.gz) (140 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.1.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.1.zip) (144 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.1.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.1.tar.gz) (143 KB)
 
 ### Déploiement Rapide
 
@@ -141,13 +170,13 @@ Les archives de déploiement PWA v2.1.0 sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/scientific-calculator-ti83-011CUqMQSu5obWhYPHKhcTN3/calculatrice-ti83-pwa-v2.1.0.tar.gz
-scp calculatrice-ti83-pwa-v2.1.0.tar.gz user@yourserver.com:/tmp/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.1.tar.gz
+scp calculatrice-ti83-pwa-v2.2.1.tar.gz user@yourserver.com:/tmp/
 ssh user@yourserver.com
-tar -xzf /tmp/calculatrice-ti83-pwa-v2.1.0.tar.gz -C /var/www/html/calculatrice/
+tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.1.tar.gz -C /var/www/html/calculatrice/
 ```
 
-📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.1.0.md](./DEPLOYMENT_PWA_v2.1.0.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
+📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.1.md](./DEPLOYMENT_PWA_v2.2.1.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
 
@@ -368,7 +397,9 @@ calculatrice-ti83-react/
 ### Guides Utilisateur
 
 - **[PWA_GUIDE.md](./PWA_GUIDE.md)** - Guide complet PWA (installation, utilisation, dépannage) 📱
-- **[DEPLOYMENT_PWA_v2.1.0.md](./DEPLOYMENT_PWA_v2.1.0.md)** - Guide de déploiement PWA v2.1.0
+- **[DEPLOYMENT_PWA_v2.2.1.md](./DEPLOYMENT_PWA_v2.2.1.md)** - Guide de déploiement PWA v2.2.1 (Mode ALPHA corrigé)
+- **[DEPLOYMENT_PWA_v2.2.0.md](./DEPLOYMENT_PWA_v2.2.0.md)** - Guide de déploiement PWA v2.2.0 (Clavier TI-83 Plus Exact)
+- **[DEPLOYMENT_PWA_v2.1.0.md](./DEPLOYMENT_PWA_v2.1.0.md)** - Guide de déploiement PWA v2.1.0 (PWA initial)
 
 ### Guides Développeur
 
@@ -465,7 +496,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.0 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.1 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
