@@ -123,11 +123,6 @@ export const Calculator: React.FC = () => {
    */
   const handleKeyPress = useCallback(
     (action: KeyAction) => {
-      // Désactiver automatiquement les modes SECOND et ALPHA après cette action
-      // (sauf si c'est la touche 2nd ou alpha elle-même)
-      const shouldDeactivateModes = action !== '2nd' && action !== 'alpha';
-      const wasSecondActive = isSecondFunction;
-      const wasAlphaActive = isAlphaMode;
 
       // Si un menu est ouvert, gérer la navigation
       if (currentMenu) {
@@ -748,16 +743,6 @@ export const Calculator: React.FC = () => {
           return;
         }
       }
-
-      // Désactiver automatiquement le mode SECOND ou ALPHA après utilisation
-      if (shouldDeactivateModes) {
-        if (wasSecondActive) {
-          toggleSecondFunction();
-        }
-        if (wasAlphaActive) {
-          toggleAlphaMode();
-        }
-      }
     },
     [
       currentInput,
@@ -804,6 +789,33 @@ export const Calculator: React.FC = () => {
   );
 
   /**
+   * Wrapper pour handleKeyPress qui désactive automatiquement les modes SECOND et ALPHA
+   * après l'exécution de l'action (sauf si c'est la touche 2nd ou alpha elle-même)
+   */
+  const handleKeyPressWithAutoDeactivate = useCallback(
+    (action: KeyAction) => {
+      // Sauvegarder les états AVANT l'action
+      const wasSecondActive = isSecondFunction;
+      const wasAlphaActive = isAlphaMode;
+      const shouldDeactivateModes = action !== '2nd' && action !== 'alpha';
+
+      // Exécuter l'action
+      handleKeyPress(action);
+
+      // Désactiver les modes APRÈS l'action si nécessaire
+      if (shouldDeactivateModes) {
+        if (wasSecondActive) {
+          toggleSecondFunction();
+        }
+        if (wasAlphaActive) {
+          toggleAlphaMode();
+        }
+      }
+    },
+    [handleKeyPress, isSecondFunction, isAlphaMode, toggleSecondFunction, toggleAlphaMode]
+  );
+
+  /**
    * Gère les raccourcis clavier
    */
   useEffect(() => {
@@ -844,13 +856,13 @@ export const Calculator: React.FC = () => {
 
       if (keyMap[e.key]) {
         e.preventDefault();
-        handleKeyPress(keyMap[e.key]);
+        handleKeyPressWithAutoDeactivate(keyMap[e.key]);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPress, currentMode]);
+  }, [handleKeyPressWithAutoDeactivate, currentMode]);
 
   // Préparer les fonctions pour le graphique
   const graphFunctionsData: GraphFunction[] = graphFunctions.map((expr, index) => ({
@@ -972,7 +984,7 @@ export const Calculator: React.FC = () => {
 
         {/* Clavier */}
         <Keyboard
-          onKeyPress={handleKeyPress}
+          onKeyPress={handleKeyPressWithAutoDeactivate}
           isSecondActive={isSecondFunction}
           isAlphaActive={isAlphaMode}
         />
