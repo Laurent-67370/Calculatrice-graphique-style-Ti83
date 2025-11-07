@@ -780,6 +780,12 @@ export const Calculator: React.FC = () => {
               expr = expr.replace(regex, name);
             });
 
+            // Gérer la transposée: remplacer NomMatrice^T par transpose(NomMatrice)
+            matrixNames.forEach(name => {
+              const transposeRegex = new RegExp(`${name}\\^T`, 'g');
+              expr = expr.replace(transposeRegex, `transpose(${name})`);
+            });
+
             // Évaluer l'expression avec mathjs
             const result = math.evaluate(expr, scope);
 
