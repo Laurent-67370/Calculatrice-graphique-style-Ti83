@@ -77,10 +77,8 @@ export const MatrixEditor = forwardRef<MatrixEditorHandle, MatrixEditorProps>(({
       }
     },
     select: () => {
-      console.log('[MatrixEditor] select() called, selectedTab:', selectedTab, 'selectedOption:', selectedOption);
       if (selectedTab === 'NAMES') {
         const matrixName = matrixNames[selectedOption];
-        console.log('[MatrixEditor] NAMES tab - inserting:', `[${matrixName}]`);
         // Insérer [A] dans l'input
         if (appendInput) {
           appendInput(`[${matrixName}]`);
@@ -88,17 +86,12 @@ export const MatrixEditor = forwardRef<MatrixEditorHandle, MatrixEditorProps>(({
         }
       } else if (selectedTab === 'EDIT') {
         const matrixName = matrixNames[selectedOption];
-        console.log('[MatrixEditor] EDIT tab - opening editor for matrix:', matrixName);
         // Ouvrir l'éditeur de grille
         if (onEditMatrix) {
-          console.log('[MatrixEditor] Calling onEditMatrix');
           onEditMatrix(matrixName);
-        } else {
-          console.error('[MatrixEditor] onEditMatrix is not defined!');
         }
       } else if (selectedTab === 'MATH') {
         const operation = mathOptions[selectedOption];
-        console.log('[MatrixEditor] MATH tab - inserting:', operation.name);
         // Insérer l'opération dans l'input
         if (appendInput) {
           appendInput(operation.name);

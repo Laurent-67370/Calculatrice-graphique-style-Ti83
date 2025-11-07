@@ -21,13 +21,8 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
   matrixName,
   onClose: _onClose,
 }, ref) => {
-  console.log('[MatrixGridEditor] Component mounted for matrix:', matrixName);
   const { getMatrix, setMatrix } = useCalculatorStore();
-  const [matrix, setLocalMatrix] = useState<Matrix>(() => {
-    const m = getMatrix(matrixName);
-    console.log('[MatrixGridEditor] Initial matrix:', m);
-    return m;
-  });
+  const [matrix, setLocalMatrix] = useState<Matrix>(getMatrix(matrixName));
   const [selectedRow, setSelectedRow] = useState(0);
   const [selectedCol, setSelectedCol] = useState(0);
   const [editMode, setEditMode] = useState(false);
@@ -86,16 +81,13 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
       }
     },
     handleEnter: () => {
-      console.log('[MatrixGridEditor] handleEnter called, editMode:', editMode, 'dimensionMode:', dimensionMode);
       if (dimensionMode) {
         if (!editMode) {
           // Commencer l'édition de la dimension
-          console.log('[MatrixGridEditor] Starting dimension edit');
           setEditValue(dimensionField === 'rows' ? matrix.rows.toString() : matrix.cols.toString());
           setEditMode(true);
         } else {
           // Sauvegarder la dimension
-          console.log('[MatrixGridEditor] Saving dimension:', editValue);
           const newValue = parseInt(editValue);
           if (!isNaN(newValue) && newValue > 0 && newValue <= 10) {
             const newRows = dimensionField === 'rows' ? newValue : matrix.rows;
@@ -108,20 +100,17 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
       } else {
         if (!editMode) {
           // Commencer l'édition de la cellule
-          console.log('[MatrixGridEditor] Starting cell edit at [', selectedRow, ',', selectedCol, ']');
           // Vérifier que la cellule existe
           if (matrix.data[selectedRow] && matrix.data[selectedRow][selectedCol] !== undefined) {
             setEditValue(matrix.data[selectedRow][selectedCol].toString());
             setEditMode(true);
           } else {
             // Cellule n'existe pas, initialiser à 0
-            console.log('[MatrixGridEditor] Cell does not exist, initializing to 0');
             setEditValue('0');
             setEditMode(true);
           }
         } else {
           // Sauvegarder la valeur
-          console.log('[MatrixGridEditor] Saving cell value:', editValue);
           const newValue = parseFloat(editValue);
           if (!isNaN(newValue)) {
             const newData = matrix.data.map(row => [...row]);
@@ -134,7 +123,6 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
       }
     },
     handleInput: (char: string) => {
-      console.log('[MatrixGridEditor] handleInput called with char:', char, 'editMode:', editMode);
       if (editMode) {
         if (char === '.') {
           if (!editValue.includes('.')) {
@@ -147,9 +135,6 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
         } else {
           setEditValue((prev) => prev + char);
         }
-        console.log('[MatrixGridEditor] New editValue will be:', editValue + char);
-      } else {
-        console.log('[MatrixGridEditor] handleInput ignored because editMode is false');
       }
     },
     handleDelete: () => {
