@@ -3,6 +3,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { create, all } from 'mathjs';
 import { useCalculatorStore } from '../../store/calculatorStore';
 import { Display } from './Display';
 import { Keyboard } from './Keyboard';
@@ -22,6 +23,9 @@ import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems } from '../.
 import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers } from '../../utils/menuHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
+
+// Créer une instance de mathjs avec toutes les fonctions
+const math = create(all);
 
 export const Calculator: React.FC = () => {
   // State pour le modal d'aide
@@ -53,6 +57,7 @@ export const Calculator: React.FC = () => {
     config,
     lastAnswer,
     isInputResult,
+    matrices,
     // cursorPosition et setCursorPosition sont gérés automatiquement par le store
     setInput,
     setInputResult,
@@ -740,116 +745,73 @@ export const Calculator: React.FC = () => {
         // Gérer ENTER pour évaluer
         if (action === 'enter' && currentMode === 'NORMAL') {
           try {
-            // Créer un contexte avec toutes les fonctions mathématiques
-            const mathContext = {
-              // Fonctions de base
-              abs: Math.abs,
-              round: Math.round,
-              floor: Math.floor,
-              ceil: Math.ceil,
-              trunc: Math.trunc,
-              sign: Math.sign,
-              min: Math.min,
-              max: Math.max,
-              sqrt: Math.sqrt,
-              cbrt: Math.cbrt,
-
-              // Fonctions trigonométriques
-              sin: Math.sin,
-              cos: Math.cos,
-              tan: Math.tan,
-              asin: Math.asin,
-              acos: Math.acos,
-              atan: Math.atan,
-
-              // Fonctions hyperboliques
-              sinh: Math.sinh,
-              cosh: Math.cosh,
-              tanh: Math.tanh,
-              asinh: Math.asinh,
-              acosh: Math.acosh,
-              atanh: Math.atanh,
-
-              // Fonctions exponentielles et logarithmes
-              exp: Math.exp,
-              ln: Math.log,      // Logarithme naturel (ln)
-              log: Math.log10,   // Logarithme base 10 (log)
-              log10: Math.log10,
-              log2: Math.log2,
-              pow: Math.pow,
-
-              // Fonctions personnalisées du service
-              iPart: (x: number) => Math.floor(x),
-              fPart: (x: number) => x - Math.floor(x),
-              int: (x: number) => Math.trunc(x),
-              mod: (a: number, b: number) => ((a % b) + b) % b,
-              hypot: Math.hypot,
-
-              // Fonctions de probabilité via le service
-              gcd: (a: number, b: number) => {
-                a = Math.abs(Math.floor(a));
-                b = Math.abs(Math.floor(b));
-                while (b !== 0) {
-                  const temp = b;
-                  b = a % b;
-                  a = temp;
-                }
-                return a;
-              },
-              lcm: (a: number, b: number) => {
-                const gcdVal = mathContext.gcd(a, b);
-                return Math.abs((a * b) / gcdVal);
-              },
-              nPr: (n: number, r: number) => {
-                n = Math.floor(n);
-                r = Math.floor(r);
-                if (r < 0 || r > n) throw new Error('0 ≤ r ≤ n requis');
-                let result = 1;
-                for (let i = 0; i < r; i++) {
-                  result *= (n - i);
-                }
-                return result;
-              },
-              nCr: (n: number, r: number) => {
-                n = Math.floor(n);
-                r = Math.floor(r);
-                if (r < 0 || r > n) throw new Error('0 ≤ r ≤ n requis');
-                if (r > n - r) r = n - r;
-                let result = 1;
-                for (let i = 0; i < r; i++) {
-                  result *= (n - i);
-                  result /= (i + 1);
-                }
-                return Math.round(result);
-              },
-
-              // Constantes
-              PI: Math.PI,
-              E: Math.E,
-              e: Math.E,  // Nombre d'Euler (aussi en minuscule)
-            };
-
             // Préparer l'expression
             let expr = currentInput
               .replace(/×/g, '*')
               .replace(/÷/g, '/')
-              .replace(/π/g, 'PI')
-              .replace(/\^/g, '**')
+              .replace(/π/g, 'pi')
+              .replace(/\^/g, '^')  // mathjs utilise ^ pour la puissance
               .replace(/√\(/g, 'sqrt(')
               .replace(/³√\(/g, 'cbrt(')
-              .replace(/[Xx]/g, '0'); // Pour l'instant, X = 0 en mode normal (majuscule et minuscule)
+              .replace(/[Xx]/g, '0'); // Pour l'instant, X = 0 en mode normal
 
-            // Créer une fonction avec le contexte mathématique
-            const funcBody = Object.keys(mathContext)
-              .map(key => `const ${key} = mathContext.${key};`)
-              .join('\n') + '\nreturn (' + expr + ');';
+            // Remplacer les références aux matrices [A], [B], etc. par les matrices réelles
+            const matrixNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+            const scope: any = {
+              // Constantes
+              e: Math.E,
+            };
 
-            const evalFunc = new Function('mathContext', funcBody);
-            const result = evalFunc(mathContext);
+            // Ajouter les matrices au scope
+            matrixNames.forEach(name => {
+              if (matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
+                // Vérifier si la matrice a des valeurs
+                const hasValues = matrices[name].data.some(row => row.some(val => val !== 0));
+                if (hasValues || matrices[name].data.length > 0) {
+                  // Créer une matrice mathjs à partir des données
+                  scope[name] = math.matrix(matrices[name].data);
+                }
+              }
+            });
 
-            addToHistory(`${currentInput} = ${result}`);
-            setInputResult(result.toString()); // Marquer comme résultat pour le remplacer lors du prochain input
-            setLastAnswer(result.toString()); // Sauvegarder le résultat pour la touche ANS
+            // Remplacer [NomMatrice] par NomMatrice dans l'expression
+            matrixNames.forEach(name => {
+              const regex = new RegExp(`\\[${name}\\]`, 'g');
+              expr = expr.replace(regex, name);
+            });
+
+            // Évaluer l'expression avec mathjs
+            const result = math.evaluate(expr, scope);
+
+            // Formater le résultat
+            let resultStr: string;
+            if (result && typeof result === 'object' && result.type === 'Matrix') {
+              // Si le résultat est une matrice, l'afficher de façon compacte
+              const matrixData = result.toArray();
+              if (Array.isArray(matrixData) && Array.isArray(matrixData[0])) {
+                // Matrice 2D
+                resultStr = '[' + matrixData.map(row =>
+                  '[' + row.map((val: number) => {
+                    // Arrondir à 6 décimales pour éviter les erreurs de précision
+                    const rounded = Math.round(val * 1000000) / 1000000;
+                    return rounded;
+                  }).join(' ') + ']'
+                ).join(' ') + ']';
+              } else {
+                // Vecteur ou cas spécial
+                resultStr = JSON.stringify(matrixData);
+              }
+            } else if (typeof result === 'number') {
+              // Arrondir les nombres pour éviter les erreurs de précision
+              const rounded = Math.round(result * 1000000000) / 1000000000;
+              resultStr = rounded.toString();
+            } else {
+              resultStr = result.toString();
+            }
+
+            addToHistory(`${currentInput} = ${resultStr}`);
+            setInputResult(resultStr); // Marquer comme résultat pour le remplacer lors du prochain input
+            setLastAnswer(resultStr); // Sauvegarder le résultat pour la touche ANS
           } catch (error) {
             console.error('Erreur d\'évaluation:', error);
             addToHistory(`${currentInput} = ERREUR`);
@@ -875,6 +837,7 @@ export const Calculator: React.FC = () => {
       traceFunctionIndex,
       lastAnswer,
       isInputResult,
+      matrices,
       appendInput,
       clearInput,
       deleteLastChar,
