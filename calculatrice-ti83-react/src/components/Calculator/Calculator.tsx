@@ -660,7 +660,8 @@ export const Calculator: React.FC = () => {
 
               // Fonctions exponentielles et logarithmes
               exp: Math.exp,
-              log: Math.log,
+              ln: Math.log,      // Logarithme naturel (ln)
+              log: Math.log10,   // Logarithme base 10 (log)
               log10: Math.log10,
               log2: Math.log2,
               pow: Math.pow,
