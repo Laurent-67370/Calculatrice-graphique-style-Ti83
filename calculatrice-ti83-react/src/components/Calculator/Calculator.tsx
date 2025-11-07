@@ -724,7 +724,7 @@ export const Calculator: React.FC = () => {
               .replace(/\^/g, '**')
               .replace(/√\(/g, 'sqrt(')
               .replace(/³√\(/g, 'cbrt(')
-              .replace(/X/g, '0'); // Pour l'instant, X = 0 en mode normal
+              .replace(/[Xx]/g, '0'); // Pour l'instant, X = 0 en mode normal (majuscule et minuscule)
 
             // Créer une fonction avec le contexte mathématique
             const funcBody = Object.keys(mathContext)
