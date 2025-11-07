@@ -753,6 +753,8 @@ export const Calculator: React.FC = () => {
               .replace(/\^/g, '^')  // mathjs utilise ^ pour la puissance
               .replace(/√\(/g, 'sqrt(')
               .replace(/³√\(/g, 'cbrt(')
+              .replace(/log\(/g, 'log10(')  // D'abord remplacer log() → log10() (base 10)
+              .replace(/ln\(/g, 'log(')  // Puis remplacer ln() → log() (logarithme naturel)
               .replace(/[Xx]/g, '0'); // Pour l'instant, X = 0 en mode normal
 
             // Remplacer les références aux matrices [A], [B], etc. par les matrices réelles
