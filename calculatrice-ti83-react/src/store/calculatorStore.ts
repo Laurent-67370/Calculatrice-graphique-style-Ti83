@@ -11,9 +11,27 @@ import type {
   WindowSettings,
 } from '../types';
 
+// Type pour une matrice
+export interface Matrix {
+  rows: number;
+  cols: number;
+  data: number[][];
+}
+
+// Type pour les variables stockées
+export interface StoredVariables {
+  [key: string]: number | string;
+}
+
 interface CalculatorStore extends CalculatorState {
   // Configuration
   config: CalculatorConfig;
+
+  // Stockage des matrices (A à J)
+  matrices: Record<string, Matrix>;
+
+  // Stockage des variables utilisateur
+  variables: StoredVariables;
 
   // État du mode TRACE
   isTraceMode: boolean;
@@ -35,6 +53,19 @@ interface CalculatorStore extends CalculatorState {
   clearHistory: () => void;
   setCursorPosition: (position: number) => void;
   setLastAnswer: (answer: string) => void; // Stocke le dernier résultat
+
+  // Actions pour les matrices
+  getMatrix: (name: string) => Matrix;
+  setMatrix: (name: string, matrix: Matrix) => void;
+  clearMatrix: (name: string) => void;
+  clearAllMatrices: () => void;
+
+  // Actions pour les variables
+  setVariable: (name: string, value: number | string) => void;
+  getVariable: (name: string) => number | string | undefined;
+  deleteVariable: (name: string) => void;
+  getAllVariables: () => StoredVariables;
+  clearAllVariables: () => void;
 
   // Actions pour les modes
   setMode: (mode: CalculatorMode) => void;
@@ -75,6 +106,7 @@ interface CalculatorStore extends CalculatorState {
 
   // Reset complet
   reset: () => void;
+  resetMemory: () => void; // Reset seulement la mémoire (variables + matrices)
 }
 
 // Valeurs initiales
@@ -110,11 +142,40 @@ const initialState: CalculatorState = {
   editingField: undefined,
 };
 
+// Créer une matrice vide
+const createEmptyMatrix = (): Matrix => ({
+  rows: 3,
+  cols: 3,
+  data: [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ],
+});
+
+// Matrices initiales (A à J)
+const initialMatrices: Record<string, Matrix> = {
+  A: createEmptyMatrix(),
+  B: createEmptyMatrix(),
+  C: createEmptyMatrix(),
+  D: createEmptyMatrix(),
+  E: createEmptyMatrix(),
+  F: createEmptyMatrix(),
+  G: createEmptyMatrix(),
+  H: createEmptyMatrix(),
+  I: createEmptyMatrix(),
+  J: createEmptyMatrix(),
+};
+
 export const useCalculatorStore = create<CalculatorStore>()(
   devtools(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
       config: initialConfig,
+
+      // État initial des matrices et variables
+      matrices: initialMatrices,
+      variables: {},
 
       // État initial du mode TRACE
       isTraceMode: false,
@@ -186,6 +247,60 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       clearHistory: () =>
         set({ history: [] }, false, 'clearHistory'),
+
+      // Actions pour les matrices
+      getMatrix: (name: string) => {
+        const state = get();
+        return state.matrices[name] || createEmptyMatrix();
+      },
+
+      setMatrix: (name: string, matrix: Matrix) =>
+        set((state) => ({
+          matrices: {
+            ...state.matrices,
+            [name]: matrix,
+          },
+        }), false, 'setMatrix'),
+
+      clearMatrix: (name: string) =>
+        set((state) => ({
+          matrices: {
+            ...state.matrices,
+            [name]: createEmptyMatrix(),
+          },
+        }), false, 'clearMatrix'),
+
+      clearAllMatrices: () =>
+        set({ matrices: initialMatrices }, false, 'clearAllMatrices'),
+
+      // Actions pour les variables
+      setVariable: (name: string, value: number | string) =>
+        set((state) => ({
+          variables: {
+            ...state.variables,
+            [name]: value,
+          },
+        }), false, 'setVariable'),
+
+      getVariable: (name: string) => {
+        const state = get();
+        return state.variables[name];
+      },
+
+      deleteVariable: (name: string) =>
+        set((state) => {
+          const newVariables = { ...state.variables };
+          delete newVariables[name];
+          return { variables: newVariables };
+        }, false, 'deleteVariable'),
+
+      getAllVariables: () => {
+        const state = get();
+        return state.variables;
+      },
+
+      clearAllVariables: () =>
+        set({ variables: {} }, false, 'clearAllVariables'),
 
       // Actions pour les modes
       setMode: (mode: CalculatorMode) =>
@@ -318,9 +433,24 @@ export const useCalculatorStore = create<CalculatorStore>()(
           };
         }, false, 'exitSubmenu'),
 
+      // Reset mémoire seulement (variables + matrices)
+      resetMemory: () =>
+        set({
+          matrices: initialMatrices,
+          variables: {},
+          history: [],
+        }, false, 'resetMemory'),
+
       // Reset complet
       reset: () =>
-        set({ ...initialState, config: initialConfig, currentMenu: null, menuSelectedIndex: 0 }, false, 'reset'),
+        set({
+          ...initialState,
+          config: initialConfig,
+          currentMenu: null,
+          menuSelectedIndex: 0,
+          matrices: initialMatrices,
+          variables: {},
+        }, false, 'reset'),
     }),
     { name: 'TI-83 Calculator' }
   )

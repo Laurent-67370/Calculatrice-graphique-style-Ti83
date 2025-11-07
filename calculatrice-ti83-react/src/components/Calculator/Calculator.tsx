@@ -13,6 +13,7 @@ import { WindowEditor, type WindowEditorHandle } from '../Editors/WindowEditor';
 import { ModeEditor, type ModeEditorHandle } from '../Editors/ModeEditor';
 import { MemEditor, type MemEditorHandle } from '../Editors/MemEditor';
 import { MatrixEditor, type MatrixEditorHandle } from '../Editors/MatrixEditor';
+import { MatrixGridEditor, type MatrixGridEditorHandle } from '../Editors/MatrixGridEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -26,11 +27,15 @@ export const Calculator: React.FC = () => {
   // State pour le modal d'aide
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
+  // State pour la matrice en cours d'édition
+  const [editingMatrixName, setEditingMatrixName] = useState<string | null>(null);
+
   // Refs pour contrôler les éditeurs depuis le clavier virtuel
   const windowEditorRef = useRef<WindowEditorHandle>(null);
   const modeEditorRef = useRef<ModeEditorHandle>(null);
   const memEditorRef = useRef<MemEditorHandle>(null);
   const matrixEditorRef = useRef<MatrixEditorHandle>(null);
+  const matrixGridEditorRef = useRef<MatrixGridEditorHandle>(null);
   const listEditorRef = useRef<ListEditorHandle>(null);
   const {
     currentInput,
@@ -461,12 +466,62 @@ export const Calculator: React.FC = () => {
           matrixEditorRef.current.navigate('down');
           return;
         }
+        if (action === 'left') {
+          matrixEditorRef.current.navigate('left');
+          return;
+        }
+        if (action === 'right') {
+          matrixEditorRef.current.navigate('right');
+          return;
+        }
         if (action === 'enter') {
           matrixEditorRef.current.select();
           return;
         }
         if (action === 'clear') {
           setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode MATRIX_EDIT - gérer la navigation et l'édition via ref
+      if (currentMode === 'MATRIX_EDIT' && matrixGridEditorRef.current) {
+        if (action === 'up') {
+          matrixGridEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          matrixGridEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'left') {
+          matrixGridEditorRef.current.navigate('left');
+          return;
+        }
+        if (action === 'right') {
+          matrixGridEditorRef.current.navigate('right');
+          return;
+        }
+        if (action === 'enter') {
+          matrixGridEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'del') {
+          matrixGridEditorRef.current.handleDelete();
+          return;
+        }
+        if (action === 'clear') {
+          setEditingMatrixName(null);
+          setMode('NORMAL');
+          return;
+        }
+        // Gérer les chiffres et symboles pour l'édition
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'dot' || action === 'negative') {
+          matrixGridEditorRef.current.handleInput(
+            action === 'negative' ? '-' : action === 'dot' ? '.' : action
+          );
           return;
         }
       }
@@ -994,8 +1049,23 @@ export const Calculator: React.FC = () => {
           ref={matrixEditorRef}
           onClose={() => setMode('NORMAL')}
           onEditMatrix={(matrixName) => {
-            // Placeholder pour l'édition d'une matrice
-            alert(`Editing matrix ${matrixName}\n(Matrix editor not yet fully implemented)`);
+            // Ouvrir l'éditeur de grille pour cette matrice
+            setEditingMatrixName(matrixName);
+            setMode('MATRIX_EDIT');
+          }}
+        />
+      );
+    }
+
+    // Si l'éditeur de grille MATRIX est ouvert
+    if (currentMode === 'MATRIX_EDIT' && editingMatrixName) {
+      return (
+        <MatrixGridEditor
+          ref={matrixGridEditorRef}
+          matrixName={editingMatrixName}
+          onClose={() => {
+            setEditingMatrixName(null);
+            setMode('NORMAL');
           }}
         />
       );

@@ -28,52 +28,75 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 
 ---
 
-## 🧠 Version 2.2.6 - Fonctions MEM & MATRIX ! 📊
+## 🧠 Version 2.2.6 - Fonctions MEM & MATRIX Complètes ! 📊
 
-### 🚀 Nouvelles Fonctionnalités
+### 🚀 Fonctionnalités 100% Implémentées
 
-Ajout de deux menus essentiels de la TI-83 Plus :
+Les menus MEM et MATRIX sont maintenant **complètement fonctionnels** comme sur une vraie TI-83 Plus !
 
-#### 🧠 Menu MEM (2ND + +)
-Accédez à la **gestion de la mémoire** :
-- 📊 **Affichage en temps réel** : RAM libre / RAM utilisée
-- 🔍 **About** : Informations détaillées sur la mémoire
-- ✅ **Check RAM** : Vérifier le statut de la RAM
-- 🔄 **Reset** : Réinitialiser la mémoire
-- 🗑️ **Delete** : Supprimer des variables
-- 📝 **Clear Entries** : Effacer l'historique
+#### 🧠 Menu MEM (2ND + +) - COMPLET
+Gestion **complète** de la mémoire :
+- 📊 **Affichage en temps réel** : RAM libre/utilisée calculée dynamiquement
+- 🔍 **About** : Statistiques détaillées (variables, matrices, historique)
+- ✅ **Check RAM** : Statut avec pourcentages
+- 🔄 **Reset** : Réinitialisation complète (avec confirmation)
+- 🗑️ **Delete** : Suppression de variables avec liste navigable
+- 📝 **Clear Entries** : Effacer l'historique (avec confirmation)
 
-#### 📊 Menu MATRIX (2ND + X⁻¹)
-Accédez à la **gestion des matrices** :
-- 📋 **Onglet NAMES** : Sélectionner une matrice ([A] à [J])
-- 🧮 **Onglet MATH** : Opérations mathématiques (det, transpose, dim, fill, etc.)
-- ✏️ **Onglet EDIT** : Éditer une matrice
-- ↔️ **Navigation** : Flèches ↑↓←→ pour naviguer entre onglets
+#### 📊 Menu MATRIX (2ND + X⁻¹) - COMPLET
+Gestion **complète** des matrices :
+- 📋 **Onglet NAMES** : Insertion de [A] à [J] dans l'input, dimensions réelles
+- 🧮 **Onglet MATH** : Insertion d'opérations (det, transpose, dim, fill, etc.)
+- ✏️ **Onglet EDIT** : Éditeur de grille complet avec navigation 2D
+- 🔲 **Éditeur de grille** : Édition cellule par cellule, changement de dimensions
 
 ### ✨ Comment Utiliser
 
 **Menu MEM** :
 ```
-2ND + + → Menu MEM s'ouvre
-↑↓ → Naviguer dans les options
-ENTER → Sélectionner
-CLEAR → Quitter
+2ND + + → Menu MEM
+↑↓ → Naviguer
+ENTER → Sélectionner (About, Check RAM, Reset, Delete, Clear Entries)
+  Delete → Liste des variables → ↑↓ → ENTER pour supprimer
+ESC → Quitter
 ```
 
 **Menu MATRIX** :
 ```
-2ND + X⁻¹ → Menu MATRIX s'ouvre
-↑↓ → Naviguer dans la liste
+2ND + X⁻¹ → Menu MATRIX
 ←→ → Changer d'onglet (NAMES/MATH/EDIT)
-ENTER → Sélectionner
-CLEAR → Quitter
+↑↓ → Naviguer dans la liste
+
+NAMES : ENTER → Insère [A] dans l'input
+MATH : ENTER → Insère l'opération (det(, T, etc.)
+EDIT : ENTER → Ouvre l'éditeur de grille
 ```
 
-### 🎯 Matrices Disponibles
+**Éditeur de Grille** (depuis EDIT) :
+```
+↑↓←→ → Naviguer entre les cellules
+ENTER → Éditer une cellule
+0-9.- → Saisir une valeur
+ENTER → Sauvegarder
+D → Mode dimensions (changer lignes/colonnes)
+ESC → Quitter
+```
 
-- **10 matrices** : [A], [B], [C], [D], [E], [F], [G], [H], [I], [J]
-- **Opérations MATH** : det(, T (transpose), dim(, Fill(, identity(, randM(, augment(, etc.
-- **Interface intuitive** avec navigation multi-onglets
+### 🎯 Nouvelles Capacités
+
+- **10 matrices** : [A] à [J] avec stockage persistant
+- **Édition 2D complète** : Grille éditable jusqu'à 10×10
+- **Dimensions réelles** : Affichage des dimensions de chaque matrice
+- **Gestion mémoire** : Calcul dynamique basé sur le contenu réel
+- **Suppression individuelle** : Variables supprimables une par une
+- **10 opérations MATH** : det(, T, dim(, Fill(, identity(, randM(, augment(, etc.
+
+### 💾 Stockage
+
+- Matrices sauvegardées automatiquement
+- Variables utilisateur persistantes
+- Mémoire totale : 24 KB (comme TI-83 Plus)
+- Calcul dynamique de la RAM utilisée
 
 ### 📦 Hérite de toutes les fonctionnalités v2.2.5
 
