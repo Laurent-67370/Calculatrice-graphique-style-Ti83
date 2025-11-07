@@ -368,6 +368,8 @@ export const Calculator: React.FC = () => {
       if (action === 'matrix') {
         setMode('MATRIX');
         setGraphMode(false);
+        // Désactiver le mode ALPHA si actif
+        if (isAlphaMode) toggleAlphaMode();
         return;
       }
 
@@ -1052,6 +1054,9 @@ export const Calculator: React.FC = () => {
             // Ouvrir l'éditeur de grille pour cette matrice
             setEditingMatrixName(matrixName);
             setMode('MATRIX_EDIT');
+            // Désactiver les modes ALPHA et SECOND
+            if (isAlphaMode) toggleAlphaMode();
+            if (isSecondFunction) toggleSecondFunction();
           }}
         />
       );
