@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.2-blue)
+![Version](https://img.shields.io/badge/version-2.2.3-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -25,6 +25,62 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 - ✅ Prêt pour production
 
 **📍 Démo en ligne :** [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
+
+---
+
+## ➕ Version 2.2.3 - Opérateurs Arithmétiques Intelligents ! 🔢
+
+### 🎯 Nouvelle Fonctionnalité Majeure
+
+Les **opérateurs arithmétiques** (+, -, ×, ÷) utilisent maintenant **automatiquement** le résultat précédent !
+
+#### Avant (v2.2.2)
+- ❌ Après un calcul, appuyer sur `+` remplaçait le résultat
+- ❌ Il fallait utiliser ANS pour continuer le calcul
+- ❌ Moins fluide qu'une TI-83 Plus réelle
+
+#### Maintenant (v2.2.3)
+- ✅ `8 = 8` puis `+ 5` → **`8 + 5`** (garde automatiquement le résultat)
+- ✅ Les calculs en chaîne sont ultra-fluides
+- ✅ Plus besoin de taper ANS constamment
+- ✅ Comportement 100% conforme à la TI-83 Plus
+
+### ✨ Exemples Pratiques
+
+**Calcul en chaîne simple** :
+```
+5 + 3 = 8
++ 2 → 8 + 2 = 10
+× 3 → 10 × 3 = 30
+÷ 5 → 30 ÷ 5 = 6
+```
+
+**Combinaison avec les fonctions** :
+```
+144 = 144
+√ → √(144) = 12
++ 8 → 12 + 8 = 20
+÷ 2 → 20 ÷ 2 = 10
+X² → 10^2 = 100
+```
+
+**Calcul scientifique** :
+```
+45 = 45
+sin → sin(45) = 0.8509...
+× 100 → 0.8509... × 100 = 85.09...
+÷ 10 → 85.09... ÷ 10 = 8.509...
+```
+
+### 📚 Documentation Enrichie
+
+- ✅ **4 exemples détaillés** ajoutés dans l'aide (bouton ?)
+- ✅ Explication du comportement de ANS
+- ✅ Explication des opérateurs automatiques
+- ✅ Explication des fonctions automatiques
+- ✅ Astuce sur le fonctionnement global
+
+**📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.3.md](./DEPLOYMENT_PWA_v2.2.3.md)
 
 ---
 
@@ -218,10 +274,10 @@ npm run preview
 
 ### Télécharger les Archives PWA
 
-Les archives de déploiement PWA v2.2.2 sont disponibles sur GitHub :
+Les archives de déploiement PWA v2.2.3 sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.2.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.2.zip) (144 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.2.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.2.tar.gz) (143 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.3.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.3.zip) (144 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.3.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.3.tar.gz) (143 KB)
 
 ### Déploiement Rapide
 
@@ -233,13 +289,13 @@ Les archives de déploiement PWA v2.2.2 sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.2.tar.gz
-scp calculatrice-ti83-pwa-v2.2.2.tar.gz user@yourserver.com:/tmp/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.3.tar.gz
+scp calculatrice-ti83-pwa-v2.2.3.tar.gz user@yourserver.com:/tmp/
 ssh user@yourserver.com
-tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.2.tar.gz -C /var/www/html/calculatrice/
+tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.3.tar.gz -C /var/www/html/calculatrice/
 ```
 
-📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.2.md](./DEPLOYMENT_PWA_v2.2.2.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
+📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.3.md](./DEPLOYMENT_PWA_v2.2.3.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
 
@@ -460,6 +516,7 @@ calculatrice-ti83-react/
 ### Guides Utilisateur
 
 - **[PWA_GUIDE.md](./PWA_GUIDE.md)** - Guide complet PWA (installation, utilisation, dépannage) 📱
+- **[DEPLOYMENT_PWA_v2.2.3.md](./DEPLOYMENT_PWA_v2.2.3.md)** - Guide de déploiement PWA v2.2.3 (Opérateurs intelligents)
 - **[DEPLOYMENT_PWA_v2.2.2.md](./DEPLOYMENT_PWA_v2.2.2.md)** - Guide de déploiement PWA v2.2.2 (ANS et calculs en chaîne)
 - **[DEPLOYMENT_PWA_v2.2.1.md](./DEPLOYMENT_PWA_v2.2.1.md)** - Guide de déploiement PWA v2.2.1 (Mode ALPHA corrigé)
 - **[DEPLOYMENT_PWA_v2.2.0.md](./DEPLOYMENT_PWA_v2.2.0.md)** - Guide de déploiement PWA v2.2.0 (Clavier TI-83 Plus Exact)
@@ -560,7 +617,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.2 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.3 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
