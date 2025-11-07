@@ -23,6 +23,7 @@ interface Key {
 }
 
 const keyLayout: Key[][] = [
+  // Ligne 1 : Touches graphiques bleues
   [
     { action: 'y-vars', secondAction: 'stat-plot', primary: 'Y=', second: 'STAT PLOT', color: 'blue' },
     { action: 'window', secondAction: 'tblset', primary: 'WINDOW', second: 'TBLSET', color: 'blue' },
@@ -30,13 +31,23 @@ const keyLayout: Key[][] = [
     { action: 'trace', secondAction: 'calc', primary: 'TRACE', second: 'CALC', color: 'blue' },
     { action: 'graph', secondAction: 'table', primary: 'GRAPH', second: 'TABLE', color: 'blue' },
   ],
+  // Ligne 2 : 2ND, MODE, DEL, flèches gauche/haut
   [
     { action: '2nd', primary: '2ND', color: 'blue' },
     { action: 'mode', secondAction: 'quit', primary: 'MODE', second: 'QUIT', color: 'gray' },
     { action: 'del', secondAction: 'ins', primary: 'DEL', second: 'INS', color: 'gray' },
-    { action: 'alpha', primary: 'ALPHA', color: 'blue' },
-    { action: 'stat', primary: 'STAT', color: 'blue' },
+    { action: 'left', primary: '←', color: 'gray' },
+    { action: 'up', primary: '↑', color: 'gray' },
   ],
+  // Ligne 3 : ALPHA, X,T,Θ,n, STAT, flèches bas/droite
+  [
+    { action: 'alpha', primary: 'ALPHA', color: 'blue' },
+    { action: 'x', secondAction: 'link', primary: 'X,T,θ,n', second: 'LINK', alpha: 'X', color: 'gray' },
+    { action: 'stat', primary: 'STAT', color: 'blue' },
+    { action: 'down', primary: '↓', color: 'gray' },
+    { action: 'right', primary: '→', color: 'gray' },
+  ],
+  // Ligne 4 : MATH, APPS, PRGM, VARS, CLEAR
   [
     { action: 'math', secondAction: 'test', primary: 'MATH', second: 'TEST', color: 'gray' },
     { action: 'apps', secondAction: 'angle', primary: 'APPS', second: 'ANGLE', color: 'gray' },
@@ -44,48 +55,53 @@ const keyLayout: Key[][] = [
     { action: 'vars', secondAction: 'distr', primary: 'VARS', second: 'DISTR', color: 'gray' },
     { action: 'clear', primary: 'CLEAR', color: 'gray' },
   ],
+  // Ligne 5 : X⁻¹, SIN, COS, TAN, ^
   [
-    { action: 'x', secondAction: 'link', primary: 'X,T,θ,n', second: 'LINK', alpha: 'X' },
-    { action: 'sin', secondAction: 'asin', primary: 'SIN', second: 'SIN⁻¹', alpha: 'S' },
-    { action: 'cos', secondAction: 'acos', primary: 'COS', second: 'COS⁻¹', alpha: 'T' },
-    { action: 'tan', secondAction: 'atan', primary: 'TAN', second: 'TAN⁻¹', alpha: 'U' },
-    { action: 'pow', secondAction: 'pi', primary: '^', second: 'π', alpha: 'V' },
+    { action: 'inverse', secondAction: 'matrix', primary: 'X⁻¹', second: 'MATRIX', alpha: 'P' },
+    { action: 'sin', secondAction: 'asin', primary: 'SIN', second: 'SIN⁻¹', alpha: 'Q' },
+    { action: 'cos', secondAction: 'acos', primary: 'COS', second: 'COS⁻¹', alpha: 'R' },
+    { action: 'tan', secondAction: 'atan', primary: 'TAN', second: 'TAN⁻¹', alpha: 'S' },
+    { action: 'pow', secondAction: 'pi', primary: '^', second: 'π', alpha: 'T' },
   ],
+  // Ligne 6 : X², , (virgule), (, ), ÷
   [
-    { action: 'sqrt', secondAction: 'square', primary: '√', second: 'x²', alpha: 'W' },
-    { action: '7', secondAction: 'comma', primary: '7', second: ',', alpha: 'A' },
-    { action: '8', primary: '8', second: 'v', alpha: 'B' },
-    { action: '9', primary: '9', second: 'w', alpha: 'C' },
-    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e', alpha: 'D' },
+    { action: 'square', secondAction: 'sqrt', primary: 'X²', second: '√', alpha: 'U' },
+    { action: 'comma', secondAction: 'ee', primary: ',', second: 'EE', alpha: 'V' },
+    { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'W' },
+    { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'θ' },
+    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e', alpha: 'X' },
   ],
-  [
-    { action: 'ln', secondAction: 'exp-func', primary: 'LN', second: 'eˣ', alpha: 'X' },
-    { action: '4', primary: '4', alpha: 'E' },
-    { action: '5', primary: '5', alpha: 'F' },
-    { action: '6', primary: '6', alpha: 'G' },
-    { action: 'multiply', secondAction: 'left-brace', primary: '×', second: '[', alpha: 'H' },
-  ],
+  // Ligne 7 : LOG, 7, 8, 9, ×
   [
     { action: 'log', secondAction: 'power10', primary: 'LOG', second: '10ˣ', alpha: 'Y' },
+    { action: '7', secondAction: 'u', primary: '7', second: 'u', alpha: 'A' },
+    { action: '8', secondAction: 'v', primary: '8', second: 'v', alpha: 'B' },
+    { action: '9', secondAction: 'w', primary: '9', second: 'w', alpha: 'C' },
+    { action: 'multiply', secondAction: 'left-bracket', primary: '×', second: '[', alpha: 'Z' },
+  ],
+  // Ligne 8 : LN, 4, 5, 6, −
+  [
+    { action: 'ln', secondAction: 'exp-func', primary: 'LN', second: 'eˣ', alpha: 'n' },
+    { action: '4', secondAction: 'left-brace-small', primary: '4', second: '{', alpha: 'D' },
+    { action: '5', primary: '5', alpha: 'E' },
+    { action: '6', secondAction: 'right-brace-small', primary: '6', second: '}', alpha: 'F' },
+    { action: 'subtract', secondAction: 'right-bracket', primary: '−', second: ']', alpha: 'G' },
+  ],
+  // Ligne 9 : STO→, 1, 2, 3, +
+  [
+    { action: 'sto', secondAction: 'rcl', primary: 'STO→', second: 'RCL', alpha: 'H' },
     { action: '1', primary: '1', alpha: 'I' },
-    { action: '2', primary: '2', alpha: 'J' },
+    { action: '2', secondAction: 'list', primary: '2', second: 'LIST', alpha: 'J' },
     { action: '3', primary: '3', alpha: 'K' },
-    { action: 'subtract', secondAction: 'right-brace', primary: '−', second: ']', alpha: 'L' },
+    { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: 'L' },
   ],
+  // Ligne 10 : ON, 0, ., (−), ENTER
   [
-    { action: 'negative', secondAction: 'ans', primary: '(−)', second: 'ANS', alpha: 'Z' },
-    { action: '0', primary: '0', alpha: ' ' },
-    { action: 'dot', primary: '.', alpha: ':' },
-    { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'M' },
-    { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'N' },
-    { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: 'O' },
-  ],
-  [
-    { action: 'left', primary: '←' },
-    { action: 'down', primary: '↓' },
-    { action: 'up', primary: '↑' },
-    { action: 'right', primary: '→' },
-    { action: 'enter', primary: 'ENTER', size: 'wide', color: 'gray' },
+    { action: 'on', secondAction: 'off', primary: 'ON', second: 'OFF', color: 'gray' },
+    { action: '0', secondAction: 'catalog', primary: '0', second: 'CATALOG', alpha: ' ' },
+    { action: 'dot', secondAction: 'i', primary: '.', second: 'i', alpha: ':' },
+    { action: 'negative', secondAction: 'ans', primary: '(−)', second: 'ANS', alpha: 'M' },
+    { action: 'enter', secondAction: 'entry', primary: 'ENTER', second: 'ENTRY', size: 'wide', color: 'blue' },
   ],
 ];
 

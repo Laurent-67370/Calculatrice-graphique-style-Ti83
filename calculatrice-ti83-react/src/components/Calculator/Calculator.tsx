@@ -482,36 +482,79 @@ export const Calculator: React.FC = () => {
         }
 
         const operatorMap: Record<string, string> = {
+          // Opérateurs arithmétiques
           'add': '+',
           'subtract': '−',
           'multiply': '×',
           'divide': '÷',
+          // Parenthèses et crochets
           'left-paren': '(',
           'right-paren': ')',
           'left-brace': '{',
           'right-brace': '}',
+          'left-bracket': '[',
+          'right-bracket': ']',
+          'left-brace-small': '{',
+          'right-brace-small': '}',
+          // Symboles
           'pow': '^',
           'dot': '.',
           'comma': ',',
+          // Variables
           'x': 'X',
+          // Fonctions trigonométriques
           'sin': 'sin(',
           'cos': 'cos(',
           'tan': 'tan(',
           'asin': 'asin(',
           'acos': 'acos(',
           'atan': 'atan(',
+          // Fonctions mathématiques
           'sqrt': '√(',
           'square': '^2',
+          'inverse': '1/',
           'ln': 'ln(',
           'log': 'log(',
+          // Constantes et exponentielles
           'pi': 'π',
           'exp': 'e',
           'exp-func': 'e^',
           'power10': '10^',
+          'ee': 'E',  // Notation scientifique
+          // Lettres u, v, w (pour paramétrage)
+          'u': 'u',
+          'v': 'v',
+          'w': 'w',
+          // Nombres complexes
+          'i': 'i',  // Unité imaginaire
         };
 
         if (operatorMap[action]) {
           appendInput(operatorMap[action]);
+          return;
+        }
+
+        // Gérer les actions spéciales
+        if (action === 'sto') {
+          appendInput('→');  // Flèche de stockage
+          return;
+        }
+
+        if (action === 'rcl') {
+          // RCL rappelle une variable (pour l'instant, juste ignorer)
+          console.log('RCL non implémenté');
+          return;
+        }
+
+        if (action === 'on' || action === 'off') {
+          // ON/OFF - ignorer ou reset
+          console.log('ON/OFF action');
+          return;
+        }
+
+        if (action === 'catalog' || action === 'entry' || action === 'list') {
+          // Actions non implémentées pour l'instant
+          console.log(`Action ${action} non implémentée`);
           return;
         }
 

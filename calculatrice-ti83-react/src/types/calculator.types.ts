@@ -23,20 +23,33 @@ export type CalculatorMode =
 
 // Actions possibles sur les touches
 export type KeyAction =
+  // Touches graphiques
   | 'y-vars' | 'window' | 'zoom' | 'trace' | 'graph'
+  // Touches de menu
   | 'stat' | 'math' | 'calc' | 'mode' | 'del' | 'clear'
   | '2nd' | 'alpha' | 'apps' | 'prgm' | 'vars'
+  // Fonctions secondaires de menu
   | 'test' | 'angle' | 'draw' | 'distr' | 'matrix'
-  | 'x' | 'sin' | 'cos' | 'tan' | 'pow'
+  // Touches de fonction
+  | 'x' | 'sin' | 'cos' | 'tan' | 'pow' | 'inverse'
   | 'sqrt' | 'ln' | 'log' | 'exp' | 'pi'
+  // Chiffres
   | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  // Opérateurs
   | 'add' | 'subtract' | 'multiply' | 'divide'
+  // Symboles
   | 'left-paren' | 'right-paren' | 'comma' | 'dot' | 'negative'
+  // Navigation
   | 'enter' | 'up' | 'down' | 'left' | 'right'
+  // Stockage et récupération
+  | 'sto' | 'rcl' | 'on' | 'off'
   // Actions secondaires
   | 'quit' | 'ins' | 'table' | 'tblset' | 'format' | 'stat-plot'
   | 'asin' | 'acos' | 'atan' | 'square' | 'exp-func' | 'power10'
-  | 'ans' | 'left-brace' | 'right-brace' | 'mem' | 'link';
+  | 'ans' | 'left-brace' | 'right-brace' | 'mem' | 'link'
+  | 'ee' | 'catalog' | 'entry' | 'list'
+  | 'left-bracket' | 'right-bracket' | 'left-brace-small' | 'right-brace-small'
+  | 'u' | 'v' | 'w' | 'i';
 
 // Configuration de l'écran
 export interface DisplayConfig {
