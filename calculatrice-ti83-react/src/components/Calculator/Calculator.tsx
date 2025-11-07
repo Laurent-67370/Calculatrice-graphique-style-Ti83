@@ -488,6 +488,7 @@ export const Calculator: React.FC = () => {
 
       // En mode MATRIX_EDIT - gérer la navigation et l'édition via ref
       if (currentMode === 'MATRIX_EDIT' && matrixGridEditorRef.current) {
+        console.log('[Calculator] MATRIX_EDIT mode - handling action:', action);
         if (action === 'up') {
           matrixGridEditorRef.current.navigate('up');
           return;
@@ -505,6 +506,7 @@ export const Calculator: React.FC = () => {
           return;
         }
         if (action === 'enter') {
+          console.log('[Calculator] Calling handleEnter on matrixGridEditor');
           matrixGridEditorRef.current.handleEnter();
           return;
         }
@@ -521,6 +523,7 @@ export const Calculator: React.FC = () => {
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
             action === 'dot' || action === 'negative') {
+          console.log('[Calculator] Calling handleInput with:', action);
           matrixGridEditorRef.current.handleInput(
             action === 'negative' ? '-' : action === 'dot' ? '.' : action
           );
@@ -1051,12 +1054,21 @@ export const Calculator: React.FC = () => {
           ref={matrixEditorRef}
           onClose={() => setMode('NORMAL')}
           onEditMatrix={(matrixName) => {
+            console.log('[Calculator] onEditMatrix called for matrix:', matrixName);
+            console.log('[Calculator] isAlphaMode:', isAlphaMode, 'isSecondFunction:', isSecondFunction);
             // Ouvrir l'éditeur de grille pour cette matrice
             setEditingMatrixName(matrixName);
             setMode('MATRIX_EDIT');
+            console.log('[Calculator] Mode set to MATRIX_EDIT, editingMatrixName:', matrixName);
             // Désactiver les modes ALPHA et SECOND
-            if (isAlphaMode) toggleAlphaMode();
-            if (isSecondFunction) toggleSecondFunction();
+            if (isAlphaMode) {
+              console.log('[Calculator] Toggling ALPHA mode OFF');
+              toggleAlphaMode();
+            }
+            if (isSecondFunction) {
+              console.log('[Calculator] Toggling SECOND mode OFF');
+              toggleSecondFunction();
+            }
           }}
         />
       );
