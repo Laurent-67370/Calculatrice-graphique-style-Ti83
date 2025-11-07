@@ -100,8 +100,15 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
       } else {
         if (!editMode) {
           // Commencer l'édition de la cellule
-          setEditValue(matrix.data[selectedRow][selectedCol].toString());
-          setEditMode(true);
+          // Vérifier que la cellule existe
+          if (matrix.data[selectedRow] && matrix.data[selectedRow][selectedCol] !== undefined) {
+            setEditValue(matrix.data[selectedRow][selectedCol].toString());
+            setEditMode(true);
+          } else {
+            // Cellule n'existe pas, initialiser à 0
+            setEditValue('0');
+            setEditMode(true);
+          }
         } else {
           // Sauvegarder la valeur
           const newValue = parseFloat(editValue);
@@ -193,7 +200,7 @@ export const MatrixGridEditor = forwardRef<MatrixGridEditorHandle, MatrixGridEdi
                      editMode &&
                      !dimensionMode
                       ? editValue || '0'
-                      : cell}
+                      : (cell !== undefined ? cell : 0)}
                   </td>
                 ))}
               </tr>
