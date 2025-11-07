@@ -194,6 +194,37 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <code>hypot(3,4)</code> → 5<br/>
               </div>
 
+              <h3>🔄 Calculs en Chaîne avec ANS</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Appuyez sur <strong>2ND + (-)</strong> pour insérer le dernier résultat (ANS).
+              </p>
+              <div className="help-examples">
+                <strong>Exemple 1 : Avec ANS</strong><br/>
+                <code>5 + 3 = 8</code><br/>
+                <code>ANS × 2 = 16</code><br/>
+                <code>ANS - 4 = 12</code><br/>
+                <br/>
+                <strong>Exemple 2 : Opérateurs automatiques</strong><br/>
+                <code>8 = 8</code><br/>
+                <code>+ 5 → 8 + 5 = 13</code><br/>
+                <code>× 2 → 13 × 2 = 26</code><br/>
+                <br/>
+                <strong>Exemple 3 : Fonctions automatiques</strong><br/>
+                <code>144 = 144</code><br/>
+                <code>√ → √(144) = 12</code><br/>
+                <code>X² → 12^2 = 144</code><br/>
+                <code>ln → ln(144) = 4.97...</code><br/>
+                <br/>
+                <strong>Exemple 4 : Calcul scientifique</strong><br/>
+                <code>45 = 45</code><br/>
+                <code>sin → sin(45) = 0.85...</code><br/>
+                <code>× 10 → 0.85... × 10 = 8.5...</code><br/>
+              </div>
+              <p style={{ fontSize: '0.85em', color: '#666', marginTop: '10px' }}>
+                💡 Astuce : Les fonctions (sin, cos, √, ln, log, X², X⁻¹) et les opérateurs (+, -, ×, ÷)
+                s'appliquent automatiquement au résultat précédent après un calcul !
+              </p>
+
               <h3>💡 Astuces</h3>
               <ul>
                 <li>Utilisez le mode DEGREE pour les angles en degrés</li>
@@ -299,7 +330,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.2.2 (PWA) • 🔄 ANS et calculs en chaîne • 📱 Installable sur Android • 📴 Hors ligne
+            Version 2.2.3 (PWA) • ➕ Opérateurs intelligents • 📱 Installable sur Android • 📴 Hors ligne
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
