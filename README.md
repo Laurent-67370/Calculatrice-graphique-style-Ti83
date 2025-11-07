@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.6.2-blue)
+![Version](https://img.shields.io/badge/version-2.2.6.3-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -106,6 +106,82 @@ ESC → Quitter
 - ✅ Corrections ln, log, e^, x (minuscule/majuscule)
 
 **📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.6.md](./DEPLOYMENT_PWA_v2.2.6.md)
+
+---
+
+## 💾 Version 2.2.6.3 - STO→ & RCL comme sur TI-83 Plus ! 📝
+
+### 🚀 Nouvelles Fonctionnalités
+
+Les fonctions **STO→** (Store) et **RCL** (Recall) sont maintenant **100% fonctionnelles** comme sur une vraie TI-83 Plus !
+
+#### 💾 STO→ (Store) - Stockage de variables
+Stockez n'importe quelle valeur dans les variables A-Z !
+
+**Utilisation** :
+```
+5 + 3 = 8
+STO→ A     → Stocke 8 dans A
+
+Ou directement :
+5 + 3 → A ENTER   → Calcule et stocke dans A en une seule étape
+```
+
+#### 📋 RCL (Recall) - Rappel de variables
+Un menu pratique pour rappeler vos variables !
+
+**Utilisation** :
+```
+RCL          → Ouvre le menu des variables
+↑↓           → Naviguer A-Z
+ENTER        → Insérer la variable sélectionnée
+```
+
+#### 🧮 Variables dans les calculs
+Les variables s'utilisent comme des nombres dans toutes vos expressions !
+
+**Exemples pratiques** :
+```
+5 → A
+3 → B
+A + B = 8        ✅
+A × B = 15       ✅
+2 × A = 10       ✅
+√(A^2 + B^2) = 5.831  ✅
+sin(A) × cos(B)  ✅
+```
+
+### 🎯 Cas d'Usage Réels
+
+**Calculs scientifiques** :
+```
+9.81 → G          → Gravité terrestre
+70 → M            → Masse en kg
+M × G = 686.7     → Poids en Newtons
+```
+
+**Géométrie** :
+```
+5 → R             → Rayon
+π × R^2 = 78.54   → Aire du cercle
+2 × π × R = 31.42 → Périmètre
+```
+
+**Statistiques** :
+```
+25 → N            → Nombre d'échantillons
+√(N) = 5          → Racine pour calculs
+```
+
+### ✨ Caractéristiques Techniques
+
+- **26 variables** : A-Z disponibles
+- **Stockage persistant** : Les variables restent en mémoire
+- **Menu RCL** : Navigation intuitive avec flèches
+- **Intégration complète** : Variables dans toutes les expressions mathématiques
+- **Compatible TI-83 Plus** : Syntaxe identique
+
+**📖 Guide complet** : Voir section Déploiement ci-dessous
 
 ---
 
@@ -479,10 +555,10 @@ npm run preview
 
 ### Télécharger les Archives PWA
 
-Les archives de déploiement PWA v2.2.6.2 sont disponibles sur GitHub :
+Les archives de déploiement PWA v2.2.6.3 sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.6.2.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.2.zip) (~150 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.6.2.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.2.tar.gz) (~149 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.6.3.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.3.zip) (~150 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.6.3.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.3.tar.gz) (~149 KB)
 
 ### Déploiement Rapide
 
@@ -494,13 +570,13 @@ Les archives de déploiement PWA v2.2.6.2 sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.2.tar.gz
-scp calculatrice-ti83-pwa-v2.2.6.2.tar.gz user@yourserver.com:/tmp/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.3.tar.gz
+scp calculatrice-ti83-pwa-v2.2.6.3.tar.gz user@yourserver.com:/tmp/
 ssh user@yourserver.com
-tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.6.2.tar.gz -C /var/www/html/calculatrice/
+tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.6.3.tar.gz -C /var/www/html/calculatrice/
 ```
 
-📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.6.2.md](./DEPLOYMENT_PWA_v2.2.6.2.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
+📖 **Guide complet** : Voir [PWA_GUIDE.md](./PWA_GUIDE.md)
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
 
@@ -721,7 +797,6 @@ calculatrice-ti83-react/
 ### Guides Utilisateur
 
 - **[PWA_GUIDE.md](./PWA_GUIDE.md)** - Guide complet PWA (installation, utilisation, dépannage) 📱
-- **[DEPLOYMENT_PWA_v2.2.6.2.md](./DEPLOYMENT_PWA_v2.2.6.2.md)** - Guide de déploiement PWA v2.2.6.2 (Correction logarithmes)
 - **[DEPLOYMENT_PWA_v2.2.6.md](./DEPLOYMENT_PWA_v2.2.6.md)** - Guide de déploiement PWA v2.2.6 (MEM & MATRIX 100% COMPLETS)
 
 ### Guides Développeur
@@ -819,7 +894,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.6.2 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.6.3 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
