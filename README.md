@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.1.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -13,7 +13,7 @@ Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'inte
 
 ## ✨ Aperçu
 
-Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une architecture moderne, type-safe et performante. **Nouveauté v2.1.0** : Installable sur Android comme une application native !
+Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une architecture moderne, type-safe et performante. **Nouveauté v2.2.0** : Clavier réorganisé pour correspondre exactement à la TI-83 Plus physique !
 
 **🎯 État du Projet : 100% Complété**
 - ✅ Backend (Services) : 100%
@@ -28,7 +28,41 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 
 ---
 
-## 🎉 Nouveautés Version 2.1.0 - Progressive Web App ! 📱
+## 🎉 Nouveautés Version 2.2.0 - Clavier TI-83 Plus Exact ! ⌨️
+
+### ⌨️ Clavier Réorganisé
+
+Le clavier a été **complètement réorganisé** pour correspondre exactement à la disposition physique de la **TI-83 Plus** :
+
+#### 🔄 Modifications Principales
+
+- **Ligne 5** : **X⁻¹** ajouté en première position (au lieu de X,T,θ,n)
+- **Ligne 6** : **X²** déplacé en première position (au lieu de √)
+- **Lignes 2-3** : **Flèches** repositionnées (←↑ ligne 2, ↓→ ligne 3)
+- **Ligne 9** : **STO→** ajouté pour le stockage de variables
+- **Ligne 10** : **ON** ajouté pour le contrôle d'alimentation
+
+#### ✨ Nouvelles Actions
+
+- `X⁻¹` : Inverse (1/)
+- `STO→` : Stockage de variable
+- `RCL` : Rappel de variable
+- `ON`/`OFF` : Contrôle d'alimentation
+- `i` : Unité imaginaire
+- `u`, `v`, `w` : Variables paramétriques
+- `EE` : Notation scientifique
+- `{`, `}`, `[`, `]` : Accolades et crochets
+
+#### 📐 Lettres Alpha Corrigées
+
+Toutes les lettres alpha correspondent maintenant exactement au matériel :
+- **Lignes 5-6** : P, Q, R, S, T, U, V, W, θ, X
+- **Lignes 7-8** : Y, A, B, C, Z, n, D, E, F, G
+- **Lignes 9-10** : H, I, J, K, L, espace, :, M
+
+---
+
+## 🎉 Version 2.1.0 - Progressive Web App ! 📱
 
 ### 📱 Installation sur Android
 
@@ -431,7 +465,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.1.0 (PWA)** | **6 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.0 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
