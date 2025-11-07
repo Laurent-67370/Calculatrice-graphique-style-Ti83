@@ -76,7 +76,7 @@ Tous les opérateurs réutilisent maintenant le résultat :
 Deux formats d'archives PWA sont disponibles :
 
 - **calculatrice-ti83-pwa-v2.2.5.zip** (144 KB) - Pour Windows/Mac
-- **calculatrice-ti83-pwa-v2.2.5.tar.gz** (142 KB) - Pour Linux/Unix
+- **calculatrice-ti83-pwa-v2.2.5.tar.gz** (145 KB) - Pour Linux/Unix
 
 ---
 
@@ -172,7 +172,7 @@ Après déploiement, votre répertoire `/calculatrice/` devrait contenir :
 ├── vite.svg                           (1.5 KB)
 ├── _redirects                         (24 bytes)
 └── assets/
-    ├── index-DGXLAVpu.js              (271.42 KB) ⭐ NOUVEAU (Puissance intelligente)
+    ├── index-DfABt6kj.js              (271.42 KB) ⭐ NOUVEAU (Puissance intelligente)
     ├── index-DpKtdQXP.css             (9.5 KB)
     └── workbox-window.prod.es5-CwtvwXb3.js   (5.76 KB)
 ```
@@ -251,7 +251,7 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 **Solutions :**
 1. **Videz le cache** : Ctrl+Shift+R (hard reload)
 2. **Mettez à jour le SW** : DevTools → Application → Service Workers → Update
-3. **Vérifiez les fichiers** : Le fichier JS doit être `index-DGXLAVpu.js` (271.42 KB)
+3. **Vérifiez les fichiers** : Le fichier JS doit être `index-DfABt6kj.js` (271.42 KB)
 4. **Désinstallez et réinstallez** l'app Android
 
 ---
@@ -260,7 +260,7 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 
 ### Fichiers Modifiés
 
-- ✅ `index-DGXLAVpu.js` (271.42 KB) - Puissance intelligente
+- ✅ `index-DfABt6kj.js` (271.42 KB) - Puissance intelligente
 - ✅ Calculator.tsx - Ajout de 'pow': '^' aux arithmeticOperators
 - ✅ HelpModal.tsx - Version 2.2.5
 - ✅ README.md - Section v2.2.5
@@ -269,7 +269,7 @@ Pour les utilisateurs ayant déjà installé la v2.2.4 :
 
 - **Build total** : 372 KB
 - **Archive ZIP** : 144 KB
-- **Archive TAR.GZ** : 142 KB
+- **Archive TAR.GZ** : 145 KB
 - **JavaScript** : 271.42 KB (+0.01 KB depuis v2.2.4)
 - **Précache** : 336.39 KB (13 fichiers)
 
