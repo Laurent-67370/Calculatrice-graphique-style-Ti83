@@ -23,6 +23,7 @@ interface CalculatorStore extends CalculatorState {
   // État de l'input
   isInputResult: boolean; // Indique si l'input actuel est un résultat de calcul
   cursorPosition: number; // Position du curseur dans l'input
+  lastAnswer: string; // Dernier résultat calculé (pour la touche ANS)
 
   // Actions pour l'affichage
   setInput: (input: string) => void;
@@ -33,6 +34,7 @@ interface CalculatorStore extends CalculatorState {
   addToHistory: (entry: string) => void;
   clearHistory: () => void;
   setCursorPosition: (position: number) => void;
+  setLastAnswer: (answer: string) => void; // Stocke le dernier résultat
 
   // Actions pour les modes
   setMode: (mode: CalculatorMode) => void;
@@ -122,6 +124,7 @@ export const useCalculatorStore = create<CalculatorStore>()(
       // État initial de l'input
       isInputResult: false,
       cursorPosition: 1, // Au début, curseur à la fin de "0"
+      lastAnswer: '0', // Pas de dernier résultat au démarrage
 
       // Actions pour l'affichage
       setInput: (input: string) =>
@@ -172,6 +175,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       setCursorPosition: (position: number) =>
         set({ cursorPosition: position }, false, 'setCursorPosition'),
+
+      setLastAnswer: (answer: string) =>
+        set({ lastAnswer: answer }, false, 'setLastAnswer'),
 
       addToHistory: (entry: string) =>
         set((state) => ({

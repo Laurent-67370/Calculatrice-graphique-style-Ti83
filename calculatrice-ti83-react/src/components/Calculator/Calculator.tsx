@@ -42,6 +42,8 @@ export const Calculator: React.FC = () => {
     activeFunctions,
     windowSettings,
     config,
+    lastAnswer,
+    isInputResult,
     // cursorPosition et setCursorPosition sont gérés automatiquement par le store
     setInput,
     setInputResult,
@@ -49,6 +51,7 @@ export const Calculator: React.FC = () => {
     deleteLastChar,
     clearInput,
     addToHistory,
+    setLastAnswer,
     setMode,
     setConfig,
     toggleSecondFunction,
@@ -241,6 +244,12 @@ export const Calculator: React.FC = () => {
         if (isAlphaMode) {
           toggleAlphaMode();
         }
+        return;
+      }
+
+      // Gérer ANS pour insérer le dernier résultat
+      if (action === 'ans') {
+        appendInput(lastAnswer);
         return;
       }
 
@@ -492,6 +501,43 @@ export const Calculator: React.FC = () => {
           return;
         }
 
+        // Fonctions qui enveloppent leur argument: si on est sur un résultat, appliquer la fonction au résultat
+        const wrappingFunctions: Record<string, string> = {
+          'sin': 'sin',
+          'cos': 'cos',
+          'tan': 'tan',
+          'asin': 'asin',
+          'acos': 'acos',
+          'atan': 'atan',
+          'sqrt': '√',
+          'ln': 'ln',
+          'log': 'log',
+        };
+
+        // Opérations suffixées qui s'appliquent au résultat précédent
+        const suffixOperators: Record<string, string> = {
+          'square': '^2',
+          'inverse': '⁻¹',  // On utilisera X⁻¹ pour éviter la confusion avec 1/
+        };
+
+        if (wrappingFunctions[action] && isInputResult && currentMode === 'NORMAL') {
+          // Si l'input actuel est un résultat, appliquer la fonction au résultat
+          const funcName = wrappingFunctions[action];
+          setInput(`${funcName}(${currentInput})`);
+          return;
+        }
+
+        if (suffixOperators[action] && isInputResult && currentMode === 'NORMAL') {
+          // Si l'input actuel est un résultat, appliquer l'opérateur au résultat
+          const operator = suffixOperators[action];
+          if (action === 'inverse') {
+            setInput(`1/${currentInput}`);
+          } else {
+            setInput(`${currentInput}${operator}`);
+          }
+          return;
+        }
+
         const operatorMap: Record<string, string> = {
           // Opérateurs arithmétiques
           'add': '+',
@@ -679,6 +725,7 @@ export const Calculator: React.FC = () => {
 
             addToHistory(`${currentInput} = ${result}`);
             setInputResult(result.toString()); // Marquer comme résultat pour le remplacer lors du prochain input
+            setLastAnswer(result.toString()); // Sauvegarder le résultat pour la touche ANS
           } catch (error) {
             console.error('Erreur d\'évaluation:', error);
             addToHistory(`${currentInput} = ERREUR`);
@@ -712,11 +759,14 @@ export const Calculator: React.FC = () => {
       isTraceMode,
       traceX,
       traceFunctionIndex,
+      lastAnswer,
+      isInputResult,
       appendInput,
       clearInput,
       deleteLastChar,
       setInput,
       setInputResult,
+      setLastAnswer,
       addToHistory,
       setMode,
       toggleSecondFunction,
