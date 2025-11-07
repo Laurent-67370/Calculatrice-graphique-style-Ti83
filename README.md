@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.3-blue)
+![Version](https://img.shields.io/badge/version-2.2.4-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -25,6 +25,52 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 - ✅ Prêt pour production
 
 **📍 Démo en ligne :** [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
+
+---
+
+## 🔧 Version 2.2.4 - Mode SECOND Corrigé ! 🎯
+
+### 🐛 Correction Importante
+
+Le **mode SECOND** se désactive maintenant automatiquement après utilisation, comme sur une vraie TI-83 Plus !
+
+#### Problème Corrigé
+- ❌ **Avant** : Le mode SECOND restait actif après avoir utilisé une fonction secondaire
+- ❌ Par exemple : `SECOND` + `SIN` → le mode SECOND restait actif après
+- ❌ Comportement non conforme à la TI-83 Plus réelle
+
+#### Maintenant
+- ✅ **Mode SECOND auto-désactivé** après utilisation d'une fonction secondaire
+- ✅ **Mode ALPHA auto-désactivé** après utilisation d'une lettre (déjà fonctionnel)
+- ✅ Comportement 100% conforme à la TI-83 Plus
+
+### 🎯 Exemples de Comportement
+
+**Mode SECOND** :
+```
+SECOND + sin → Insère "sin("
+Mode SECOND désactivé automatiquement ✅
+```
+
+**Mode ALPHA** :
+```
+ALPHA + A → Insère "A"
+Mode ALPHA désactivé automatiquement ✅
+```
+
+**Activation seule** :
+```
+SECOND seul → Mode SECOND reste actif
+ALPHA seul → Mode ALPHA reste actif
+```
+
+### 🔧 Solution Technique
+
+- Création d'une fonction wrapper `handleKeyPressWithAutoDeactivate`
+- Garantit la désactivation pour tous les chemins de code
+- Sauvegarde des états avant l'action, désactivation après
+
+**📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.4.md](./DEPLOYMENT_PWA_v2.2.4.md)
 
 ---
 
@@ -274,10 +320,10 @@ npm run preview
 
 ### Télécharger les Archives PWA
 
-Les archives de déploiement PWA v2.2.3 sont disponibles sur GitHub :
+Les archives de déploiement PWA v2.2.4 sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.3.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.3.zip) (144 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.3.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.3.tar.gz) (143 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.4.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.4.zip) (144 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.4.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.4.tar.gz) (142 KB)
 
 ### Déploiement Rapide
 
@@ -289,13 +335,13 @@ Les archives de déploiement PWA v2.2.3 sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.3.tar.gz
-scp calculatrice-ti83-pwa-v2.2.3.tar.gz user@yourserver.com:/tmp/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.4.tar.gz
+scp calculatrice-ti83-pwa-v2.2.4.tar.gz user@yourserver.com:/tmp/
 ssh user@yourserver.com
-tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.3.tar.gz -C /var/www/html/calculatrice/
+tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.4.tar.gz -C /var/www/html/calculatrice/
 ```
 
-📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.3.md](./DEPLOYMENT_PWA_v2.2.3.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
+📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.4.md](./DEPLOYMENT_PWA_v2.2.4.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
 
@@ -516,6 +562,7 @@ calculatrice-ti83-react/
 ### Guides Utilisateur
 
 - **[PWA_GUIDE.md](./PWA_GUIDE.md)** - Guide complet PWA (installation, utilisation, dépannage) 📱
+- **[DEPLOYMENT_PWA_v2.2.4.md](./DEPLOYMENT_PWA_v2.2.4.md)** - Guide de déploiement PWA v2.2.4 (Mode SECOND corrigé)
 - **[DEPLOYMENT_PWA_v2.2.3.md](./DEPLOYMENT_PWA_v2.2.3.md)** - Guide de déploiement PWA v2.2.3 (Opérateurs intelligents)
 - **[DEPLOYMENT_PWA_v2.2.2.md](./DEPLOYMENT_PWA_v2.2.2.md)** - Guide de déploiement PWA v2.2.2 (ANS et calculs en chaîne)
 - **[DEPLOYMENT_PWA_v2.2.1.md](./DEPLOYMENT_PWA_v2.2.1.md)** - Guide de déploiement PWA v2.2.1 (Mode ALPHA corrigé)
@@ -617,7 +664,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.3 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.4 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
