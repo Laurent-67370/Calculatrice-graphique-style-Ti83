@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.6-blue)
+![Version](https://img.shields.io/badge/version-2.2.6.2-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -106,6 +106,32 @@ ESC → Quitter
 - ✅ Corrections ln, log, e^, x (minuscule/majuscule)
 
 **📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.6.md](./DEPLOYMENT_PWA_v2.2.6.md)
+
+---
+
+## 🐛 Version 2.2.6.2 - Correction Logarithmes ! 🔢
+
+### 🐛 Correction Critique
+
+Les **fonctions logarithmiques** ln() et log() retournaient des résultats incorrects !
+
+#### Problème Corrigé
+- ❌ **Avant** : `ln(1)` retournait une **ERREUR** au lieu de **0**
+- ❌ **Avant** : `log(100)` ne fonctionnait pas correctement
+
+#### Maintenant (v2.2.6.2)
+- ✅ `ln(1)` retourne **0** (correct !)
+- ✅ `ln(10)` retourne **2.302585** (correct !)
+- ✅ `log(100)` retourne **2** (correct !)
+- ✅ `log(1000)` retourne **3** (correct !)
+
+### 🔧 Solution Technique
+
+Correction de la conversion des fonctions pour mathjs dans `Calculator.tsx:756-757` :
+- Ordre correct : **log() → log10()** puis **ln() → log()**
+- Évite les conflits de remplacement
+
+**📖 Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.6.2.md](./DEPLOYMENT_PWA_v2.2.6.2.md)
 
 ---
 
@@ -453,10 +479,10 @@ npm run preview
 
 ### Télécharger les Archives PWA
 
-Les archives de déploiement PWA v2.2.5 sont disponibles sur GitHub :
+Les archives de déploiement PWA v2.2.6.2 sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.5.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.5.zip) (144 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.5.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.5.tar.gz) (145 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.6.2.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.2.zip) (~150 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.6.2.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.2.tar.gz) (~149 KB)
 
 ### Déploiement Rapide
 
@@ -468,13 +494,13 @@ Les archives de déploiement PWA v2.2.5 sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.5.tar.gz
-scp calculatrice-ti83-pwa-v2.2.5.tar.gz user@yourserver.com:/tmp/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.2.tar.gz
+scp calculatrice-ti83-pwa-v2.2.6.2.tar.gz user@yourserver.com:/tmp/
 ssh user@yourserver.com
-tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.5.tar.gz -C /var/www/html/calculatrice/
+tar -xzf /tmp/calculatrice-ti83-pwa-v2.2.6.2.tar.gz -C /var/www/html/calculatrice/
 ```
 
-📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.5.md](./DEPLOYMENT_PWA_v2.2.5.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
+📖 **Guide complet** : Voir [DEPLOYMENT_PWA_v2.2.6.2.md](./DEPLOYMENT_PWA_v2.2.6.2.md) et [PWA_GUIDE.md](./PWA_GUIDE.md)
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
 
@@ -695,8 +721,8 @@ calculatrice-ti83-react/
 ### Guides Utilisateur
 
 - **[PWA_GUIDE.md](./PWA_GUIDE.md)** - Guide complet PWA (installation, utilisation, dépannage) 📱
-- **[DEPLOYMENT_PWA_v2.2.5.md](./DEPLOYMENT_PWA_v2.2.5.md)** - Guide de déploiement PWA v2.2.5 (Puissance intelligente)
-- **[DEPLOYMENT_PWA_v2.1.0.md](./DEPLOYMENT_PWA_v2.1.0.md)** - Guide de déploiement PWA v2.1.0 (PWA initial)
+- **[DEPLOYMENT_PWA_v2.2.6.2.md](./DEPLOYMENT_PWA_v2.2.6.2.md)** - Guide de déploiement PWA v2.2.6.2 (Correction logarithmes)
+- **[DEPLOYMENT_PWA_v2.2.6.md](./DEPLOYMENT_PWA_v2.2.6.md)** - Guide de déploiement PWA v2.2.6 (MEM & MATRIX 100% COMPLETS)
 
 ### Guides Développeur
 
@@ -793,7 +819,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.5 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.6.2 (PWA)** | **7 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
