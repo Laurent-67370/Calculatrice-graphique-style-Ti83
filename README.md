@@ -375,7 +375,7 @@ npm run preview
 Les archives de déploiement PWA v2.2.5 sont disponibles sur GitHub :
 
 - **ZIP** : [calculatrice-ti83-pwa-v2.2.5.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.5.zip) (144 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.5.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.5.tar.gz) (142 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.5.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.5.tar.gz) (145 KB)
 
 ### Déploiement Rapide
 
