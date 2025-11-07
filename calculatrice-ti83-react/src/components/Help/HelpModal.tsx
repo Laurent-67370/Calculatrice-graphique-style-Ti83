@@ -160,6 +160,83 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>TRIG ▶</strong> : sinh, cosh, tanh, asinh, acosh, atanh</li>
               </ul>
 
+              <h3>🧠 Menu MEM (Mémoire)</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Accès : <strong>2ND + +</strong> (touche MEM)
+              </p>
+              <ul>
+                <li><strong>Reset</strong> : Réinitialiser toute la mémoire</li>
+                <li><strong>Delete</strong> : Supprimer des éléments individuels
+                  <ul style={{ marginLeft: '20px', fontSize: '0.9em' }}>
+                    <li>Variables : A-Z, θ (stocker avec STO→)</li>
+                    <li>Listes : L1-L6 (éditeur STAT)</li>
+                    <li>Matrices : A-J (éditeur MATRIX)</li>
+                  </ul>
+                </li>
+                <li><strong>Navigation</strong> :
+                  <ul style={{ marginLeft: '20px', fontSize: '0.9em' }}>
+                    <li>↑ ↓ : Naviguer dans les options</li>
+                    <li>← → : Changer de catégorie (All/Var/List/Matrix)</li>
+                    <li>ENTER : Sélectionner pour suppression</li>
+                    <li>CLEAR : Fermer</li>
+                  </ul>
+                </li>
+              </ul>
+
+              <h3>📊 Menu MATRIX (Matrices)</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Accès : <strong>2ND + X⁻¹</strong> (touche MATRIX)
+              </p>
+
+              <h4>📝 Onglet NAMES - Insérer une matrice</h4>
+              <ul>
+                <li>Sélectionner une matrice (A-J)</li>
+                <li>ENTER pour insérer <code>[A]</code> dans un calcul</li>
+                <li>Affiche les dimensions (ex: 3×3)</li>
+              </ul>
+
+              <h4>✏️ Onglet EDIT - Éditer une matrice</h4>
+              <ol>
+                <li>Sélectionner la matrice à éditer</li>
+                <li>ENTER pour ouvrir l'éditeur de grille</li>
+                <li>← → ↑ ↓ : Naviguer entre les cellules</li>
+                <li>ENTER : Commencer l'édition d'une cellule</li>
+                <li>Taper la valeur et ENTER pour valider</li>
+                <li>Touche <strong>D</strong> : Changer les dimensions (rows/cols)</li>
+                <li>CLEAR : Fermer l'éditeur</li>
+              </ol>
+
+              <h4>🧮 Onglet MATH - Opérations matricielles</h4>
+              <ul>
+                <li><strong>det(</strong> : Déterminant - <code>det([A])</code></li>
+                <li><strong>T</strong> : Transposée - <code>[A]^T</code></li>
+                <li><strong>dim(</strong> : Dimensions - <code>dim([A])</code></li>
+                <li><strong>Fill(</strong> : Remplir - <code>Fill(5,[A])</code></li>
+                <li><strong>identity(</strong> : Matrice identité - <code>identity(3)</code></li>
+                <li><strong>randM(</strong> : Matrice aléatoire - <code>randM(3,3)</code></li>
+              </ul>
+
+              <h4>➕ Calculs matriciels</h4>
+              <div className="help-examples">
+                <strong>Opérations de base :</strong><br/>
+                <code>[A] + [B]</code> - Addition<br/>
+                <code>[A] - [B]</code> - Soustraction<br/>
+                <code>[A] * [B]</code> - Produit matriciel<br/>
+                <code>5 * [A]</code> - Multiplication scalaire<br/>
+                <code>[A] ^ 2</code> - Puissance (A²)<br/>
+                <br/>
+                <strong>Fonctions avancées :</strong><br/>
+                <code>det([A])</code> - Déterminant<br/>
+                <code>[A]^T</code> - Transposée<br/>
+                <code>inv([A])</code> - Inverse<br/>
+                <code>trace([A])</code> - Trace<br/>
+                <br/>
+                <strong>Calculs complexes :</strong><br/>
+                <code>det([A]*[B])</code> - Déterminant du produit<br/>
+                <code>inv([A])*[B]</code> - Résolution A·X=B<br/>
+                <code>2*[A] + [B]^T</code> - Calcul combiné<br/>
+              </div>
+
               <h3>🎨 Fonctionnalités supplémentaires</h3>
               <ul>
                 <li><strong>Navigation fluide</strong> : Tous les éditeurs fonctionnent avec le clavier virtuel</li>
