@@ -1296,6 +1296,7 @@ export const Calculator: React.FC = () => {
         <WindowEditor
           ref={windowEditorRef}
           settings={windowSettings}
+          graphMode={config.graphMode}
           onSave={(settings) => {
             setWindowSettings(settings);
             setMode('NORMAL');
