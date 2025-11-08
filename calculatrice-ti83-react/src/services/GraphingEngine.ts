@@ -85,8 +85,11 @@ export class GraphingEngine {
     }
 
     try {
-      // Remplacer X par la valeur
-      let expr = expression.replace(/X/g, `(${xValue})`);
+      // Remplacer X, T et θ par la valeur
+      let expr = expression
+        .replace(/X/g, `(${xValue})`)
+        .replace(/T/g, `(${xValue})`)
+        .replace(/θ/g, `(${xValue})`);
 
       // Remplacer les symboles
       expr = expr
