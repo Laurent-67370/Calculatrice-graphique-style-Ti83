@@ -388,6 +388,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  overflow-y: auto; /* Permettre le défilement pour voir tous les champs */
+  overflow-x: hidden;
+  padding-right: 4px; /* Espace pour la scrollbar */
 }
 
 .editor-field {

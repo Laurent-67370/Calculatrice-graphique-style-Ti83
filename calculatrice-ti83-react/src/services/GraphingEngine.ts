@@ -465,8 +465,10 @@ export class GraphingEngine {
         const t = window.tMin + i * window.tStep;
 
         // Évaluer X(T) et Y(T)
-        const x = this.evaluateFunction(funcX, t, angleMode);
-        const y = this.evaluateFunction(funcY, t, angleMode);
+        // Pour les équations paramétriques, T est toujours en radians
+        // même si le mode est DEGREE (comportement TI-83)
+        const x = this.evaluateFunction(funcX, t, 'RADIAN');
+        const y = this.evaluateFunction(funcY, t, 'RADIAN');
 
         const screenPoint = transform.graphToScreen(x, y);
 
@@ -512,11 +514,12 @@ export class GraphingEngine {
       try {
         let θ = window.θMin + i * window.θStep;
 
-        // Convertir θ en radians si nécessaire pour le calcul
-        const θRad = angleMode === 'DEGREE' ? (θ * Math.PI / 180) : θ;
+        // Pour les équations polaires, θ est toujours en radians
+        // même si le mode est DEGREE (comportement TI-83)
+        const θRad = θ;
 
-        // Évaluer r(θ) - utiliser X comme variable pour l'expression
-        const r = this.evaluateFunction(func, θ, angleMode);
+        // Évaluer r(θ) - toujours en mode RADIAN
+        const r = this.evaluateFunction(func, θ, 'RADIAN');
 
         // Convertir coordonnées polaires en cartésiennes
         const x = r * Math.cos(θRad);
@@ -593,8 +596,20 @@ export class GraphingEngine {
       });
     } else if (graphMode === 'PAR' && parametricFunctions) {
       // Mode paramétrique (X(T), Y(T))
+      console.log('📐 Mode PAR détecté:', {
+        parametricFunctions,
+        functions: functions.map(f => ({ active: f.active, expr: f.expression }))
+      });
       for (let i = 0; i < 6; i++) {
+        console.log(`Fonction ${i}:`, {
+          active: functions[i]?.active,
+          hasX: !!parametricFunctions.x[i],
+          hasY: !!parametricFunctions.y[i],
+          x: parametricFunctions.x[i],
+          y: parametricFunctions.y[i]
+        });
         if (functions[i]?.active && parametricFunctions.x[i] && parametricFunctions.y[i]) {
+          console.log(`🎨 Traçage fonction paramétrique ${i+1}:`, parametricFunctions.x[i], parametricFunctions.y[i]);
           this.plotParametric(
             parametricFunctions.x[i],
             parametricFunctions.y[i],
