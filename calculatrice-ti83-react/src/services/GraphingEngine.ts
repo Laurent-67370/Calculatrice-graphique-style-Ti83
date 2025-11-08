@@ -437,6 +437,109 @@ export class GraphingEngine {
   }
 
   /**
+   * Trace une fonction paramétrique (X(T), Y(T))
+   */
+  private plotParametric(
+    funcX: string,
+    funcY: string,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    color: string,
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+  ): void {
+    if (!this.ctx || !this.canvas) return;
+
+    const ctx = this.ctx;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    let firstPoint = true;
+    const numPoints = Math.ceil((window.tMax - window.tMin) / window.tStep);
+
+    for (let i = 0; i <= numPoints; i++) {
+      try {
+        const t = window.tMin + i * window.tStep;
+
+        // Évaluer X(T) et Y(T)
+        const x = this.evaluateFunction(funcX, t, angleMode);
+        const y = this.evaluateFunction(funcY, t, angleMode);
+
+        const screenPoint = transform.graphToScreen(x, y);
+
+        if (screenPoint.y >= -100 && screenPoint.y <= this.canvas.height + 100) {
+          if (firstPoint) {
+            ctx.moveTo(screenPoint.x, screenPoint.y);
+            firstPoint = false;
+          } else {
+            ctx.lineTo(screenPoint.x, screenPoint.y);
+          }
+        } else {
+          firstPoint = true;
+        }
+      } catch (error) {
+        firstPoint = true;
+      }
+    }
+
+    ctx.stroke();
+  }
+
+  /**
+   * Trace une fonction polaire r(θ)
+   */
+  private plotPolar(
+    func: string,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    color: string,
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+  ): void {
+    if (!this.ctx || !this.canvas) return;
+
+    const ctx = this.ctx;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    let firstPoint = true;
+    const numPoints = Math.ceil((window.θMax - window.θMin) / window.θStep);
+
+    for (let i = 0; i <= numPoints; i++) {
+      try {
+        let θ = window.θMin + i * window.θStep;
+
+        // Convertir θ en radians si nécessaire pour le calcul
+        const θRad = angleMode === 'DEGREE' ? (θ * Math.PI / 180) : θ;
+
+        // Évaluer r(θ) - utiliser X comme variable pour l'expression
+        const r = this.evaluateFunction(func, θ, angleMode);
+
+        // Convertir coordonnées polaires en cartésiennes
+        const x = r * Math.cos(θRad);
+        const y = r * Math.sin(θRad);
+
+        const screenPoint = transform.graphToScreen(x, y);
+
+        if (screenPoint.y >= -100 && screenPoint.y <= this.canvas.height + 100) {
+          if (firstPoint) {
+            ctx.moveTo(screenPoint.x, screenPoint.y);
+            firstPoint = false;
+          } else {
+            ctx.lineTo(screenPoint.x, screenPoint.y);
+          }
+        } else {
+          firstPoint = true;
+        }
+      } catch (error) {
+        firstPoint = true;
+      }
+    }
+
+    ctx.stroke();
+  }
+
+  /**
    * Dessine le graphique complet
    */
   drawGraph(
@@ -444,7 +547,9 @@ export class GraphingEngine {
     window: WindowSettings,
     angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE',
     statPlots?: [StatPlot, StatPlot, StatPlot],
-    lists?: Record<string, number[]>
+    lists?: Record<string, number[]>,
+    graphMode: 'FUNC' | 'PAR' | 'POL' | 'SEQ' = 'FUNC',
+    parametricFunctions?: { x: string[], y: string[] }
   ): void {
     if (!this.ctx || !this.canvas) {
       console.warn('Canvas non initialisé');
@@ -475,12 +580,36 @@ export class GraphingEngine {
       });
     }
 
-    // Tracer chaque fonction active
-    functions.forEach((func) => {
-      if (func.active && func.expression) {
-        this.plotFunction(func, window, transform, angleMode);
+    // Dessiner les fonctions selon le mode
+    if (graphMode === 'FUNC') {
+      // Mode fonction Y(X)
+      functions.forEach((func) => {
+        if (func.active && func.expression) {
+          this.plotFunction(func, window, transform, angleMode);
+        }
+      });
+    } else if (graphMode === 'PAR' && parametricFunctions) {
+      // Mode paramétrique (X(T), Y(T))
+      for (let i = 0; i < 6; i++) {
+        if (functions[i]?.active && parametricFunctions.x[i] && parametricFunctions.y[i]) {
+          this.plotParametric(
+            parametricFunctions.x[i],
+            parametricFunctions.y[i],
+            window,
+            transform,
+            this.colors[i],
+            angleMode
+          );
+        }
       }
-    });
+    } else if (graphMode === 'POL') {
+      // Mode polaire r(θ)
+      functions.forEach((func) => {
+        if (func.active && func.expression) {
+          this.plotPolar(func.expression, window, transform, func.color || this.colors[func.index], angleMode);
+        }
+      });
+    }
   }
 
   /**

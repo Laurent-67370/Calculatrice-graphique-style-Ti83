@@ -1321,6 +1321,7 @@ export const Calculator: React.FC = () => {
           functions={graphFunctionsData}
           window={windowSettings}
           angleMode={config.angleMode}
+          graphMode={config.graphMode}
           statPlots={statPlots}
           lists={listsData}
         />
