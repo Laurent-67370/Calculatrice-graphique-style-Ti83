@@ -115,6 +115,47 @@ export const Calculator: React.FC = () => {
   console.log({ graphingEngine, statisticsService, mathFunctionsService });
 
   // Obtenir les items du menu actuel AVANT handleKeyPress
+  // Générer le menu VARS dynamiquement selon le mode graphique
+  const varsMenuItemsDynamic = useMemo(() => {
+    // Créer le sous-menu Window selon le mode graphique
+    const windowSubmenu = [
+      { id: 'xmin', label: 'Xmin', action: () => {} },
+      { id: 'xmax', label: 'Xmax', action: () => {} },
+      { id: 'xscl', label: 'Xscl', action: () => {} },
+      { id: 'ymin', label: 'Ymin', action: () => {} },
+      { id: 'ymax', label: 'Ymax', action: () => {} },
+      { id: 'yscl', label: 'Yscl', action: () => {} },
+    ];
+
+    // Ajouter les variables spécifiques au mode
+    if (config.graphMode === 'PAR') {
+      windowSubmenu.push(
+        { id: 'tmin', label: 'Tmin', action: () => {} },
+        { id: 'tmax', label: 'Tmax', action: () => {} },
+        { id: 'tstep', label: 'Tstep', action: () => {} }
+      );
+    } else if (config.graphMode === 'POL') {
+      windowSubmenu.push(
+        { id: 'θmin', label: 'θmin', action: () => {} },
+        { id: 'θmax', label: 'θmax', action: () => {} },
+        { id: 'θstep', label: 'θstep', action: () => {} }
+      );
+    } else if (config.graphMode === 'SEQ') {
+      windowSubmenu.push(
+        { id: 'nmin', label: 'nMin', action: () => {} },
+        { id: 'nmax', label: 'nMax', action: () => {} },
+        { id: 'plotstart', label: 'PlotStart', action: () => {} },
+        { id: 'plotstep', label: 'PlotStep', action: () => {} }
+      );
+    }
+
+    // Retourner le menu VARS complet avec Window dynamique
+    return [
+      { id: 'vars-window', label: 'Window...', action: () => {}, submenu: windowSubmenu },
+      ...varsMenuItems.slice(1), // Garder Zoom, XY, Matrix
+    ];
+  }, [config.graphMode]);
+
   const currentMenuItems = useMemo(() => {
     // Si on est dans un sous-menu, utiliser le dernier item du stack
     if (menuStack.length > 0) {
@@ -125,9 +166,9 @@ export const Calculator: React.FC = () => {
     if (currentMenu === 'MATH') return mathMenuItems;
     if (currentMenu === 'ZOOM') return zoomMenuItems;
     if (currentMenu === 'CALC') return calcMenuItems;
-    if (currentMenu === 'VARS') return varsMenuItems;
+    if (currentMenu === 'VARS') return varsMenuItemsDynamic;
     return [];
-  }, [currentMenu, menuStack]);
+  }, [currentMenu, menuStack, varsMenuItemsDynamic]);
 
   // Créer les handlers pour les menus
   const zoomHandlers = useMemo(() =>
