@@ -1,6 +1,6 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 2.3.0.1 - React + TypeScript + PWA
+## Version 2.4.0.0 - React + TypeScript + PWA
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
@@ -64,7 +64,17 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 
 ## 🎯 Fonctionnalités Principales
 
-### 🎯 **SOLVER & CATALOG** (Nouveauté v2.3.0.0)
+### 💰 **FINANCE TVM** (Nouveauté v2.4.0.0)
+- **TVM Solver** (APPS) : Calculateur financier professionnel
+  - Time Value of Money (Valeur Temporelle de l'Argent)
+  - 7 variables : N, I%, PV, PMT, FV, P/Y, C/Y
+  - Calcul automatique de n'importe quelle variable
+  - Mode END/BEGIN pour paiements
+  - Exemples : prêts hypothécaires, épargne retraite, crédits auto
+  - Précision financière professionnelle
+  - Interface intuitive avec navigation ↑↓
+
+### 🎯 **SOLVER & CATALOG** (v2.3.0.0)
 - **SOLVER** (MATH > 0) : Résolveur d'équations f(X)=0
   - Méthode de Newton-Raphson avec fallback bisection
   - Précision : 10 décimales
@@ -127,6 +137,38 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 ---
 
 ## 🚀 Guide d'Utilisation Rapide
+
+### Calculer un prêt avec FINANCE TVM
+
+1. **Ouvrir le Finance TVM Solver**
+   - Cliquer sur **APPS**
+   - Le TVM Solver s'affiche avec 7 variables
+
+2. **Exemple : Calculer la mensualité d'un prêt immobilier**
+   - **N** = `240` (20 ans × 12 mois)
+   - **I%** = `3.5` (taux annuel 3.5%)
+   - **PV** = `200000` (emprunt de 200 000€)
+   - **PMT** = `0` (à calculer)
+   - **FV** = `0` (solde final = 0)
+   - **P/Y** = `12` (12 paiements par an)
+   - **C/Y** = `12` (12 compositions par an)
+
+3. **Calculer PMT**
+   - Naviguer avec **↑ ↓** jusqu'à **PMT**
+   - Appuyer sur **GRAPH**
+   - Résultat : PMT = **-1158.03€** (paiement mensuel)
+
+4. **Autres exemples financiers**
+   ```
+   Épargne retraite :
+   PMT=-500, I%=5, N=300, PV=0 → FV = 295 488€
+
+   Durée d'un crédit auto :
+   PV=15000, PMT=-350, I%=4.2, FV=0 → N = 46.27 mois
+
+   Taux effectif d'un placement :
+   PV=-10000, FV=15000, N=60, PMT=0 → I% = 8.44%
+   ```
 
 ### Résoudre une équation avec le SOLVER
 
