@@ -19,7 +19,7 @@ import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
-import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems } from '../../data/menus';
+import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems } from '../../data/menus';
 import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers } from '../../utils/menuHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
@@ -105,6 +105,7 @@ export const Calculator: React.FC = () => {
     if (currentMenu === 'MATH') return mathMenuItems;
     if (currentMenu === 'ZOOM') return zoomMenuItems;
     if (currentMenu === 'CALC') return calcMenuItems;
+    if (currentMenu === 'VARS') return varsMenuItems;
     return [];
   }, [currentMenu, menuStack]);
 
@@ -184,6 +185,13 @@ export const Calculator: React.FC = () => {
               handler = (calcHandlers as any)[currentItem.id];
             } else if (currentMenu === 'RCL') {
               // Menu RCL : insérer la variable sélectionnée dans l'input
+              const varName = currentItem.label;
+              handler = () => {
+                appendInput(varName);
+                setCurrentMenu(null);
+              };
+            } else if (currentMenu === 'VARS') {
+              // Menu VARS : insérer la variable système sélectionnée
               const varName = currentItem.label;
               handler = () => {
                 appendInput(varName);
@@ -355,6 +363,13 @@ export const Calculator: React.FC = () => {
       // Gérer MATH
       if (action === 'math') {
         setCurrentMenu('MATH');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer VARS
+      if (action === 'vars') {
+        setCurrentMenu('VARS');
         setGraphMode(false);
         return;
       }
@@ -801,6 +816,14 @@ export const Calculator: React.FC = () => {
                 scope[name] = value;
               }
             });
+
+            // Ajouter les variables VARS (Window settings) au scope
+            scope.Xmin = windowSettings.xMin;
+            scope.Xmax = windowSettings.xMax;
+            scope.Xscl = windowSettings.xScale;
+            scope.Ymin = windowSettings.yMin;
+            scope.Ymax = windowSettings.yMax;
+            scope.Yscl = windowSettings.yScale;
 
             // Ajouter les matrices au scope
             matrixNames.forEach(name => {
