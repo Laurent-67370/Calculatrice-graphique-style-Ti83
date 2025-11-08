@@ -1,470 +1,297 @@
-# 🧮 Calculatrice TI-83 Plus - Progressive Web App
+# 🧮 Calculatrice Graphique TI-83 Plus
 
-Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
+## Version 2.3.0.1 - React + TypeScript + PWA
 
-![Version](https://img.shields.io/badge/version-2.2.8.0-blue)
-![PWA](https://img.shields.io/badge/PWA-Ready-success)
-![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-green)
+Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
 ---
 
-## ✨ Aperçu
+## ✨ Améliorations par rapport à la version JavaScript
 
-Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une architecture moderne, type-safe et performante. Clavier réorganisé pour correspondre exactement à la TI-83 Plus physique !
+### 🔒 **Sécurité et Robustesse**
+- ✅ **Typage statique complet** avec TypeScript
+- ✅ **Détection d'erreurs à la compilation**
+- ✅ **Interfaces strictes** pour tous les composants
+- ✅ **Validation des types** à chaque étape
 
-**🎯 État du Projet : 100% Complété**
-- ✅ Backend (Services) : 100%
-- ✅ Frontend (UI/UX) : 100%
-- ✅ Menu STAT : **100% complet** (14/14 fonctions)
-- ✅ Menu CALC : **100% complet** (7/7 fonctions)
-- ✅ Menu MATH : **100% complet** (38 fonctions, 6 catégories)
-- ✅ Menu VARS : **100% complet** (Window dynamique PAR/POL/SEQ, Zoom, XY, Matrix)
-- ✅ PWA : **100%** (Installable, Hors ligne, Auto-update) 🎉
-- ✅ Prêt pour production
+### ⚡ **Performance Optimisée**
+- ✅ **React.memo** pour éviter les re-rendus inutiles
+- ✅ **useCallback** pour optimiser les callbacks
+- ✅ **Zustand** : gestion d'état 10x plus rapide que Redux
+- ✅ **Virtual DOM** de React pour des mises à jour efficaces
+- ✅ **Build optimisé** avec tree-shaking et minification (68 KB gzip)
 
-**📍 Démo en ligne :** [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
-
----
-
-## 🎉 Version 2.2.8.0 - Optimisations Modes Graphiques ! 🎯
-
-### 🚀 Nouvelles Fonctionnalités v2.2.8.0
-
-#### 🎛️ Menu VARS Dynamique
-Le menu VARS s'adapte maintenant automatiquement au mode graphique sélectionné !
-
-**Window dynamique selon le mode** :
-- **Mode FUNC** : Xmin, Xmax, Xscl, Ymin, Ymax, Yscl
-- **Mode PAR** : + Tmin, Tmax, Tstep (variables paramétriques)
-- **Mode POL** : + θmin, θmax, θstep (variables polaires)
-- **Mode SEQ** : + nMin, nMax, PlotStart, PlotStep (variables de séquence)
-
-```
-MODE → PAR
-VARS → Window... → Affiche Tmin, Tmax, Tstep
-```
-
-#### 🔤 Touche X,T,θ,n Intelligente
-La touche X,T,θ,n insère automatiquement la bonne variable selon le mode !
-
-- **Mode FUNC** → insère **X**
-- **Mode PAR** → insère **T**
-- **Mode POL** → insère **θ**
-- **Mode SEQ** → insère **n**
-
-```
-MODE → POL
-Y= → r1= → [X,T,θ,n] → insère θ automatiquement
-```
-
-#### 📊 Indicateur de Mode Graphique
-Le mode actif s'affiche en temps réel dans la barre d'état (coin supérieur gauche) :
-- **PAR** affiché en mode paramétrique
-- **POL** affiché en mode polaire
-- **SEQ** affiché en mode séquence
-- Mode FUNC n'affiche rien (par défaut)
-
-#### 📈 TABLE Paramétrique
-Support complet du mode paramétrique dans TABLE !
-- En mode **PAR** : Colonnes **T, X1T, Y1T, X2T, Y2T**...
-- En mode **FUNC** : Colonnes **X, Y1, Y2**...
-- Évaluation correcte de X(T) et Y(T)
-
-```
-MODE → PAR
-Y= → X1T=cos(T), Y1T=sin(T)
-2ND + GRAPH → TABLE → Affiche T, X1T, Y1T
-```
-
-#### ⚡ Service Worker Optimisé
-Mises à jour automatiques améliorées :
-- **NetworkFirst** au lieu de CacheFirst
-- Cache valide 7 jours au lieu de 1 an
-- Nettoyage automatique des anciens caches
-- Mise à jour immédiate lors du déploiement
-
-### 🎯 Hérite de v2.2.7.0
-
-#### 📊 TABLE & TBLSET - Affichage Tabulaire
-Visualisez vos fonctions sous forme de tableau comme sur une vraie TI-83 Plus !
-
-**TABLE (2ND + GRAPH)** :
-- Affichage tabulaire de toutes les fonctions actives (Y1-Y6)
-- 50 lignes de valeurs calculées automatiquement
-- Navigation verticale et horizontale avec les flèches
-- Scroll indicator pour les grandes tables
-
-**TBLSET (2ND + WINDOW)** :
-- **TblStart** : Valeur de départ du tableau
-- **ΔTbl** : Incrément entre chaque valeur
-- **Indpnt** : Mode AUTO ou ASK
-- **Depend** : Mode AUTO ou ASK
-
-```
-Y= → Entrez Y1=X²
-2ND + WINDOW → TBLSET (TblStart=0, ΔTbl=1)
-2ND + GRAPH → TABLE (affiche le tableau)
-```
-
-#### 📈 STAT PLOT - Graphiques Statistiques
-3 plots statistiques configurables indépendamment !
-
-**Types de graphiques** :
-- **Scatter** (nuage de points) : avec marqueurs □, +, •
-- **xyLine** : Ligne reliant les points
-- **Histogram** : Histogramme avec bins automatiques
-- **Box Plot** : Boîtes à moustaches (modifié et normal)
-- **Normal Probability Plot** : Graphique de probabilité
-
-**Configuration (2ND + Y=)** :
-- On/Off pour chaque plot (Plot1, Plot2, Plot3)
-- Choix du type de graphique
-- Sélection des listes X et Y (L1-L6)
-- Style de marqueur
-
-```
-STAT → Edit → Entrez des données dans L1 et L2
-2ND + Y= → Plot1 → ON → scatter → L1, L2
-GRAPH → Affiche le scatter plot
-```
-
-#### 🔄 Modes Graphiques Parametric et Polar
-Support complet des équations paramétriques et polaires !
-
-**Mode Parametric (Par)** :
-- Tracé de courbes X(T), Y(T)
-- Paramètres : tMin, tMax, tStep
-- Parfait pour les spirales, ellipses, cycloides
-
-**Mode Polar (Pol)** :
-- Tracé de courbes r(θ)
-- Paramètres : θMin, θMax, θStep
-- Conversion automatique polaire → cartésien
-
-**Sélection du mode** :
-```
-MODE → Func/Par/Pol/Seq
-WINDOW → Configure tMin, tMax, θMin, θMax, etc.
-Y= → Entrez vos équations
-GRAPH → Tracé automatique
-```
-
-**Exemples** :
-```
-Parametric: X1T=cos(T), Y1T=sin(T) → Cercle
-Polar: r1=1+cos(θ) → Cardioïde
-```
-
-### 💾 Hérite de v2.2.6.4 et antérieures
-
-- ✅ **Menu VARS** - Variables système (Window, Zoom, XY, Matrix)
-- ✅ **STO→ et RCL** - Stockage et rappel de 26 variables (A-Z)
-- ✅ **Menu MEM** - Gestion complète de la mémoire
-- ✅ **Menu MATRIX** - Édition de 10 matrices [A]-[J]
-- ✅ **Logarithmes corrigés** - ln() et log() fonctionnels
-- ✅ **Puissance intelligente** - Réutilisation automatique des résultats
-- ✅ **Opérateurs intelligents** - Calculs en chaîne fluides
+### 🏗️ **Architecture Moderne**
+- ✅ **Composants modulaires** et réutilisables
+- ✅ **Séparation des responsabilités** (UI / Logic / State)
+- ✅ **Services dédiés** pour le graphique, les stats, les maths
+- ✅ **Store centralisé** avec Zustand
+- ✅ **Types réutilisables** pour toute l'application
 
 ---
 
-## 📦 Téléchargement et Déploiement
-
-### Archives PWA v2.2.8.0
-
-Les archives de déploiement sont disponibles sur GitHub :
-
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.8.0.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.8.0.zip) (340 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.8.0.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.8.0.tar.gz) (341 KB)
-
-### Déploiement Rapide
-
-**Via FTP :**
-1. Téléchargez le ZIP depuis GitHub
-2. Décompressez localement
-3. Uploadez le contenu dans votre dossier web (HTTPS requis !)
-
-**Via SSH :**
-```bash
-# Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.8.0.tar.gz
-tar -xzf calculatrice-ti83-pwa-v2.2.8.0.tar.gz -C /var/www/html/calculatrice/
-```
-
-⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
-
----
-
-## 🚀 Démarrage Rapide
-
-### Prérequis
-- Node.js 18+ et npm
-
-### Installation et Développement
+## 📦 Installation et Démarrage
 
 ```bash
-# Cloner le dépôt
-git clone https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83.git
-cd Calculatrice-graphique-style-Ti83/calculatrice-ti83-react
-
 # Installer les dépendances
 npm install
 
-# Lancer en mode développement
+# Lancer le serveur de développement
 npm run dev
 
-# Ouvrir dans le navigateur
-# http://localhost:5173/
-```
-
-### Build de Production PWA
-
-```bash
-# Créer le build optimisé (inclut génération d'icônes PWA)
+# Build de production
 npm run build
 
 # Prévisualiser le build
 npm run preview
 ```
 
----
+L'application sera disponible sur `http://localhost:5173`
 
-## 🌟 Fonctionnalités Principales
+### 🚀 Déploiement sur Netlify
 
-### ✅ Mode Graphique Complet
-- **Éditeur Y=** : 6 fonctions simultanées (Y1-Y6)
-- **Modes graphiques** : Function, Parametric, Polar, Sequence
-- **Éditeur WINDOW** : Configuration complète (xMin/Max, tMin/Max, θMin/Max)
-- **Menu ZOOM** : 10 modes prédéfinis (ZStandard, ZDecimal, ZTrig, etc.)
-- **Mode TRACE** : Navigation interactive sur les courbes
-- **GraphCanvas** : Tracé multi-courbes optimisé avec support Par/Pol
+```bash
+# Déployer en production
+npm run deploy
 
-### ✅ TABLE & TBLSET - Affichage Tabulaire
-- **TABLE (2ND + GRAPH)** : Tableau de valeurs pour Y1-Y6
-- **TBLSET (2ND + WINDOW)** : Configuration TblStart, ΔTbl
-- **Navigation** : Scroll vertical (50 lignes) et horizontal
-- **Évaluation automatique** : Toutes les fonctions actives
+# Déployer en mode preview
+npm run deploy:preview
+```
 
-### ✅ STAT PLOT - Graphiques Statistiques
-- **3 plots indépendants** : Plot1, Plot2, Plot3
-- **Types** : Scatter (□,+,•), xyLine, Histogram, Box Plot
-- **Listes** : Support complet de L1-L6
-- **Superposition** : Compatible avec les fonctions Y1-Y6
-
-### ✅ Menu VARS (Variables Système) - Dynamique !
-- **Window** : S'adapte au mode graphique
-  - Mode FUNC : Xmin, Xmax, Xscl, Ymin, Ymax, Yscl
-  - Mode PAR : + Tmin, Tmax, Tstep
-  - Mode POL : + θmin, θmax, θstep
-  - Mode SEQ : + nMin, nMax, PlotStart, PlotStep
-- **Zoom** : Variables de zoom (ZXmin, ZXmax, ZXscl, ZYmin, ZYmax, ZYscl)
-- **XY** : Coordonnées du dernier point tracé
-- **Matrix** : Matrices [A] à [J]
-
-### ✅ Statistiques - 100% Complet
-- **Menu STAT** : 14 fonctions (Edit, 1-Var Stats, 2-Var Stats, 13 types de régressions)
-- **Éditeur de Listes** : 6 listes (L1-L6) avec édition interactive
-- **Calculs avancés** : Régressions linéaire, quadratique, cubique, exponentielle, etc.
-
-### ✅ Menu MATH - 100% Complet
-- **38 fonctions** réparties en **6 catégories** :
-  - MATH : ³√(), logBASE(), e^(), 10^(), hypot()
-  - NUM : abs(), round(), iPart(), fPart(), int(), min(), max(), etc.
-  - CPX : Nombres complexes
-  - PRB : Probabilités et distributions
-  - ANGLE : Conversions d'angles
-  - TRIG : Fonctions hyperboliques
-
-### ✅ Menu CALC (Calculs sur courbes)
-- **7 fonctions** : value, zero, minimum, maximum, intersect, dy/dx, ∫f(x)dx
-- **Algorithmes avancés** : Newton-Raphson, section dorée, Simpson
-
-### ✅ Mémoire et Variables
-- **Menu MEM** (2ND + +) : Gestion complète de la mémoire
-- **STO→ et RCL** : 26 variables utilisateur (A-Z)
-- **Menu MATRIX** : 10 matrices [A]-[J] éditables
-- **Stockage persistant** : Tout reste en mémoire
-
-### ✅ PWA (Progressive Web App)
-- 📲 **Installable** sur Android (Chrome)
-- 📴 **Mode hors ligne** complet
-- ⚡ **Chargement instantané**
-- 🔄 **Mises à jour automatiques** (NetworkFirst)
-- 💾 **Légère** : 340 KB seulement
+Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 
 ---
 
-## 🏗️ Architecture Technique
+## 🎯 Fonctionnalités Principales
 
-### Stack
-- **React 19.1** - Framework UI moderne
-- **TypeScript 5.6** - Typage statique complet
-- **Vite 7.2** - Build tool ultra-rapide
-- **Zustand 5** - State management performant
-- **Vite PWA Plugin** - PWA avec mode offline
-- **Canvas API** - Rendu graphique optimisé
+### 🎯 **SOLVER & CATALOG** (Nouveauté v2.3.0.0)
+- **SOLVER** (MATH > 0) : Résolveur d'équations f(X)=0
+  - Méthode de Newton-Raphson avec fallback bisection
+  - Précision : 10 décimales
+  - Support complet des fonctions mathématiques
+  - Affichage du nombre d'itérations
+- **CATALOG** (2ND + 0) : Liste alphabétique de 100+ fonctions
+  - Recherche rapide par lettre (A-Z)
+  - Navigation intuitive ↑↓
+  - Insertion directe dans l'input
 
-### Services Backend
-- **GraphingEngine.ts** - Moteur de tracé de courbes
-- **StatisticsService.ts** - Calculs statistiques et régressions
-- **MathFunctionsService.ts** - 50+ fonctions mathématiques
+### 📊 **Graphiques**
+- Tracer jusqu'à 6 fonctions simultanément (Y1 à Y6)
+- **Modes graphiques** : Function, Parametric, Polar
+- Zoom In/Out, presets (Standard, Decimal, Trig, Square)
+- Mode Trace pour suivre les courbes
+- Calculs sur courbe (zéros, min, max, intégrale, dérivée)
+- **TABLE** (2ND + GRAPH) : Affichage tabulaire avec TBLSET
 
----
+### 📈 **Statistiques & Listes**
+- Édition de listes (L1-L6) avec éditeur complet
+- **STAT PLOT** (2ND + Y=) : 5 types de graphiques
+  - Scatter, xyLine, Histogram, Box Plot (normal et modifié)
+  - 3 plots indépendants configurables
+  - Marqueurs personnalisables (□, +, •)
+- Statistiques à 1 et 2 variables (mean, Sx, σx, Q1, Med, Q3)
+- **12 types de régressions** :
+  - LinReg, QuadReg, CubicReg, QuartReg
+  - ExpReg, PwrReg, LnReg, SinReg, Logistic
+  - Med-Med, LinReg(a+bx)
 
-## 📊 Statistiques
+### 🧮 **MATH - 38 Fonctions en 6 Catégories**
+- **MATH** : ³√, logBASE, e^x, 10^x, hypot
+- **NUM** : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod
+- **CPX** : conj, real, imag, angle, abs, Rect, Polar
+- **PRB** : rand, nPr, nCr, !, randInt, randNorm, randBin
+- **ANGLE** : °→rad, rad→°, →DMS, →Dec
+- **TRIG** : sinh, cosh, tanh, asinh, acosh, atanh
 
-### Code
-- **5,000+ lignes** de TypeScript
-- **600+ lignes** de CSS
-- **15 composants** React
-- **3 services** backend
-- **120+ fonctions** mathématiques
+### 💾 **Mémoire & Variables**
+- **MEM** (2ND + +) : Gestion mémoire complète
+  - Reset total ou suppression sélective
+  - Variables A-Z, θ (stockage avec STO→)
+  - Listes L1-L6
+  - Matrices A-J
+- **MATRIX** (2ND + X⁻¹) : Calcul matriciel complet
+  - Éditeur de grille avec navigation
+  - Opérations : +, −, ×, ^, transposée
+  - Fonctions : det, dim, Fill, identity, randM
+  - Support des calculs complexes
 
-### Performance PWA
-- **Build time** : < 10s
-- **Bundle total** : 340 KB (287 KB compressé)
-- **Service Worker** : NetworkFirst optimisé
-- **Cache** : 13 fichiers, 7 jours
-- **Lighthouse score** : 90+
-
-### Complétion
-- ✅ **Calculatrice de base** : 100%
-- ✅ **Mode graphique** : 100%
-- ✅ **Statistiques (STAT)** : 100% (14/14)
-- ✅ **Calculs (CALC)** : 100% (7/7)
-- ✅ **Menu MATH** : 100% (38/38)
-- ✅ **Menu VARS** : 100% (4 sous-menus)
-- ✅ **PWA** : 100%
-- ⬜ **Programmation** : 0% (non prévu)
-
-**Complétion totale : 100%** 🎉
-
----
-
-## 📝 Historique des Versions
-
-### v2.2.8.0 (Novembre 2025) - Actuelle ⭐
-- **VARS dynamique** : Menu Window s'adapte au mode (PAR/POL/SEQ)
-- **Touche X,T,θ,n** : Insère automatiquement la bonne variable selon le mode
-- **Indicateur mode** : Affichage PAR/POL/SEQ dans la barre d'état
-- **TABLE paramétrique** : Colonnes T, X1T, Y1T en mode PAR
-- **Service Worker** : NetworkFirst + cache 7j pour mises à jour rapides
-
-### v2.2.7.0 (Novembre 2025)
-- **TABLE & TBLSET** : Affichage tabulaire complet des fonctions
-- **STAT PLOT** : 3 plots statistiques (scatter, histogram, box plots)
-- **Modes Par/Pol** : Support graphique paramétrique et polaire
-- **Sélection MODE** : Choix Func/Par/Pol/Seq dans l'écran MODE
-- Intégration complète avec navigation clavier
-
-### v2.2.6.4 (Novembre 2025)
-- Champ vide au démarrage
-- CLEAR pour sortir du graphique
-- Menu VARS avec sous-menu Matrix
-
-### v2.2.6.3 (Novembre 2025)
-- STO→ et RCL (26 variables A-Z)
-- Menu VARS (Window, Zoom, XY)
-
-### v2.2.6 (Novembre 2025)
-- Menu MEM complet
-- Menu MATRIX complet (10 matrices)
-- Éditeur de grille 2D
-
-### v2.2.5 (Novembre 2025)
-- Puissance intelligente (^)
-- Logarithmes corrigés (ln, log)
-
-### v2.2.4 (Novembre 2025)
-- Mode SECOND auto-désactivé
-- Mode ALPHA corrigé
-
-### v2.2.3 (Novembre 2025)
-- Opérateurs arithmétiques intelligents
-
-### v2.2.0 (Novembre 2025)
-- Clavier réorganisé (conforme TI-83 Plus)
-- 30+ lettres ALPHA
-
-### v2.1.0 (Novembre 2025)
-- PWA installable sur Android
-- Mode hors ligne complet
+### 🔢 **Calculs**
+- Opérations arithmétiques de base (+, −, ×, ÷)
+- Fonctions trigonométriques (sin, cos, tan, asin, acos, atan)
+- Fonctions exponentielles et logarithmiques (ln, log, exp, e^x, 10^x)
+- Racines et puissances (√, ³√, ^, x²)
+- Parenthèses et ordre des opérations
+- **ANS** : Calculs en chaîne avec le dernier résultat
+- **STO→** et **RCL** : Stockage et rappel de variables
 
 ---
 
-## 🎯 Cas d'Usage
+## 🚀 Guide d'Utilisation Rapide
 
-### Enseignement
-- 📚 **Mathématiques lycée** : Fonctions, statistiques, probabilités
-- 📊 **Statistiques avancées** : Régressions polynomiales, sinusoïdales
-- 🔬 **Sciences** : Calculs scientifiques, graphiques
+### Résoudre une équation avec le SOLVER
 
-### Examens
-- 📝 **Compatible TI-83 Plus** : Interface identique
-- ⚡ **Rapide** : Chargement instantané
-- 📱 **Mobile** : Installable sur Android
-- 📴 **Hors ligne** : Fonctionne sans Internet
+1. **Ouvrir le Solver**
+   - Cliquer sur **MATH**
+   - Sélectionner **0:Solver...**
 
-### Usage Personnel
-- 🎓 **Étudiants** : Toujours dans votre poche
-- 👨‍🔬 **Professionnels** : Calculs scientifiques rapides
-- 🧮 **Passionnés** : Nostalgie de la TI-83 originale
+2. **Entrer l'équation**
+   - **Équation** : Taper `X^2-4` (résout X²-4=0)
+   - **Estimation** : Taper `1` (valeur de départ)
+   - Appuyer sur **GRAPH** pour résoudre
+
+3. **Résultat**
+   - X = 2.0000000000 (10 décimales)
+   - Affiche le nombre d'itérations
+
+### Exemples d'équations pour le Solver
+
+```
+X^2-4            → Racines: X = ±2
+X^3-2*X-5        → X = 2.0945514815
+sin(X)-0.5       → X = 0.5235987756 (rad)
+ln(X)-2          → X = 7.3890560989
+cos(X)-X         → X = 0.7390851332
+```
+
+### Tracer un graphique
+
+1. **Définir une fonction**
+   - Cliquer sur **Y=**
+   - Taper `X^2` (ou `X*X`, `X×X`)
+   - Appuyer sur **ENTER**
+
+2. **Afficher le graphique**
+   - Cliquer sur **GRAPH**
+   - La parabole apparaît !
+
+3. **Ajuster la vue**
+   - **WINDOW** : Modifier xMin, xMax, yMin, yMax
+   - **ZOOM** : Choisir un preset (Standard, Decimal, Trig)
+
+### Exemples de fonctions valides
+
+```
+X^2              → Parabole
+X^3 - 2*X        → Cubique
+sin(X)           → Sinusoïde
+cos(X)           → Cosinusoïde
+2^X              → Exponentielle
+ln(X)            → Logarithme
+sqrt(X)          → Racine carrée
+abs(X)           → Valeur absolue
+```
+
+### Utiliser le CATALOG
+
+1. **Ouvrir le Catalog**
+   - Appuyer sur **2ND + 0**
+   - Liste de 100+ fonctions apparaît
+
+2. **Recherche rapide**
+   - Taper **S** pour sauter aux fonctions commençant par S
+   - Utiliser **↑↓** pour naviguer
+
+3. **Insérer**
+   - Appuyer sur **ENTER** pour insérer la fonction sélectionnée
+
+---
+
+## 🏗️ Architecture du Projet
+
+```
+src/
+├── types/                    # Types TypeScript
+│   ├── calculator.types.ts   # Types calculatrice
+│   ├── graph.types.ts        # Types graphiques
+│   └── menu.types.ts         # Types menus
+│
+├── store/                    # Gestion d'état Zustand
+│   └── calculatorStore.ts    # Store global
+│
+├── services/                 # Logique métier
+│   └── GraphingEngine.ts     # Moteur de graphiques
+│
+├── components/               # Composants React
+│   ├── Calculator/
+│   │   ├── Calculator.tsx    # Composant principal
+│   │   ├── Display.tsx       # Écran LCD
+│   │   └── Keyboard.tsx      # Clavier
+│   └── Graph/
+│       └── GraphCanvas.tsx   # Canvas graphique
+│
+├── styles/
+│   └── ti83.css             # Styles TI-83
+│
+├── App.tsx                   # App principale
+└── main.tsx                  # Point d'entrée
+```
+
+---
+
+## 🎨 Technologies Utilisées
+
+| Technologie | Version | Utilisation |
+|------------|---------|-------------|
+| React | 19.1+ | Framework UI avec Virtual DOM |
+| TypeScript | 5.6+ | Typage statique et sécurité |
+| Zustand | 5.0+ | Gestion d'état centralisée |
+| Vite | 7.2+ | Build tool ultra-rapide |
+| MathJS | 14.0+ | Calculs mathématiques complexes |
+| Workbox | 7.3+ | Service Worker pour PWA |
+| Sharp | 0.34+ | Génération d'icônes PWA |
+
+---
+
+## 📊 Comparaison JavaScript vs TypeScript
+
+| Critère | JavaScript | React + TypeScript |
+|---------|-----------|-------------------|
+| Erreurs runtime | Fréquentes | Rares (détectées à la compilation) |
+| Performance | Bonne | Excellente (Virtual DOM) |
+| Maintenabilité | Moyenne | Excellente (types + composants) |
+| Refactoring | Risqué | Sûr (TypeScript) |
+| Build size | ~50KB | ~68KB (optimisé) |
+| Hot reload | Non | Oui (HMR de Vite) |
+
+---
+
+## 🐛 Dépannage
+
+### Le graphique ne s'affiche pas
+- Vérifier que vous avez bien cliqué sur **ENTER** après avoir tapé la fonction dans Y=
+- S'assurer que X est en **majuscule**
+- Utiliser **WINDOW** ou **ZOOM** pour ajuster la fenêtre de visualisation
+
+### Les touches ne répondent pas
+- Actualiser la page (Ctrl+R / Cmd+R)
+- Vérifier la console du navigateur (F12) pour les erreurs
 
 ---
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! Pour contribuer :
+Les contributions sont bienvenues !
 
 1. Fork le projet
-2. Créez une branche (`git checkout -b feature/amazing-feature`)
-3. Committez vos changements (`git commit -m 'Add amazing feature'`)
-4. Push vers la branche (`git push origin feature/amazing-feature`)
-5. Ouvrez une Pull Request
+2. Créer une branche (`git checkout -b feature/amazing-feature`)
+3. Commit (`git commit -m 'Add amazing feature'`)
+4. Push (`git push origin feature/amazing-feature`)
+5. Ouvrir une Pull Request
 
 ---
 
-## 📄 License
+## 📄 Licence
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
----
-
-## 🙏 Remerciements
-
-- **Texas Instruments** pour la calculatrice TI-83 Plus originale
-- **React Team** pour le framework incroyable
-- **Vite Team** pour le build tool ultra-rapide
-- **Communauté open-source** pour tous les outils utilisés
+MIT License - Voir le fichier LICENSE
 
 ---
 
-## 📞 Support
+## 👨‍💻 Crédits
 
-- **Issues** : [GitHub Issues](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/issues)
-- **Demo** : [www.lhusser.fr/calculatrice](https://www.lhusser.fr/calculatrice/)
-- **Installation Android** : Visitez la démo avec Chrome et tapez sur "Installer"
+Converti de JavaScript vers **React + TypeScript** pour une meilleure robustesse, maintenabilité et performance.
 
----
-
-## 📜 Disclaimer
-
-Ce projet est une **réimplémentation éducative** et n'est **pas affilié** à Texas Instruments. TI-83 Plus est une marque déposée de Texas Instruments Incorporated.
-
-Ce projet est créé à des fins éducatives et de démonstration.
+**Technologies** : React 18, TypeScript 5, Zustand, Vite
 
 ---
 
-<div align="center">
-
-**Version 2.2.8.0 (PWA)** | **8 novembre 2025** | **Made with ❤️ for Education**
-
-⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
-
-📱 **Installez-la sur Android en 3 clics !** 📱
-
-[🏠 Accueil](#-calculatrice-ti-83-plus---progressive-web-app) | [📦 Télécharger](#-téléchargement-et-déploiement) | [🚀 Démarrage](#-démarrage-rapide) | [🤝 Contribuer](#-contribution) | [🐛 Issues](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/issues)
-
-</div>
+**Profitez de cette calculatrice graphique moderne ! 🎉**
