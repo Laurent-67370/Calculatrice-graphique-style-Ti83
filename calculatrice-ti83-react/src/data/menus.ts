@@ -135,3 +135,32 @@ export const defaultModeConfig: ModeConfig = {
   connected: true,
   sequential: false,
 };
+
+// Menu VARS
+export const varsMenuItems: MenuItem[] = [
+  // Sous-menu Window
+  { id: 'vars-window', label: 'Window...', action: () => {}, submenu: [
+    { id: 'xmin', label: 'Xmin', action: () => {} },
+    { id: 'xmax', label: 'Xmax', action: () => {} },
+    { id: 'xscl', label: 'Xscl', action: () => {} },
+    { id: 'ymin', label: 'Ymin', action: () => {} },
+    { id: 'ymax', label: 'Ymax', action: () => {} },
+    { id: 'yscl', label: 'Yscl', action: () => {} },
+  ]},
+
+  // Sous-menu Zoom
+  { id: 'vars-zoom', label: 'Zoom...', action: () => {}, submenu: [
+    { id: 'zxmin', label: 'ZXmin', action: () => {} },
+    { id: 'zxmax', label: 'ZXmax', action: () => {} },
+    { id: 'zxscl', label: 'ZXscl', action: () => {} },
+    { id: 'zymin', label: 'ZYmin', action: () => {} },
+    { id: 'zymax', label: 'ZYmax', action: () => {} },
+    { id: 'zyscl', label: 'ZYscl', action: () => {} },
+  ]},
+
+  // XY (coordonnées du dernier point tracé)
+  { id: 'vars-xy', label: 'XY', action: () => {}, submenu: [
+    { id: 'x', label: 'X', action: () => {} },
+    { id: 'y', label: 'Y', action: () => {} },
+  ]},
+];
