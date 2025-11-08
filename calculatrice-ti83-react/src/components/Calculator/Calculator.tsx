@@ -657,7 +657,7 @@ export const Calculator: React.FC = () => {
           solverEditorRef.current.handleDelete();
           return;
         }
-        if (action === 'graph') {
+        if ((action as string) === 'graph') {
           solverEditorRef.current.solve();
           return;
         }
@@ -1115,7 +1115,7 @@ export const Calculator: React.FC = () => {
           return;
         }
 
-        if (action === 'catalog' || action === 'entry' || action === 'list') {
+        if ((action as string) === 'catalog' || (action as string) === 'entry' || (action as string) === 'list') {
           // Actions non implémentées pour l'instant
           console.log(`Action ${action} non implémentée`);
           return;

@@ -448,7 +448,7 @@ export class GraphingEngine {
     window: WindowSettings,
     transform: CoordinateTransform,
     color: string,
-    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+    _angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
   ): void {
     if (!this.ctx || !this.canvas) return;
 
@@ -498,7 +498,7 @@ export class GraphingEngine {
     window: WindowSettings,
     transform: CoordinateTransform,
     color: string,
-    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+    _angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
   ): void {
     if (!this.ctx || !this.canvas) return;
 

@@ -2,7 +2,7 @@
  * Composant Solver - Résolveur d'équations f(X)=0
  */
 
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { solverService, type SolverResult } from '../../services/SolverService';
 
 export interface SolverEditorHandle {
