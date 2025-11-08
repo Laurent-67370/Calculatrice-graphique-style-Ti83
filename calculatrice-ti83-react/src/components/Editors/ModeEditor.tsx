@@ -3,11 +3,13 @@
  */
 
 import { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from 'react';
+import type { GraphMode } from '../../types';
 
 interface ModeEditorProps {
   angleMode: 'DEGREE' | 'RADIAN';
   floatMode: 'FLOAT' | 'FIXED';
   fixedDecimals: number;
+  graphMode: GraphMode;
   onSave: (config: ModeConfig) => void;
   onClose: () => void;
 }
@@ -16,6 +18,7 @@ export interface ModeConfig {
   angleMode: 'DEGREE' | 'RADIAN';
   floatMode: 'FLOAT' | 'FIXED';
   fixedDecimals: number;
+  graphMode: GraphMode;
 }
 
 export interface ModeEditorHandle {
@@ -28,15 +31,23 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
   angleMode,
   floatMode,
   fixedDecimals,
+  graphMode,
   onSave,
   onClose,
 }, ref) => {
   const [localAngleMode, setLocalAngleMode] = useState<'DEGREE' | 'RADIAN'>(angleMode);
   const [localFloatMode, setLocalFloatMode] = useState<'FLOAT' | 'FIXED'>(floatMode);
+  const [localGraphMode, setLocalGraphMode] = useState<GraphMode>(graphMode);
   const [localFixedDecimals] = useState(fixedDecimals);
   const [selectedOption, setSelectedOption] = useState(0);
 
   const options = useMemo(() => [
+    {
+      name: 'Graph',
+      choices: ['FUNC', 'PAR', 'POL', 'SEQ'],
+      current: localGraphMode,
+      setter: (value: string) => setLocalGraphMode(value as GraphMode),
+    },
     {
       name: 'Angle',
       choices: ['RADIAN', 'DEGREE'],
@@ -49,7 +60,7 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
       current: localFloatMode,
       setter: (value: string) => setLocalFloatMode(value as 'FLOAT' | 'FIXED'),
     },
-  ], [localAngleMode, localFloatMode]);
+  ], [localGraphMode, localAngleMode, localFloatMode]);
 
   // Exposer les méthodes au parent via ref
   useImperativeHandle(ref, () => ({
@@ -68,12 +79,13 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
     },
     save: () => {
       onSave({
+        graphMode: localGraphMode,
         angleMode: localAngleMode,
         floatMode: localFloatMode,
         fixedDecimals: localFixedDecimals,
       });
     },
-  }), [selectedOption, options, localAngleMode, localFloatMode, localFixedDecimals, onSave]);
+  }), [selectedOption, options, localGraphMode, localAngleMode, localFloatMode, localFixedDecimals, onSave]);
 
   // Gérer les touches du clavier
   useEffect(() => {
@@ -105,6 +117,7 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
         case 's': // Ou 's' pour save
           e.preventDefault();
           onSave({
+            graphMode: localGraphMode,
             angleMode: localAngleMode,
             floatMode: localFloatMode,
             fixedDecimals: localFixedDecimals,
@@ -118,7 +131,7 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedOption, localAngleMode, localFloatMode, localFixedDecimals, options, onSave, onClose]);
+  }, [selectedOption, localGraphMode, localAngleMode, localFloatMode, localFixedDecimals, options, onSave, onClose]);
 
   return (
     <div className="mode-editor">

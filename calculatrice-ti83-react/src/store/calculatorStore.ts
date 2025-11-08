@@ -23,6 +23,27 @@ export interface StoredVariables {
   [key: string]: number | string;
 }
 
+// Type pour les paramètres TABLE
+export interface TableSettings {
+  tblStart: number;   // Valeur de départ
+  deltaTbl: number;   // Incrément
+  indpnt: 'AUTO' | 'ASK';  // Mode automatique ou demande
+  depend: 'AUTO' | 'ASK';  // Mode automatique ou demande
+}
+
+// Type pour les graphiques statistiques
+export type StatPlotType = 'scatter' | 'xyLine' | 'histogram' | 'modBoxPlot' | 'normBoxPlot' | 'normProbPlot';
+export type StatPlotMark = 'square' | 'plus' | 'dot';
+
+export interface StatPlot {
+  on: boolean;
+  type: StatPlotType;
+  xList: string;  // Nom de la liste (L1, L2, etc.)
+  yList: string;  // Nom de la liste (seulement pour scatter, xyLine)
+  mark: StatPlotMark;
+  freqList?: string;  // Pour histogram
+}
+
 interface CalculatorStore extends CalculatorState {
   // Configuration
   config: CalculatorConfig;
@@ -87,6 +108,17 @@ interface CalculatorStore extends CalculatorState {
   setWindowSettings: (settings: Partial<WindowSettings>) => void;
   resetWindowSettings: () => void;
 
+  // Actions pour TABLE
+  tableSettings: TableSettings;
+  setTableSettings: (settings: Partial<TableSettings>) => void;
+  resetTableSettings: () => void;
+
+  // Actions pour STAT PLOT
+  statPlots: [StatPlot, StatPlot, StatPlot];  // Plot1, Plot2, Plot3
+  setStatPlot: (plotIndex: 0 | 1 | 2, plot: Partial<StatPlot>) => void;
+  toggleStatPlot: (plotIndex: 0 | 1 | 2) => void;
+  resetStatPlots: () => void;
+
   // Actions pour l'éditeur
   setCurrentEditor: (editor: string | undefined) => void;
   setEditingField: (field: string | undefined) => void;
@@ -117,7 +149,54 @@ const initialWindowSettings: WindowSettings = {
   yMin: -10,
   yMax: 10,
   yScale: 1,
+  // Parametric
+  tMin: 0,
+  tMax: 6.283185307179586, // 2π
+  tStep: 0.1308996938995747, // π/24
+  // Polar
+  θMin: 0,
+  θMax: 6.283185307179586, // 2π
+  θStep: 0.1308996938995747, // π/24
+  // Sequence
+  nMin: 1,
+  nMax: 10,
+  plotStart: 1,
+  plotStep: 1,
 };
+
+const initialTableSettings: TableSettings = {
+  tblStart: 0,
+  deltaTbl: 1,
+  indpnt: 'AUTO',
+  depend: 'AUTO',
+};
+
+const initialStatPlots: [StatPlot, StatPlot, StatPlot] = [
+  // Plot1
+  {
+    on: false,
+    type: 'scatter',
+    xList: 'L1',
+    yList: 'L2',
+    mark: 'square',
+  },
+  // Plot2
+  {
+    on: false,
+    type: 'scatter',
+    xList: 'L1',
+    yList: 'L3',
+    mark: 'plus',
+  },
+  // Plot3
+  {
+    on: false,
+    type: 'scatter',
+    xList: 'L1',
+    yList: 'L4',
+    mark: 'dot',
+  },
+];
 
 const initialConfig: CalculatorConfig = {
   angleMode: 'DEGREE',
@@ -125,6 +204,7 @@ const initialConfig: CalculatorConfig = {
   fixedDecimals: 2,
   scientificNotation: false,
   complexMode: 'REAL',
+  graphMode: 'FUNC',
 };
 
 const initialState: CalculatorState = {
@@ -176,6 +256,12 @@ export const useCalculatorStore = create<CalculatorStore>()(
       // État initial des matrices et variables
       matrices: initialMatrices,
       variables: {},
+
+      // État initial TABLE
+      tableSettings: initialTableSettings,
+
+      // État initial STAT PLOT
+      statPlots: initialStatPlots,
 
       // État initial du mode TRACE
       isTraceMode: false,
@@ -380,6 +466,33 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       resetWindowSettings: () =>
         set({ windowSettings: initialWindowSettings }, false, 'resetWindowSettings'),
+
+      // Actions pour TABLE
+      setTableSettings: (settings: Partial<TableSettings>) =>
+        set((state) => ({
+          tableSettings: { ...state.tableSettings, ...settings },
+        }), false, 'setTableSettings'),
+
+      resetTableSettings: () =>
+        set({ tableSettings: initialTableSettings }, false, 'resetTableSettings'),
+
+      // Actions pour STAT PLOT
+      setStatPlot: (plotIndex: 0 | 1 | 2, plot: Partial<StatPlot>) =>
+        set((state) => {
+          const newPlots = [...state.statPlots] as [StatPlot, StatPlot, StatPlot];
+          newPlots[plotIndex] = { ...newPlots[plotIndex], ...plot };
+          return { statPlots: newPlots };
+        }, false, 'setStatPlot'),
+
+      toggleStatPlot: (plotIndex: 0 | 1 | 2) =>
+        set((state) => {
+          const newPlots = [...state.statPlots] as [StatPlot, StatPlot, StatPlot];
+          newPlots[plotIndex] = { ...newPlots[plotIndex], on: !newPlots[plotIndex].on };
+          return { statPlots: newPlots };
+        }, false, 'toggleStatPlot'),
+
+      resetStatPlots: () =>
+        set({ statPlots: initialStatPlots }, false, 'resetStatPlots'),
 
       // Actions pour l'éditeur
       setCurrentEditor: (editor: string | undefined) =>

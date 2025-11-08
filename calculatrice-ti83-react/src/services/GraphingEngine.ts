@@ -10,6 +10,7 @@ import type {
   FunctionEvaluation,
   CoordinateTransform,
 } from '../types';
+import type { StatPlot } from '../store/calculatorStore';
 
 export class GraphingEngine {
   private canvas: HTMLCanvasElement | null = null;
@@ -255,12 +256,300 @@ export class GraphingEngine {
   }
 
   /**
+   * Dessine un scatter plot (nuage de points)
+   */
+  private drawScatterPlot(
+    plot: StatPlot,
+    lists: Record<string, number[]>,
+    transform: CoordinateTransform,
+    plotIndex: number
+  ): void {
+    if (!this.ctx || !plot.on) return;
+
+    const xList = lists[plot.xList] || [];
+    const yList = lists[plot.yList] || [];
+    const minLength = Math.min(xList.length, yList.length);
+
+    if (minLength === 0) return;
+
+    this.ctx.fillStyle = this.colors[plotIndex];
+    this.ctx.strokeStyle = this.colors[plotIndex];
+
+    for (let i = 0; i < minLength; i++) {
+      const x = xList[i];
+      const y = yList[i];
+
+      if (isNaN(x) || isNaN(y)) continue;
+
+      const screenPoint = transform.graphToScreen(x, y);
+
+      // Dessiner le marqueur selon le type
+      if (plot.mark === 'square') {
+        this.ctx.fillRect(screenPoint.x - 3, screenPoint.y - 3, 6, 6);
+      } else if (plot.mark === 'plus') {
+        this.ctx.beginPath();
+        this.ctx.moveTo(screenPoint.x - 4, screenPoint.y);
+        this.ctx.lineTo(screenPoint.x + 4, screenPoint.y);
+        this.ctx.moveTo(screenPoint.x, screenPoint.y - 4);
+        this.ctx.lineTo(screenPoint.x, screenPoint.y + 4);
+        this.ctx.stroke();
+      } else {
+        // dot
+        this.ctx.beginPath();
+        this.ctx.arc(screenPoint.x, screenPoint.y, 2, 0, 2 * Math.PI);
+        this.ctx.fill();
+      }
+    }
+  }
+
+  /**
+   * Dessine un histogramme
+   */
+  private drawHistogram(
+    plot: StatPlot,
+    lists: Record<string, number[]>,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    plotIndex: number
+  ): void {
+    if (!this.ctx || !plot.on) return;
+
+    const xList = lists[plot.xList] || [];
+    if (xList.length === 0) return;
+
+    const data = xList.filter(v => !isNaN(v));
+    if (data.length === 0) return;
+
+    // Calculer les bins selon xScale
+    const binWidth = window.xScale;
+    const minData = Math.min(...data);
+    const maxData = Math.max(...data);
+    const numBins = Math.ceil((maxData - minData) / binWidth) + 1;
+
+    // Compter les valeurs dans chaque bin
+    const bins = new Array(numBins).fill(0);
+    data.forEach(value => {
+      const binIndex = Math.floor((value - minData) / binWidth);
+      if (binIndex >= 0 && binIndex < numBins) {
+        bins[binIndex]++;
+      }
+    });
+
+    // Dessiner les barres
+    const ctx = this.ctx;
+    ctx.fillStyle = this.colors[plotIndex];
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+
+    bins.forEach((count, i) => {
+      if (count === 0 || !ctx) return;
+
+      const x = minData + i * binWidth;
+      const bottomLeft = transform.graphToScreen(x, 0);
+      const topRight = transform.graphToScreen(x + binWidth, count);
+
+      const barX = bottomLeft.x;
+      const barY = topRight.y;
+      const barWidth = topRight.x - bottomLeft.x;
+      const barHeight = bottomLeft.y - topRight.y;
+
+      ctx.fillRect(barX, barY, barWidth, barHeight);
+      ctx.strokeRect(barX, barY, barWidth, barHeight);
+    });
+  }
+
+  /**
+   * Dessine un box plot (boîte à moustaches)
+   */
+  private drawBoxPlot(
+    plot: StatPlot,
+    lists: Record<string, number[]>,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    plotIndex: number
+  ): void {
+    if (!this.ctx || !this.canvas || !plot.on) return;
+
+    const xList = lists[plot.xList] || [];
+    const data = xList.filter(v => !isNaN(v)).sort((a, b) => a - b);
+
+    if (data.length === 0) return;
+
+    // Calculer les quartiles
+    const n = data.length;
+    const min = data[0];
+    const max = data[n - 1];
+    const Q1 = data[Math.floor(n * 0.25)];
+    const median = data[Math.floor(n * 0.5)];
+    const Q3 = data[Math.floor(n * 0.75)];
+
+    // Position verticale (au milieu de l'écran)
+    const yPos = (window.yMin + window.yMax) / 2 + plotIndex * 0.5;
+    const boxHeight = window.yScale * 2;
+
+    this.ctx.strokeStyle = this.colors[plotIndex];
+    this.ctx.fillStyle = this.colors[plotIndex];
+    this.ctx.lineWidth = 2;
+
+    // Tracer le box plot
+    const minPt = transform.graphToScreen(min, yPos);
+    const Q1Pt = transform.graphToScreen(Q1, yPos);
+    const medianPt = transform.graphToScreen(median, yPos);
+    const Q3Pt = transform.graphToScreen(Q3, yPos);
+    const maxPt = transform.graphToScreen(max, yPos);
+
+    const boxTop = transform.graphToScreen(0, yPos + boxHeight / 2).y;
+    const boxBottom = transform.graphToScreen(0, yPos - boxHeight / 2).y;
+    const boxMid = transform.graphToScreen(0, yPos).y;
+
+    // Moustache gauche
+    this.ctx.beginPath();
+    this.ctx.moveTo(minPt.x, boxMid);
+    this.ctx.lineTo(Q1Pt.x, boxMid);
+    this.ctx.stroke();
+
+    // Trait min
+    this.ctx.beginPath();
+    this.ctx.moveTo(minPt.x, boxTop);
+    this.ctx.lineTo(minPt.x, boxBottom);
+    this.ctx.stroke();
+
+    // Boîte
+    this.ctx.strokeRect(Q1Pt.x, boxTop, Q3Pt.x - Q1Pt.x, boxBottom - boxTop);
+
+    // Médiane
+    this.ctx.beginPath();
+    this.ctx.moveTo(medianPt.x, boxTop);
+    this.ctx.lineTo(medianPt.x, boxBottom);
+    this.ctx.stroke();
+
+    // Moustache droite
+    this.ctx.beginPath();
+    this.ctx.moveTo(Q3Pt.x, boxMid);
+    this.ctx.lineTo(maxPt.x, boxMid);
+    this.ctx.stroke();
+
+    // Trait max
+    this.ctx.beginPath();
+    this.ctx.moveTo(maxPt.x, boxTop);
+    this.ctx.lineTo(maxPt.x, boxBottom);
+    this.ctx.stroke();
+  }
+
+  /**
+   * Trace une fonction paramétrique (X(T), Y(T))
+   */
+  private plotParametric(
+    funcX: string,
+    funcY: string,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    color: string,
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+  ): void {
+    if (!this.ctx || !this.canvas) return;
+
+    const ctx = this.ctx;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    let firstPoint = true;
+    const numPoints = Math.ceil((window.tMax - window.tMin) / window.tStep);
+
+    for (let i = 0; i <= numPoints; i++) {
+      try {
+        const t = window.tMin + i * window.tStep;
+
+        // Évaluer X(T) et Y(T)
+        const x = this.evaluateFunction(funcX, t, angleMode);
+        const y = this.evaluateFunction(funcY, t, angleMode);
+
+        const screenPoint = transform.graphToScreen(x, y);
+
+        if (screenPoint.y >= -100 && screenPoint.y <= this.canvas.height + 100) {
+          if (firstPoint) {
+            ctx.moveTo(screenPoint.x, screenPoint.y);
+            firstPoint = false;
+          } else {
+            ctx.lineTo(screenPoint.x, screenPoint.y);
+          }
+        } else {
+          firstPoint = true;
+        }
+      } catch (error) {
+        firstPoint = true;
+      }
+    }
+
+    ctx.stroke();
+  }
+
+  /**
+   * Trace une fonction polaire r(θ)
+   */
+  private plotPolar(
+    func: string,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    color: string,
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+  ): void {
+    if (!this.ctx || !this.canvas) return;
+
+    const ctx = this.ctx;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    let firstPoint = true;
+    const numPoints = Math.ceil((window.θMax - window.θMin) / window.θStep);
+
+    for (let i = 0; i <= numPoints; i++) {
+      try {
+        let θ = window.θMin + i * window.θStep;
+
+        // Convertir θ en radians si nécessaire pour le calcul
+        const θRad = angleMode === 'DEGREE' ? (θ * Math.PI / 180) : θ;
+
+        // Évaluer r(θ) - utiliser X comme variable pour l'expression
+        const r = this.evaluateFunction(func, θ, angleMode);
+
+        // Convertir coordonnées polaires en cartésiennes
+        const x = r * Math.cos(θRad);
+        const y = r * Math.sin(θRad);
+
+        const screenPoint = transform.graphToScreen(x, y);
+
+        if (screenPoint.y >= -100 && screenPoint.y <= this.canvas.height + 100) {
+          if (firstPoint) {
+            ctx.moveTo(screenPoint.x, screenPoint.y);
+            firstPoint = false;
+          } else {
+            ctx.lineTo(screenPoint.x, screenPoint.y);
+          }
+        } else {
+          firstPoint = true;
+        }
+      } catch (error) {
+        firstPoint = true;
+      }
+    }
+
+    ctx.stroke();
+  }
+
+  /**
    * Dessine le graphique complet
    */
   drawGraph(
     functions: GraphFunction[],
     window: WindowSettings,
-    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE'
+    angleMode: 'DEGREE' | 'RADIAN' = 'DEGREE',
+    statPlots?: [StatPlot, StatPlot, StatPlot],
+    lists?: Record<string, number[]>,
+    graphMode: 'FUNC' | 'PAR' | 'POL' | 'SEQ' = 'FUNC',
+    parametricFunctions?: { x: string[], y: string[] }
   ): void {
     if (!this.ctx || !this.canvas) {
       console.warn('Canvas non initialisé');
@@ -276,12 +565,51 @@ export class GraphingEngine {
     // Dessiner la grille et les axes
     this.drawGrid(window, transform);
 
-    // Tracer chaque fonction active
-    functions.forEach((func) => {
-      if (func.active && func.expression) {
-        this.plotFunction(func, window, transform, angleMode);
+    // Dessiner les stat plots d'abord (en dessous des fonctions)
+    if (statPlots && lists) {
+      statPlots.forEach((plot, index) => {
+        if (!plot.on) return;
+
+        if (plot.type === 'scatter' || plot.type === 'xyLine') {
+          this.drawScatterPlot(plot, lists, transform, index);
+        } else if (plot.type === 'histogram') {
+          this.drawHistogram(plot, lists, window, transform, index);
+        } else if (plot.type === 'modBoxPlot' || plot.type === 'normBoxPlot') {
+          this.drawBoxPlot(plot, lists, window, transform, index);
+        }
+      });
+    }
+
+    // Dessiner les fonctions selon le mode
+    if (graphMode === 'FUNC') {
+      // Mode fonction Y(X)
+      functions.forEach((func) => {
+        if (func.active && func.expression) {
+          this.plotFunction(func, window, transform, angleMode);
+        }
+      });
+    } else if (graphMode === 'PAR' && parametricFunctions) {
+      // Mode paramétrique (X(T), Y(T))
+      for (let i = 0; i < 6; i++) {
+        if (functions[i]?.active && parametricFunctions.x[i] && parametricFunctions.y[i]) {
+          this.plotParametric(
+            parametricFunctions.x[i],
+            parametricFunctions.y[i],
+            window,
+            transform,
+            this.colors[i],
+            angleMode
+          );
+        }
       }
-    });
+    } else if (graphMode === 'POL') {
+      // Mode polaire r(θ)
+      functions.forEach((func) => {
+        if (func.active && func.expression) {
+          this.plotPolar(func.expression, window, transform, func.color || this.colors[func.index], angleMode);
+        }
+      });
+    }
   }
 
   /**
@@ -454,6 +782,16 @@ export class GraphingEngine {
       yMin: yCenter - yRange / (2 * factor),
       yMax: yCenter + yRange / (2 * factor),
       yScale: window.yScale / factor,
+      tMin: window.tMin,
+      tMax: window.tMax,
+      tStep: window.tStep,
+      θMin: window.θMin,
+      θMax: window.θMax,
+      θStep: window.θStep,
+      nMin: window.nMin,
+      nMax: window.nMax,
+      plotStart: window.plotStart,
+      plotStep: window.plotStep,
     };
   }
 
@@ -473,6 +811,16 @@ export class GraphingEngine {
       yMin: yCenter - (yRange * factor) / 2,
       yMax: yCenter + (yRange * factor) / 2,
       yScale: window.yScale * factor,
+      tMin: window.tMin,
+      tMax: window.tMax,
+      tStep: window.tStep,
+      θMin: window.θMin,
+      θMax: window.θMax,
+      θStep: window.θStep,
+      nMin: window.nMin,
+      nMax: window.nMax,
+      plotStart: window.plotStart,
+      plotStep: window.plotStep,
     };
   }
 

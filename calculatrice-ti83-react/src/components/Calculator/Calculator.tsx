@@ -15,6 +15,9 @@ import { ModeEditor, type ModeEditorHandle } from '../Editors/ModeEditor';
 import { MemEditor, type MemEditorHandle } from '../Editors/MemEditor';
 import { MatrixEditor, type MatrixEditorHandle } from '../Editors/MatrixEditor';
 import { MatrixGridEditor, type MatrixGridEditorHandle } from '../Editors/MatrixGridEditor';
+import { TableSetEditor, type TableSetEditorHandle } from '../Editors/TableSetEditor';
+import { TableViewer, type TableViewerHandle } from '../Editors/TableViewer';
+import { StatPlotEditor, type StatPlotEditorHandle } from '../Editors/StatPlotEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -41,6 +44,9 @@ export const Calculator: React.FC = () => {
   const matrixEditorRef = useRef<MatrixEditorHandle>(null);
   const matrixGridEditorRef = useRef<MatrixGridEditorHandle>(null);
   const listEditorRef = useRef<ListEditorHandle>(null);
+  const tableSetEditorRef = useRef<TableSetEditorHandle>(null);
+  const tableViewerRef = useRef<TableViewerHandle>(null);
+  const statPlotEditorRef = useRef<StatPlotEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -54,6 +60,8 @@ export const Calculator: React.FC = () => {
     graphFunctions,
     activeFunctions,
     windowSettings,
+    tableSettings,
+    statPlots,
     config,
     lastAnswer,
     isInputResult,
@@ -80,6 +88,8 @@ export const Calculator: React.FC = () => {
     currentFunction,
     setCurrentFunction,
     setWindowSettings,
+    setTableSettings,
+    setStatPlot,
     currentMenu,
     menuSelectedIndex,
     menuStack,
@@ -348,6 +358,27 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer TABLE
+      if (action === 'table') {
+        setMode('TABLE_VIEW');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer TBLSET
+      if (action === 'tblset') {
+        setMode('TBLSET');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer STAT PLOT
+      if (action === 'stat-plot') {
+        setMode('STAT_PLOT');
+        setGraphMode(false);
+        return;
+      }
+
       // Gérer ZOOM
       if (action === 'zoom') {
         setCurrentMenu('ZOOM');
@@ -445,6 +476,92 @@ export const Calculator: React.FC = () => {
             action === 'comma' ? ',' :
             action
           );
+          return;
+        }
+      }
+
+      // En mode TBLSET - gérer la navigation via ref
+      if (currentMode === 'TBLSET' && tableSetEditorRef.current) {
+        if (action === 'up') {
+          tableSetEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          tableSetEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          tableSetEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'clear') {
+          tableSetEditorRef.current.save();
+          setMode('NORMAL');
+          return;
+        }
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'negative' || action === 'dot') {
+          tableSetEditorRef.current.handleInput(
+            action === 'negative' ? '-' : action === 'dot' ? '.' : action
+          );
+          return;
+        }
+        if (action === 'del') {
+          tableSetEditorRef.current.handleDelete();
+          return;
+        }
+      }
+
+      // En mode TABLE_VIEW - gérer la navigation via ref
+      if (currentMode === 'TABLE_VIEW' && tableViewerRef.current) {
+        if (action === 'up') {
+          tableViewerRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          tableViewerRef.current.navigate('down');
+          return;
+        }
+        if (action === 'left') {
+          tableViewerRef.current.navigate('left');
+          return;
+        }
+        if (action === 'right') {
+          tableViewerRef.current.navigate('right');
+          return;
+        }
+        if (action === 'clear') {
+          setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode STAT_PLOT - gérer la navigation via ref
+      if (currentMode === 'STAT_PLOT' && statPlotEditorRef.current) {
+        if (action === 'up') {
+          statPlotEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          statPlotEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'left') {
+          statPlotEditorRef.current.navigate('left');
+          return;
+        }
+        if (action === 'right') {
+          statPlotEditorRef.current.navigate('right');
+          return;
+        }
+        if (action === 'enter') {
+          statPlotEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'clear') {
+          statPlotEditorRef.current.save();
+          setMode('NORMAL');
           return;
         }
       }
@@ -1032,6 +1149,15 @@ export const Calculator: React.FC = () => {
     active: activeFunctions[index],
   }));
 
+  // Préparer les listes pour les stat plots
+  const listsData = useMemo(() => {
+    const lists: Record<string, number[]> = {};
+    for (let i = 1; i <= 6; i++) {
+      lists[`L${i}`] = statisticsService.getList(`L${i}`);
+    }
+    return lists;
+  }, []);
+
   // Rendu de l'écran selon l'état
   const renderScreen = () => {
     // Si un menu est ouvert
@@ -1063,6 +1189,48 @@ export const Calculator: React.FC = () => {
       );
     }
 
+    // Si l'éditeur TBLSET est ouvert
+    if (currentMode === 'TBLSET') {
+      return (
+        <TableSetEditor
+          ref={tableSetEditorRef}
+          settings={tableSettings}
+          onSave={(settings) => {
+            setTableSettings(settings);
+            setMode('NORMAL');
+          }}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si le visualiseur TABLE est ouvert
+    if (currentMode === 'TABLE_VIEW') {
+      return (
+        <TableViewer
+          ref={tableViewerRef}
+          functions={graphFunctions}
+          activeFunctions={activeFunctions}
+          settings={tableSettings}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si l'éditeur STAT PLOT est ouvert
+    if (currentMode === 'STAT_PLOT') {
+      return (
+        <StatPlotEditor
+          ref={statPlotEditorRef}
+          plots={statPlots}
+          onSave={(plotIndex, plot) => {
+            setStatPlot(plotIndex, plot);
+          }}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
     // Si l'éditeur MODE est ouvert
     if (currentMode === 'MODE') {
       return (
@@ -1071,6 +1239,7 @@ export const Calculator: React.FC = () => {
           angleMode={config.angleMode}
           floatMode={config.floatMode}
           fixedDecimals={config.fixedDecimals}
+          graphMode={config.graphMode}
           onSave={(modeConfig) => {
             setConfig(modeConfig);
             setMode('NORMAL');
@@ -1152,6 +1321,9 @@ export const Calculator: React.FC = () => {
           functions={graphFunctionsData}
           window={windowSettings}
           angleMode={config.angleMode}
+          graphMode={config.graphMode}
+          statPlots={statPlots}
+          lists={listsData}
         />
       );
     }
