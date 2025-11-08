@@ -26,7 +26,8 @@ export type CalculatorMode =
   | 'CALC_INTEGRAL_LOWER'
   | 'CALC_INTEGRAL_UPPER'
   | 'ZOOM'
-  | 'TRACE';
+  | 'TRACE'
+  | 'CATALOG';
 
 // Actions possibles sur les touches
 export type KeyAction =

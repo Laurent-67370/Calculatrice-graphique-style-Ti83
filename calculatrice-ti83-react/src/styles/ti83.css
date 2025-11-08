@@ -918,3 +918,150 @@ body {
   color: #666;
   margin-top: 5px;
 }
+
+/* Catalog Viewer */
+.catalog-viewer {
+  background: var(--ti83-screen-bg);
+  color: var(--ti83-screen-text);
+  height: 256px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Courier New', monospace;
+  padding: 8px;
+}
+
+.catalog-content {
+  flex: 1;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.catalog-list {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.catalog-item {
+  padding: 6px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.catalog-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.catalog-item.selected {
+  background: var(--ti83-screen-text);
+  color: var(--ti83-screen-bg);
+  font-weight: bold;
+}
+
+/* Solver Editor */
+.solver-editor {
+  background: var(--ti83-screen-bg);
+  color: var(--ti83-screen-text);
+  height: 256px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Courier New', monospace;
+  padding: 8px;
+}
+
+.solver-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 0;
+  overflow-y: auto;
+}
+
+.solver-field {
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+}
+
+.solver-field.selected {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.4);
+}
+
+.solver-field.editing {
+  background: var(--ti83-screen-text);
+  color: var(--ti83-screen-bg);
+  font-weight: bold;
+}
+
+.solver-field .field-label {
+  min-width: 100px;
+  font-weight: bold;
+}
+
+.solver-field .field-value {
+  flex: 1;
+}
+
+.solver-button {
+  padding: 10px;
+  text-align: center;
+  background: rgba(30, 58, 138, 0.1);
+  border: 2px solid rgba(30, 58, 138, 0.3);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.solver-button:hover {
+  background: rgba(30, 58, 138, 0.2);
+}
+
+.solver-button.selected {
+  background: rgba(30, 58, 138, 0.3);
+  border-color: rgba(30, 58, 138, 0.6);
+}
+
+.solver-result {
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(0, 128, 0, 0.1);
+  border: 1px solid rgba(0, 128, 0, 0.3);
+  font-size: 13px;
+}
+
+.solver-result .result-label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.solver-result .result-label.error {
+  color: #d00;
+}
+
+.solver-result .result-value {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.solver-result .result-error {
+  color: #d00;
+  margin: 4px 0;
+}
+
+.solver-result .result-info {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.solver-result .result-help {
+  font-size: 11px;
+  margin-top: 6px;
+  font-style: italic;
+}

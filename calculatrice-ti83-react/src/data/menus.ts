@@ -24,6 +24,9 @@ export const statMenuItems: MenuItem[] = [
 
 // Menu MATH
 export const mathMenuItems: MenuItem[] = [
+  // Solver (MATH > 0)
+  { id: 'solver', label: 'Solver...', action: () => {} },
+
   // Sous-menu principal MATH
   { id: 'cbrt', label: '³√(', action: () => {} },
   { id: 'log-base', label: 'logBASE(', action: () => {} },

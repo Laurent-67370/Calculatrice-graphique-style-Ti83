@@ -18,6 +18,8 @@ import { MatrixGridEditor, type MatrixGridEditorHandle } from '../Editors/Matrix
 import { TableSetEditor, type TableSetEditorHandle } from '../Editors/TableSetEditor';
 import { TableViewer, type TableViewerHandle } from '../Editors/TableViewer';
 import { StatPlotEditor, type StatPlotEditorHandle } from '../Editors/StatPlotEditor';
+import { CatalogViewer, type CatalogViewerHandle } from '../Editors/CatalogViewer';
+import { SolverEditor, type SolverEditorHandle } from '../Editors/SolverEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -47,6 +49,7 @@ export const Calculator: React.FC = () => {
   const tableSetEditorRef = useRef<TableSetEditorHandle>(null);
   const tableViewerRef = useRef<TableViewerHandle>(null);
   const statPlotEditorRef = useRef<StatPlotEditorHandle>(null);
+  const catalogViewerRef = useRef<CatalogViewerHandle>(null);
   const {
     currentInput,
     history,
@@ -437,6 +440,13 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer CATALOG (2ND + 0)
+      if (action === 'catalog') {
+        setMode('CATALOG');
+        setGraphMode(false);
+        return;
+      }
+
       // Gérer TBLSET
       if (action === 'tblset') {
         setMode('TBLSET');
@@ -604,6 +614,26 @@ export const Calculator: React.FC = () => {
         }
         if (action === 'clear') {
           setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode CATALOG - gérer la navigation via ref
+      if (currentMode === 'CATALOG' && catalogViewerRef.current) {
+        if (action === 'up') {
+          catalogViewerRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          catalogViewerRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          catalogViewerRef.current.select();
+          return;
+        }
+        if (action === 'clear') {
+          catalogViewerRef.current.close();
           return;
         }
       }
@@ -1394,6 +1424,20 @@ export const Calculator: React.FC = () => {
           parametricFunctionsX={parametricFunctionsX}
           parametricFunctionsY={parametricFunctionsY}
           activeParametricFunctions={activeParametricFunctions}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Affichage du Catalog
+    if (currentMode === 'CATALOG') {
+      return (
+        <CatalogViewer
+          ref={catalogViewerRef}
+          onInsert={(text) => {
+            appendInput(text);
+            setMode('NORMAL');
+          }}
           onClose={() => setMode('NORMAL')}
         />
       );
