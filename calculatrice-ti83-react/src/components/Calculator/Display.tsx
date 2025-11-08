@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import type { CalculatorMode } from '../../types';
+import type { CalculatorMode, GraphMode } from '../../types';
 
 interface DisplayProps {
   input: string;
@@ -12,6 +12,7 @@ interface DisplayProps {
   secondActive: boolean;
   alphaActive: boolean;
   cursorPosition: number;
+  graphMode?: GraphMode;
 }
 
 export const Display: React.FC<DisplayProps> = ({
@@ -21,6 +22,7 @@ export const Display: React.FC<DisplayProps> = ({
   secondActive,
   alphaActive,
   cursorPosition,
+  graphMode,
 }) => {
   // Diviser le texte en deux parties: avant et après le curseur
   const textBeforeCursor = input.slice(0, cursorPosition);
@@ -31,6 +33,7 @@ export const Display: React.FC<DisplayProps> = ({
       <div className="status-bar">
         {secondActive && <span className="indicator">2ND</span>}
         {alphaActive && <span className="indicator">ALPHA</span>}
+        {graphMode && graphMode !== 'FUNC' && <span className="indicator graph-mode-indicator">{graphMode}</span>}
         {mode !== 'NORMAL' && <span className="mode-indicator">{mode}</span>}
       </div>
 
