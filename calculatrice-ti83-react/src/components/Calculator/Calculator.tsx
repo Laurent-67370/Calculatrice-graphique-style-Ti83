@@ -1509,6 +1509,7 @@ export const Calculator: React.FC = () => {
         secondActive={isSecondFunction}
         alphaActive={isAlphaMode}
         cursorPosition={cursorPosition}
+        graphMode={config.graphMode}
       />
     );
   };
