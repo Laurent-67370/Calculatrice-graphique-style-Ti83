@@ -128,7 +128,7 @@ const initialConfig: CalculatorConfig = {
 };
 
 const initialState: CalculatorState = {
-  currentInput: '0',
+  currentInput: '',
   history: [],
   currentMode: 'NORMAL',
   isSecondFunction: false,
@@ -184,7 +184,7 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       // État initial de l'input
       isInputResult: false,
-      cursorPosition: 1, // Au début, curseur à la fin de "0"
+      cursorPosition: 0, // Au début, curseur au début du champ vide
       lastAnswer: '0', // Pas de dernier résultat au démarrage
 
       // Actions pour l'affichage
@@ -208,12 +208,12 @@ export const useCalculatorStore = create<CalculatorStore>()(
           // Sinon, insérer à la position du curseur
           const before = state.currentInput.slice(0, state.cursorPosition);
           const after = state.currentInput.slice(state.cursorPosition);
-          const newInput = state.currentInput === '0' ? value : before + value + after;
+          const newInput = state.currentInput === '' ? value : before + value + after;
 
           return {
             currentInput: newInput,
             isInputResult: false,
-            cursorPosition: state.currentInput === '0' ? value.length : state.cursorPosition + value.length,
+            cursorPosition: state.currentInput === '' ? value.length : state.cursorPosition + value.length,
           };
         }, false, 'appendInput'),
 
@@ -223,16 +223,16 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
           const newInput = state.currentInput.length > 1
             ? state.currentInput.slice(0, state.cursorPosition - 1) + state.currentInput.slice(state.cursorPosition)
-            : '0';
+            : '';
 
           return {
             currentInput: newInput,
-            cursorPosition: newInput === '0' ? 1 : Math.max(0, state.cursorPosition - 1),
+            cursorPosition: Math.max(0, state.cursorPosition - 1),
           };
         }, false, 'deleteLastChar'),
 
       clearInput: () =>
-        set({ currentInput: '0', cursorPosition: 1 }, false, 'clearInput'),
+        set({ currentInput: '', cursorPosition: 0 }, false, 'clearInput'),
 
       setCursorPosition: (position: number) =>
         set({ cursorPosition: position }, false, 'setCursorPosition'),
