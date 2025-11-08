@@ -362,8 +362,8 @@ export const Calculator: React.FC = () => {
         return;
       }
 
-      // Gérer DEL (sauf en mode STAT_EDIT qui a sa propre gestion)
-      if (action === 'del' && currentMode !== 'STAT_EDIT') {
+      // Gérer DEL (sauf les modes qui ont leur propre gestion)
+      if (action === 'del' && currentMode !== 'STAT_EDIT' && currentMode !== 'SOLVER' && currentMode !== 'MATRIX_EDIT' && currentMode !== 'TBLSET') {
         deleteLastChar();
         return;
       }
@@ -670,7 +670,8 @@ export const Calculator: React.FC = () => {
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
             action === 'dot' || action === 'negative' || action === 'add' || action === 'subtract' ||
             action === 'multiply' || action === 'divide' || action === 'left-paren' || action === 'right-paren' ||
-            action === 'x' || action === 'pow') {
+            action === 'x' || action === 'pow' || action === 'square' || action === 'sin' || action === 'cos' ||
+            action === 'tan' || action === 'sqrt' || action === 'ln' || action === 'log' || action === 'inverse') {
           const inputMap: Record<string, string> = {
             'negative': '-',
             'dot': '.',
@@ -682,6 +683,14 @@ export const Calculator: React.FC = () => {
             'right-paren': ')',
             'x': 'X',
             'pow': '^',
+            'square': '^2',
+            'sin': 'sin(',
+            'cos': 'cos(',
+            'tan': 'tan(',
+            'sqrt': '√(',
+            'ln': 'ln(',
+            'log': 'log(',
+            'inverse': '1/',
           };
           solverEditorRef.current.handleInput(inputMap[action] || action);
           return;
