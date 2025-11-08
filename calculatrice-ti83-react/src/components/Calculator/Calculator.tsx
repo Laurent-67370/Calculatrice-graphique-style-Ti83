@@ -370,8 +370,8 @@ export const Calculator: React.FC = () => {
         return;
       }
 
-      // Gérer GRAPH
-      if (action === 'graph') {
+      // Gérer GRAPH (sauf les modes qui ont leur propre gestion)
+      if (action === 'graph' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE') {
         setGraphMode(true);
         setTraceMode(false);
         setMode('NORMAL');
