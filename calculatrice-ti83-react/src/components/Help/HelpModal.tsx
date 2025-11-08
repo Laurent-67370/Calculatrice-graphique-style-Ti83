@@ -128,6 +128,86 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>dy/dx</strong> : Calculer la dérivée</li>
                 <li><strong>∫f(x)dx</strong> : Calculer l'intégrale</li>
               </ul>
+
+              <h3>📊 TABLE & TBLSET - Affichage Tabulaire</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Visualisez vos fonctions sous forme de tableau de valeurs !
+              </p>
+
+              <h4>📋 TABLE (2ND + GRAPH)</h4>
+              <ul>
+                <li><strong>Affichage</strong> : Tableau avec X, Y1, Y2, ..., Y6</li>
+                <li><strong>↑ ↓</strong> : Naviguer verticalement (50 lignes)</li>
+                <li><strong>← →</strong> : Naviguer horizontalement entre colonnes</li>
+                <li><strong>CLEAR</strong> : Fermer le tableau</li>
+              </ul>
+
+              <h4>⚙️ TBLSET (2ND + WINDOW)</h4>
+              <ul>
+                <li><strong>TblStart</strong> : Valeur de départ (ex: 0)</li>
+                <li><strong>ΔTbl</strong> : Incrément entre valeurs (ex: 1)</li>
+                <li><strong>Indpnt</strong> : AUTO (automatique) ou ASK</li>
+                <li><strong>Depend</strong> : AUTO (automatique) ou ASK</li>
+              </ul>
+
+              <div className="help-examples">
+                <strong>Exemple - Tableau pour Y1=X²</strong><br/>
+                1. <code>Y=</code> → Entrer <code>X^2</code><br/>
+                2. <code>2ND + WINDOW</code> → TblStart=0, ΔTbl=1<br/>
+                3. <code>2ND + GRAPH</code> → Voir le tableau<br/>
+                <br/>
+                <strong>Résultat :</strong><br/>
+                <code>X=0  Y1=0</code><br/>
+                <code>X=1  Y1=1</code><br/>
+                <code>X=2  Y1=4</code><br/>
+                <code>X=3  Y1=9</code><br/>
+              </div>
+
+              <h3>🔄 Modes Graphiques : Parametric & Polar</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Tracez des courbes paramétriques et polaires !
+              </p>
+
+              <h4>📐 Mode Parametric (Par)</h4>
+              <ul>
+                <li><strong>MODE</strong> : Sélectionner "Par"</li>
+                <li><strong>Y=</strong> : Entrer X1T= et Y1T=</li>
+                <li><strong>WINDOW</strong> : Configurer tMin, tMax, tStep</li>
+                <li><strong>GRAPH</strong> : Tracer la courbe</li>
+              </ul>
+
+              <div className="help-examples">
+                <strong>Exemple - Cercle unitaire :</strong><br/>
+                1. <code>MODE</code> → Par<br/>
+                2. <code>Y=</code> → X1T=<code>cos(T)</code>, Y1T=<code>sin(T)</code><br/>
+                3. <code>WINDOW</code> → tMin=0, tMax=6.28, tStep=0.1<br/>
+                4. <code>GRAPH</code> → Cercle affiché !<br/>
+                <br/>
+                <strong>Autres exemples :</strong><br/>
+                <code>X1T=T, Y1T=T^2</code> → Parabole<br/>
+                <code>X1T=T*cos(T), Y1T=T*sin(T)</code> → Spirale<br/>
+              </div>
+
+              <h4>🌀 Mode Polar (Pol)</h4>
+              <ul>
+                <li><strong>MODE</strong> : Sélectionner "Pol"</li>
+                <li><strong>Y=</strong> : Entrer r1=, r2=, ...</li>
+                <li><strong>WINDOW</strong> : Configurer θMin, θMax, θStep</li>
+                <li><strong>GRAPH</strong> : Tracer la courbe</li>
+              </ul>
+
+              <div className="help-examples">
+                <strong>Exemple - Cardioïde :</strong><br/>
+                1. <code>MODE</code> → Pol<br/>
+                2. <code>Y=</code> → r1=<code>1+cos(θ)</code><br/>
+                3. <code>WINDOW</code> → θMin=0, θMax=6.28, θStep=0.1<br/>
+                4. <code>GRAPH</code> → Cardioïde affichée !<br/>
+                <br/>
+                <strong>Autres exemples :</strong><br/>
+                <code>r1=2</code> → Cercle de rayon 2<br/>
+                <code>r1=θ</code> → Spirale d'Archimède<br/>
+                <code>r1=sin(3*θ)</code> → Rose à 3 pétales<br/>
+              </div>
             </div>
           )}
 
@@ -140,6 +220,64 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>← →</strong> : Changer de liste</li>
                 <li><strong>↑ ↓</strong> : Naviguer dans la liste</li>
                 <li><strong>CLEAR</strong> : Fermer l'éditeur</li>
+              </ul>
+
+              <h3>📊 STAT PLOT - Graphiques Statistiques</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Accès : <strong>2ND + Y=</strong> (touche STAT PLOT)
+              </p>
+
+              <h4>⚙️ Configuration des Plots</h4>
+              <ul>
+                <li><strong>Plot1, Plot2, Plot3</strong> : 3 plots indépendants</li>
+                <li><strong>On/Off</strong> : Activer/désactiver un plot</li>
+                <li><strong>Type</strong> : Scatter, xyLine, Histogram, Box Plot</li>
+                <li><strong>Xlist/Ylist</strong> : Sélectionner L1-L6</li>
+                <li><strong>Mark</strong> : Marqueur (□, +, •)</li>
+              </ul>
+
+              <h4>📍 Types de graphiques disponibles</h4>
+              <ul>
+                <li><strong>Scatter</strong> : Nuage de points avec marqueurs</li>
+                <li><strong>xyLine</strong> : Ligne reliant les points</li>
+                <li><strong>Histogram</strong> : Histogramme avec bins automatiques</li>
+                <li><strong>modBoxPlot</strong> : Boîte à moustaches modifiée</li>
+                <li><strong>normBoxPlot</strong> : Boîte à moustaches normale</li>
+              </ul>
+
+              <div className="help-examples">
+                <strong>Exemple - Nuage de points :</strong><br/>
+                1. <code>STAT → Edit</code><br/>
+                   L1: <code>1, 2, 3, 4, 5</code><br/>
+                   L2: <code>2, 4, 5, 7, 9</code><br/>
+                <br/>
+                2. <code>2ND + Y=</code> → Plot1<br/>
+                   On: <code>ON</code><br/>
+                   Type: <code>Scatter</code><br/>
+                   Xlist: <code>L1</code><br/>
+                   Ylist: <code>L2</code><br/>
+                   Mark: <code>□</code><br/>
+                <br/>
+                3. <code>GRAPH</code> → Scatter plot affiché !<br/>
+                <br/>
+                <strong>Exemple - Histogramme :</strong><br/>
+                1. <code>STAT → Edit</code><br/>
+                   L1: <code>10, 15, 12, 18, 20, 14, 16</code><br/>
+                <br/>
+                2. <code>2ND + Y=</code> → Plot1<br/>
+                   On: <code>ON</code><br/>
+                   Type: <code>Histogram</code><br/>
+                   Xlist: <code>L1</code><br/>
+                <br/>
+                3. <code>GRAPH</code> → Histogramme affiché !<br/>
+              </div>
+
+              <h4>💡 Astuces STAT PLOT</h4>
+              <ul>
+                <li>Les plots se superposent aux fonctions Y1-Y6</li>
+                <li>Utilisez ZOOM → ZoomStat pour ajuster la fenêtre</li>
+                <li>Les 3 plots peuvent être actifs simultanément</li>
+                <li>Chaque plot peut avoir un marqueur différent</li>
               </ul>
 
               <h3>🧮 Menu MATH - Navigation Hiérarchique</h3>
@@ -327,7 +465,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>⚡ Chargement instantané</strong> - Cache optimisé</li>
                 <li><strong>🔄 Mises à jour automatiques</strong> - Toujours la dernière version</li>
                 <li><strong>🚀 Mode plein écran</strong> - Pas de barre d'adresse</li>
-                <li><strong>💾 Ultra légère</strong> - Seulement 365 KB</li>
+                <li><strong>💾 Ultra légère</strong> - Seulement 337 KB</li>
               </ul>
 
               <h4>🎯 Installation en 3 étapes (Android)</h4>
@@ -389,7 +527,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h4>📊 Informations techniques</h4>
               <ul>
-                <li><strong>Taille</strong> : 365 KB (140 KB compressé)</li>
+                <li><strong>Taille</strong> : 337 KB (283 KB compressé)</li>
                 <li><strong>Compatibilité</strong> : Chrome Android 80+, Samsung Internet 12+</li>
                 <li><strong>Offline</strong> : 13 fichiers en cache local</li>
                 <li><strong>Update</strong> : Automatique en arrière-plan</li>
