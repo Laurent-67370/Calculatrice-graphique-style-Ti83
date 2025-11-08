@@ -1,7 +1,7 @@
 {
   "name": "calculatrice-ti83-react",
   "private": true,
-  "version": "2.2.6.4",
+  "version": "2.2.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
