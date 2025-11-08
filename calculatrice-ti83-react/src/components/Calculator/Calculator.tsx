@@ -946,6 +946,16 @@ export const Calculator: React.FC = () => {
           return;
         }
 
+        // Déterminer la variable à insérer selon le mode graphique
+        let variableForXKey = 'X';
+        if (config.graphMode === 'PAR') {
+          variableForXKey = 'T';
+        } else if (config.graphMode === 'POL') {
+          variableForXKey = 'θ';
+        } else if (config.graphMode === 'SEQ') {
+          variableForXKey = 'n';
+        }
+
         const operatorMap: Record<string, string> = {
           // Opérateurs arithmétiques
           'add': '+',
@@ -965,8 +975,8 @@ export const Calculator: React.FC = () => {
           'pow': '^',
           'dot': '.',
           'comma': ',',
-          // Variables
-          'x': 'X',
+          // Variables (dynamique selon le mode graphique)
+          'x': variableForXKey,
           // Fonctions trigonométriques
           'sin': 'sin(',
           'cos': 'cos(',
@@ -1171,6 +1181,7 @@ export const Calculator: React.FC = () => {
       isInputResult,
       matrices,
       variables,
+      config.graphMode,
       appendInput,
       clearInput,
       deleteLastChar,
