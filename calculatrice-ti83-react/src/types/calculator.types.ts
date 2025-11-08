@@ -19,6 +19,7 @@ export type CalculatorMode =
   | 'TBLSET_EDIT'
   | 'STAT'
   | 'STAT_EDIT'
+  | 'STAT_PLOT'
   | 'MATH'
   | 'CALC_VALUE'
   | 'CALC_DERIV'

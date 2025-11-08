@@ -5,17 +5,20 @@
 import React, { useEffect, useRef } from 'react';
 import { graphingEngine } from '../../services/GraphingEngine';
 import type { GraphFunction, WindowSettings } from '../../types';
+import type { StatPlot } from '../../store/calculatorStore';
 
 interface GraphCanvasProps {
   functions: GraphFunction[];
   window: WindowSettings;
   angleMode: 'DEGREE' | 'RADIAN';
+  statPlots?: [StatPlot, StatPlot, StatPlot];
+  lists?: Record<string, number[]>;
   width?: number;
   height?: number;
 }
 
 export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
-  ({ functions, window, angleMode, width = 384, height = 256 }) => {
+  ({ functions, window, angleMode, statPlots, lists, width = 384, height = 256 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Initialiser le canvas dans le moteur graphique
@@ -30,12 +33,13 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
       if (canvasRef.current) {
         console.log('🎨 Dessin du graphique:', {
           functions: functions.map(f => ({ index: f.index, expr: f.expression, active: f.active })),
+          statPlots,
           window,
           angleMode
         });
-        graphingEngine.drawGraph(functions, window, angleMode);
+        graphingEngine.drawGraph(functions, window, angleMode, statPlots, lists);
       }
-    }, [functions, window, angleMode]);
+    }, [functions, window, angleMode, statPlots, lists]);
 
     return (
       <canvas

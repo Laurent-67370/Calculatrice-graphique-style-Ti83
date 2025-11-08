@@ -17,6 +17,7 @@ import { MatrixEditor, type MatrixEditorHandle } from '../Editors/MatrixEditor';
 import { MatrixGridEditor, type MatrixGridEditorHandle } from '../Editors/MatrixGridEditor';
 import { TableSetEditor, type TableSetEditorHandle } from '../Editors/TableSetEditor';
 import { TableViewer, type TableViewerHandle } from '../Editors/TableViewer';
+import { StatPlotEditor, type StatPlotEditorHandle } from '../Editors/StatPlotEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -45,6 +46,7 @@ export const Calculator: React.FC = () => {
   const listEditorRef = useRef<ListEditorHandle>(null);
   const tableSetEditorRef = useRef<TableSetEditorHandle>(null);
   const tableViewerRef = useRef<TableViewerHandle>(null);
+  const statPlotEditorRef = useRef<StatPlotEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -59,6 +61,7 @@ export const Calculator: React.FC = () => {
     activeFunctions,
     windowSettings,
     tableSettings,
+    statPlots,
     config,
     lastAnswer,
     isInputResult,
@@ -86,6 +89,7 @@ export const Calculator: React.FC = () => {
     setCurrentFunction,
     setWindowSettings,
     setTableSettings,
+    setStatPlot,
     currentMenu,
     menuSelectedIndex,
     menuStack,
@@ -368,6 +372,13 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer STAT PLOT
+      if (action === 'stat-plot') {
+        setMode('STAT_PLOT');
+        setGraphMode(false);
+        return;
+      }
+
       // Gérer ZOOM
       if (action === 'zoom') {
         setCurrentMenu('ZOOM');
@@ -521,6 +532,35 @@ export const Calculator: React.FC = () => {
           return;
         }
         if (action === 'clear') {
+          setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode STAT_PLOT - gérer la navigation via ref
+      if (currentMode === 'STAT_PLOT' && statPlotEditorRef.current) {
+        if (action === 'up') {
+          statPlotEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          statPlotEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'left') {
+          statPlotEditorRef.current.navigate('left');
+          return;
+        }
+        if (action === 'right') {
+          statPlotEditorRef.current.navigate('right');
+          return;
+        }
+        if (action === 'enter') {
+          statPlotEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'clear') {
+          statPlotEditorRef.current.save();
           setMode('NORMAL');
           return;
         }
@@ -1109,6 +1149,15 @@ export const Calculator: React.FC = () => {
     active: activeFunctions[index],
   }));
 
+  // Préparer les listes pour les stat plots
+  const listsData = useMemo(() => {
+    const lists: Record<string, number[]> = {};
+    for (let i = 1; i <= 6; i++) {
+      lists[`L${i}`] = statisticsService.getList(`L${i}`);
+    }
+    return lists;
+  }, []);
+
   // Rendu de l'écran selon l'état
   const renderScreen = () => {
     // Si un menu est ouvert
@@ -1163,6 +1212,20 @@ export const Calculator: React.FC = () => {
           functions={graphFunctions}
           activeFunctions={activeFunctions}
           settings={tableSettings}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Si l'éditeur STAT PLOT est ouvert
+    if (currentMode === 'STAT_PLOT') {
+      return (
+        <StatPlotEditor
+          ref={statPlotEditorRef}
+          plots={statPlots}
+          onSave={(plotIndex, plot) => {
+            setStatPlot(plotIndex, plot);
+          }}
           onClose={() => setMode('NORMAL')}
         />
       );
@@ -1257,6 +1320,8 @@ export const Calculator: React.FC = () => {
           functions={graphFunctionsData}
           window={windowSettings}
           angleMode={config.angleMode}
+          statPlots={statPlots}
+          lists={listsData}
         />
       );
     }

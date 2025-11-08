@@ -31,6 +31,19 @@ export interface TableSettings {
   depend: 'AUTO' | 'ASK';  // Mode automatique ou demande
 }
 
+// Type pour les graphiques statistiques
+export type StatPlotType = 'scatter' | 'xyLine' | 'histogram' | 'modBoxPlot' | 'normBoxPlot' | 'normProbPlot';
+export type StatPlotMark = 'square' | 'plus' | 'dot';
+
+export interface StatPlot {
+  on: boolean;
+  type: StatPlotType;
+  xList: string;  // Nom de la liste (L1, L2, etc.)
+  yList: string;  // Nom de la liste (seulement pour scatter, xyLine)
+  mark: StatPlotMark;
+  freqList?: string;  // Pour histogram
+}
+
 interface CalculatorStore extends CalculatorState {
   // Configuration
   config: CalculatorConfig;
@@ -100,6 +113,12 @@ interface CalculatorStore extends CalculatorState {
   setTableSettings: (settings: Partial<TableSettings>) => void;
   resetTableSettings: () => void;
 
+  // Actions pour STAT PLOT
+  statPlots: [StatPlot, StatPlot, StatPlot];  // Plot1, Plot2, Plot3
+  setStatPlot: (plotIndex: 0 | 1 | 2, plot: Partial<StatPlot>) => void;
+  toggleStatPlot: (plotIndex: 0 | 1 | 2) => void;
+  resetStatPlots: () => void;
+
   // Actions pour l'éditeur
   setCurrentEditor: (editor: string | undefined) => void;
   setEditingField: (field: string | undefined) => void;
@@ -138,6 +157,33 @@ const initialTableSettings: TableSettings = {
   indpnt: 'AUTO',
   depend: 'AUTO',
 };
+
+const initialStatPlots: [StatPlot, StatPlot, StatPlot] = [
+  // Plot1
+  {
+    on: false,
+    type: 'scatter',
+    xList: 'L1',
+    yList: 'L2',
+    mark: 'square',
+  },
+  // Plot2
+  {
+    on: false,
+    type: 'scatter',
+    xList: 'L1',
+    yList: 'L3',
+    mark: 'plus',
+  },
+  // Plot3
+  {
+    on: false,
+    type: 'scatter',
+    xList: 'L1',
+    yList: 'L4',
+    mark: 'dot',
+  },
+];
 
 const initialConfig: CalculatorConfig = {
   angleMode: 'DEGREE',
@@ -199,6 +245,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       // État initial TABLE
       tableSettings: initialTableSettings,
+
+      // État initial STAT PLOT
+      statPlots: initialStatPlots,
 
       // État initial du mode TRACE
       isTraceMode: false,
@@ -412,6 +461,24 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       resetTableSettings: () =>
         set({ tableSettings: initialTableSettings }, false, 'resetTableSettings'),
+
+      // Actions pour STAT PLOT
+      setStatPlot: (plotIndex: 0 | 1 | 2, plot: Partial<StatPlot>) =>
+        set((state) => {
+          const newPlots = [...state.statPlots] as [StatPlot, StatPlot, StatPlot];
+          newPlots[plotIndex] = { ...newPlots[plotIndex], ...plot };
+          return { statPlots: newPlots };
+        }, false, 'setStatPlot'),
+
+      toggleStatPlot: (plotIndex: 0 | 1 | 2) =>
+        set((state) => {
+          const newPlots = [...state.statPlots] as [StatPlot, StatPlot, StatPlot];
+          newPlots[plotIndex] = { ...newPlots[plotIndex], on: !newPlots[plotIndex].on };
+          return { statPlots: newPlots };
+        }, false, 'toggleStatPlot'),
+
+      resetStatPlots: () =>
+        set({ statPlots: initialStatPlots }, false, 'resetStatPlots'),
 
       // Actions pour l'éditeur
       setCurrentEditor: (editor: string | undefined) =>
