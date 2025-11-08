@@ -6,6 +6,66 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [2.3.0.1] - 2025-11-08
+
+### 🐛 Corrigé
+- **Solver - Touche ^2** : Ajout du support de la touche x² dans le Solver
+  - La touche X² insère maintenant correctement `^2` en mode édition
+- **Solver - Touche DEL** : Correction de l'effacement arrière
+  - DEL était intercepté avant d'atteindre le Solver
+  - Ajout du mode SOLVER aux exceptions de gestion générale de DEL
+  - DEL fonctionne maintenant correctement pour effacer les caractères
+
+### ✨ Ajouté
+- **Solver - Fonctions mathématiques étendues**
+  - Support complet : sin, cos, tan, sqrt, ln, log, 1/X
+  - Facilite l'écriture d'équations complexes directement dans le Solver
+
+### 📝 Documentation
+- Mise à jour du HelpModal avec exemples détaillés du Solver
+- Mise à jour du README.md avec toutes les nouvelles fonctionnalités
+- Mise à jour du CHANGELOG.md
+
+---
+
+## [2.3.0.0] - 2025-11-08
+
+### ✨ Ajouté
+- **CATALOG** (2ND + 0) : Liste alphabétique de 100+ fonctions mathématiques
+  - Navigation intuitive avec ↑↓
+  - Recherche rapide par lettre (A-Z)
+  - Insertion directe dans l'input avec ENTER
+  - Toutes les fonctions TI-83 Plus disponibles
+- **SOLVER** (MATH > 0) : Résolveur d'équations f(X)=0
+  - Méthode de Newton-Raphson avec convergence rapide
+  - Fallback automatique sur méthode de bisection si nécessaire
+  - Précision numérique : 10 décimales (10⁻¹⁰)
+  - Affichage du nombre d'itérations effectuées
+  - Support complet des fonctions mathématiques
+  - Interface intuitive avec navigation clavier
+    - ↑↓ : Naviguer entre Équation et Estimation
+    - ENTER : Éditer/Valider
+    - DEL : Effacer
+    - GRAPH : Résoudre
+    - CLEAR : Fermer
+
+### 🔧 Amélioré
+- **Menu MATH** : Ajout du Solver en première position (0:Solver...)
+- **Services** : Nouveau SolverService.ts avec algorithmes numériques
+- **Navigation** : Support clavier complet dans le Solver
+- **Types** : Ajout du mode 'SOLVER' et 'CATALOG' dans CalculatorMode
+
+### 📝 Documentation
+- Ajout d'exemples détaillés dans le HelpModal
+  - Équations polynomiales (X^2-4, X^3-2*X-5)
+  - Équations trigonométriques (sin(X)-0.5, cos(X)-X)
+  - Équations logarithmiques (ln(X)-2, log(X)-1)
+  - Équations complexes (X^3-sin(X)-1, e^X-5*X)
+- Guide d'utilisation du Catalog avec recherche rapide
+- Mise à jour de la version affichée à 2.3.0.0
+
+---
+
 ## [2.2.8.0] - 2025-11-08
 
 ### ✨ Ajouté

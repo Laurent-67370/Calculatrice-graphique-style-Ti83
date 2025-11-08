@@ -290,6 +290,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h4>Catégories disponibles :</h4>
               <ul>
+                <li><strong>0:Solver...</strong> : Résolveur d'équations f(X)=0 (voir ci-dessous)</li>
                 <li><strong>MATH (Principal)</strong> : ³√, logBASE, e^x, 10^x, hypot</li>
                 <li><strong>NUM ▶</strong> : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod</li>
                 <li><strong>CPX ▶</strong> : conj, real, imag, angle, abs, Rect, Polar</li>
@@ -297,6 +298,95 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>ANGLE ▶</strong> : °→rad, rad→°, →DMS, →Dec</li>
                 <li><strong>TRIG ▶</strong> : sinh, cosh, tanh, asinh, acosh, atanh</li>
               </ul>
+
+              <h3>🎯 SOLVER - Résolveur d'Équations (MATH &gt; 0)</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Trouvez les racines (zéros) d'une équation f(X)=0 avec précision numérique !
+              </p>
+
+              <h4>📝 Utilisation du Solver</h4>
+              <ol>
+                <li><strong>MATH</strong> → Sélectionner <strong>0:Solver...</strong></li>
+                <li><strong>Équation</strong> : Entrer votre équation (ex: X^2-4)</li>
+                <li><strong>Estimation</strong> : Valeur de départ pour la recherche (ex: 1)</li>
+                <li><strong>GRAPH</strong> : Lancer la résolution</li>
+                <li>Résultat affiché avec 10 décimales de précision</li>
+              </ol>
+
+              <h4>⌨️ Navigation dans le Solver</h4>
+              <ul>
+                <li><strong>↑ ↓</strong> : Naviguer entre les champs (Équation/Estimation)</li>
+                <li><strong>ENTER</strong> : Éditer le champ sélectionné / Sortir de l'édition</li>
+                <li><strong>DEL</strong> : Effacer le dernier caractère</li>
+                <li><strong>GRAPH</strong> : Résoudre l'équation</li>
+                <li><strong>CLEAR</strong> : Fermer le Solver</li>
+              </ul>
+
+              <h4>🧮 Exemples d'équations</h4>
+              <div className="help-examples">
+                <strong>Équations polynomiales :</strong><br/>
+                <code>X^2-4</code> avec estimation <code>1</code> → X = 2.0000000000<br/>
+                <code>X^3-2*X-5</code> avec estimation <code>2</code> → X = 2.0945514815<br/>
+                <code>X^4-10</code> avec estimation <code>2</code> → X = 1.7782794100<br/>
+                <br/>
+                <strong>Équations trigonométriques :</strong><br/>
+                <code>sin(X)-0.5</code> avec estimation <code>0.5</code> → X = 0.5235987756 (rad)<br/>
+                <code>cos(X)-X</code> avec estimation <code>1</code> → X = 0.7390851332<br/>
+                <code>tan(X)-2</code> avec estimation <code>1</code> → X = 1.1071487178<br/>
+                <br/>
+                <strong>Équations logarithmiques :</strong><br/>
+                <code>ln(X)-2</code> avec estimation <code>5</code> → X = 7.3890560989<br/>
+                <code>log(X)-1</code> avec estimation <code>5</code> → X = 10.0000000000<br/>
+                <br/>
+                <strong>Équations complexes :</strong><br/>
+                <code>X^3-sin(X)-1</code> avec estimation <code>1</code> → X = 1.2493247076<br/>
+                <code>e^X-5*X</code> avec estimation <code>0.5</code> → X = 0.2591711018<br/>
+                <code>√(X)-cos(X)</code> avec estimation <code>1</code> → X = 0.6417143708<br/>
+              </div>
+
+              <h4>🔬 Méthode numérique</h4>
+              <p style={{ fontSize: '0.85em', color: '#666' }}>
+                Le Solver utilise la <strong>méthode de Newton-Raphson</strong> avec un fallback
+                automatique sur la <strong>méthode de bissection</strong> si nécessaire.
+                Précision : 10⁻¹⁰ (10 décimales). Affiche le nombre d'itérations effectuées.
+              </p>
+
+              <h4>💡 Conseils pour le Solver</h4>
+              <ul>
+                <li>Choisissez une estimation proche de la racine attendue</li>
+                <li>Pour les équations trigonométriques, vérifiez le mode DEGREE/RADIAN</li>
+                <li>Si "Pas de convergence", essayez une autre estimation</li>
+                <li>Vous pouvez utiliser toutes les fonctions (sin, cos, ln, √, etc.)</li>
+              </ul>
+
+              <h3>📚 CATALOG - Liste des Fonctions (2ND + 0)</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Accédez rapidement à TOUTES les fonctions mathématiques disponibles !
+              </p>
+
+              <h4>📖 Utilisation du Catalog</h4>
+              <ul>
+                <li><strong>2ND + 0</strong> : Ouvrir le Catalog (100+ fonctions)</li>
+                <li><strong>↑ ↓</strong> : Naviguer dans la liste alphabétique</li>
+                <li><strong>A-Z</strong> : Taper une lettre pour sauter à cette section</li>
+                <li><strong>ENTER</strong> : Insérer la fonction sélectionnée</li>
+                <li><strong>CLEAR</strong> : Fermer le Catalog</li>
+              </ul>
+
+              <h4>✨ Fonctions disponibles dans le Catalog</h4>
+              <div className="help-examples">
+                <strong>A-D :</strong> abs, acos, Ans, asin, atan, binomcdf, binompdf, ceil, conj, cos, cosh, cbrt, det...<br/>
+                <strong>E-I :</strong> e^x, exp, fPart, floor, gcd, hypot, identity, imag, int, iPart...<br/>
+                <strong>L-P :</strong> lcm, ln, log, logBASE, max, min, nCr, nPr, Polar, π...<br/>
+                <strong>R-Z :</strong> rand, randInt, real, Rect, round, sign, sin, sinh, sqrt, tan, tanh, trace, trunc...<br/>
+              </div>
+
+              <h4>⚡ Recherche rapide</h4>
+              <p style={{ fontSize: '0.85em', color: '#666' }}>
+                Tapez simplement la première lettre de la fonction que vous cherchez !
+                Par exemple, tapez <strong>S</strong> pour sauter directement aux fonctions
+                commençant par S (sin, sqrt, sign, etc.).
+              </p>
 
               <h3>🧠 Menu MEM (Mémoire)</h3>
               <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
@@ -545,7 +635,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.2.8.0 (PWA) • 📊 TABLE & STAT PLOT • 📈 Par/Pol modes • 💾 STO→ & RCL • 🧠 MEM & MATRIX
+            Version 2.3.0.1 (PWA) • 🎯 SOLVER & CATALOG • 📊 TABLE & STAT PLOT • 📈 Par/Pol • 💾 MEM & MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
