@@ -14,12 +14,13 @@ interface GraphCanvasProps {
   graphMode?: GraphMode;
   statPlots?: [StatPlot, StatPlot, StatPlot];
   lists?: Record<string, number[]>;
+  parametricFunctions?: { x: string[], y: string[] };
   width?: number;
   height?: number;
 }
 
 export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
-  ({ functions, window, angleMode, graphMode = 'FUNC', statPlots, lists, width = 384, height = 256 }) => {
+  ({ functions, window, angleMode, graphMode = 'FUNC', statPlots, lists, parametricFunctions, width = 384, height = 256 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Initialiser le canvas dans le moteur graphique
@@ -35,13 +36,14 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
         console.log('🎨 Dessin du graphique:', {
           functions: functions.map(f => ({ index: f.index, expr: f.expression, active: f.active })),
           graphMode,
+          parametricFunctions,
           statPlots,
           window,
           angleMode
         });
-        graphingEngine.drawGraph(functions, window, angleMode, statPlots, lists, graphMode);
+        graphingEngine.drawGraph(functions, window, angleMode, statPlots, lists, graphMode, parametricFunctions);
       }
-    }, [functions, window, angleMode, graphMode, statPlots, lists]);
+    }, [functions, window, angleMode, graphMode, statPlots, lists, parametricFunctions]);
 
     return (
       <canvas

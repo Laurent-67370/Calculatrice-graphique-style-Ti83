@@ -59,6 +59,18 @@ interface CalculatorStore extends CalculatorState {
   traceX: number;
   traceFunctionIndex: number;
 
+  // Fonctions paramétriques (X1T-X6T, Y1T-Y6T)
+  parametricFunctionsX: string[];
+  parametricFunctionsY: string[];
+  activeParametricFunctions: boolean[];
+
+  // Fonctions polaires (r1-r6)
+  polarFunctions: string[];
+  activePolarFunctions: boolean[];
+
+  // Composant en cours d'édition pour mode paramétrique ('X' ou 'Y')
+  editingParametricComponent: 'X' | 'Y';
+
   // État de l'input
   isInputResult: boolean; // Indique si l'input actuel est un résultat de calcul
   cursorPosition: number; // Position du curseur dans l'input
@@ -103,6 +115,18 @@ interface CalculatorStore extends CalculatorState {
   toggleFunctionActive: (index: number) => void;
   clearFunction: (index: number) => void;
   clearAllFunctions: () => void;
+
+  // Actions pour les fonctions paramétriques
+  setParametricFunctionX: (index: number, expression: string) => void;
+  setParametricFunctionY: (index: number, expression: string) => void;
+  toggleParametricFunctionActive: (index: number) => void;
+  clearParametricFunction: (index: number) => void;
+  setEditingParametricComponent: (component: 'X' | 'Y') => void;
+
+  // Actions pour les fonctions polaires
+  setPolarFunction: (index: number, expression: string) => void;
+  togglePolarFunctionActive: (index: number) => void;
+  clearPolarFunction: (index: number) => void;
 
   // Actions pour la fenêtre
   setWindowSettings: (settings: Partial<WindowSettings>) => void;
@@ -222,6 +246,12 @@ const initialState: CalculatorState = {
   editingField: undefined,
 };
 
+const initialParametricFunctionsX = ['', '', '', '', '', ''];
+const initialParametricFunctionsY = ['', '', '', '', '', ''];
+const initialPolarFunctions = ['', '', '', '', '', ''];
+const initialActiveParametricFunctions = [false, false, false, false, false, false];
+const initialActivePolarFunctions = [false, false, false, false, false, false];
+
 // Créer une matrice vide
 const createEmptyMatrix = (): Matrix => ({
   rows: 3,
@@ -267,6 +297,14 @@ export const useCalculatorStore = create<CalculatorStore>()(
       isTraceMode: false,
       traceX: 0,
       traceFunctionIndex: 0,
+
+      // État initial des fonctions paramétriques et polaires
+      parametricFunctionsX: initialParametricFunctionsX,
+      parametricFunctionsY: initialParametricFunctionsY,
+      activeParametricFunctions: initialActiveParametricFunctions,
+      polarFunctions: initialPolarFunctions,
+      activePolarFunctions: initialActivePolarFunctions,
+      editingParametricComponent: 'X',
 
       // État initial de l'input
       isInputResult: false,
@@ -458,6 +496,92 @@ export const useCalculatorStore = create<CalculatorStore>()(
           activeFunctions: [false, false, false, false, false, false],
         }, false, 'clearAllFunctions'),
 
+      // Actions pour les fonctions paramétriques
+      setParametricFunctionX: (index: number, expression: string) =>
+        set((state) => {
+          const newFunctions = [...state.parametricFunctionsX];
+          const newActive = [...state.activeParametricFunctions];
+          newFunctions[index] = expression;
+          // Activer si X et Y ont tous les deux une expression
+          const hasY = state.parametricFunctionsY[index].trim() !== '';
+          newActive[index] = expression.trim() !== '' && hasY;
+          return {
+            parametricFunctionsX: newFunctions,
+            activeParametricFunctions: newActive,
+          };
+        }, false, 'setParametricFunctionX'),
+
+      setParametricFunctionY: (index: number, expression: string) =>
+        set((state) => {
+          const newFunctions = [...state.parametricFunctionsY];
+          const newActive = [...state.activeParametricFunctions];
+          newFunctions[index] = expression;
+          // Activer si X et Y ont tous les deux une expression
+          const hasX = state.parametricFunctionsX[index].trim() !== '';
+          newActive[index] = expression.trim() !== '' && hasX;
+          return {
+            parametricFunctionsY: newFunctions,
+            activeParametricFunctions: newActive,
+          };
+        }, false, 'setParametricFunctionY'),
+
+      toggleParametricFunctionActive: (index: number) =>
+        set((state) => {
+          const newActive = [...state.activeParametricFunctions];
+          newActive[index] = !newActive[index];
+          return { activeParametricFunctions: newActive };
+        }, false, 'toggleParametricFunctionActive'),
+
+      clearParametricFunction: (index: number) =>
+        set((state) => {
+          const newFunctionsX = [...state.parametricFunctionsX];
+          const newFunctionsY = [...state.parametricFunctionsY];
+          const newActive = [...state.activeParametricFunctions];
+          newFunctionsX[index] = '';
+          newFunctionsY[index] = '';
+          newActive[index] = false;
+          return {
+            parametricFunctionsX: newFunctionsX,
+            parametricFunctionsY: newFunctionsY,
+            activeParametricFunctions: newActive,
+          };
+        }, false, 'clearParametricFunction'),
+
+      setEditingParametricComponent: (component: 'X' | 'Y') =>
+        set({ editingParametricComponent: component }, false, 'setEditingParametricComponent'),
+
+      // Actions pour les fonctions polaires
+      setPolarFunction: (index: number, expression: string) =>
+        set((state) => {
+          const newFunctions = [...state.polarFunctions];
+          const newActive = [...state.activePolarFunctions];
+          newFunctions[index] = expression;
+          newActive[index] = expression.trim() !== '';
+          return {
+            polarFunctions: newFunctions,
+            activePolarFunctions: newActive,
+          };
+        }, false, 'setPolarFunction'),
+
+      togglePolarFunctionActive: (index: number) =>
+        set((state) => {
+          const newActive = [...state.activePolarFunctions];
+          newActive[index] = !newActive[index];
+          return { activePolarFunctions: newActive };
+        }, false, 'togglePolarFunctionActive'),
+
+      clearPolarFunction: (index: number) =>
+        set((state) => {
+          const newFunctions = [...state.polarFunctions];
+          const newActive = [...state.activePolarFunctions];
+          newFunctions[index] = '';
+          newActive[index] = false;
+          return {
+            polarFunctions: newFunctions,
+            activePolarFunctions: newActive,
+          };
+        }, false, 'clearPolarFunction'),
+
       // Actions pour la fenêtre
       setWindowSettings: (settings: Partial<WindowSettings>) =>
         set((state) => ({
@@ -563,6 +687,12 @@ export const useCalculatorStore = create<CalculatorStore>()(
           menuSelectedIndex: 0,
           matrices: initialMatrices,
           variables: {},
+          parametricFunctionsX: initialParametricFunctionsX,
+          parametricFunctionsY: initialParametricFunctionsY,
+          activeParametricFunctions: initialActiveParametricFunctions,
+          polarFunctions: initialPolarFunctions,
+          activePolarFunctions: initialActivePolarFunctions,
+          editingParametricComponent: 'X',
         }, false, 'reset'),
     }),
     { name: 'TI-83 Calculator' }
