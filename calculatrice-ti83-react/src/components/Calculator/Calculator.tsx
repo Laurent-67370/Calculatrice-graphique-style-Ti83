@@ -59,6 +59,7 @@ export const Calculator: React.FC = () => {
     isInputResult,
     matrices,
     variables,
+    cursorPosition,
     // cursorPosition et setCursorPosition sont gérés automatiquement par le store
     setInput,
     setInputResult,
@@ -1138,6 +1139,7 @@ export const Calculator: React.FC = () => {
         mode={currentMode}
         secondActive={isSecondFunction}
         alphaActive={isAlphaMode}
+        cursorPosition={cursorPosition}
       />
     );
   };

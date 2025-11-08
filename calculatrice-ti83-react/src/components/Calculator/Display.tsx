@@ -11,6 +11,7 @@ interface DisplayProps {
   mode: CalculatorMode;
   secondActive: boolean;
   alphaActive: boolean;
+  cursorPosition: number;
 }
 
 export const Display: React.FC<DisplayProps> = ({
@@ -19,7 +20,11 @@ export const Display: React.FC<DisplayProps> = ({
   mode,
   secondActive,
   alphaActive,
+  cursorPosition,
 }) => {
+  // Diviser le texte en deux parties: avant et après le curseur
+  const textBeforeCursor = input.slice(0, cursorPosition);
+  const textAfterCursor = input.slice(cursorPosition);
   return (
     <div className="ti83-display">
       {/* Indicateurs de statut */}
@@ -40,8 +45,9 @@ export const Display: React.FC<DisplayProps> = ({
 
       {/* Ligne d'entrée actuelle */}
       <div className="input-line">
-        <span className="input-text">{input}</span>
+        <span className="input-text">{textBeforeCursor}</span>
         <span className="cursor">█</span>
+        <span className="input-text">{textAfterCursor}</span>
       </div>
     </div>
   );
