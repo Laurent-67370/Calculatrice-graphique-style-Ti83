@@ -97,6 +97,9 @@ export interface CalculatorState {
   editingField?: string;
 }
 
+// Mode de graphique
+export type GraphMode = 'FUNC' | 'PAR' | 'POL' | 'SEQ';
+
 // Paramètres de la fenêtre graphique
 export interface WindowSettings {
   xMin: number;
@@ -105,6 +108,19 @@ export interface WindowSettings {
   yMin: number;
   yMax: number;
   yScale: number;
+  // Paramètres pour mode paramétrique
+  tMin: number;
+  tMax: number;
+  tStep: number;
+  // Paramètres pour mode polaire
+  θMin: number;
+  θMax: number;
+  θStep: number;
+  // Paramètres pour mode séquence
+  nMin: number;
+  nMax: number;
+  plotStart: number;
+  plotStep: number;
 }
 
 // Options de zoom
@@ -127,6 +143,7 @@ export interface CalculatorConfig {
   fixedDecimals: number;
   scientificNotation: boolean;
   complexMode: 'REAL' | 'RECTANGULAR' | 'POLAR';
+  graphMode: GraphMode;
 }
 
 // Résultat d'évaluation

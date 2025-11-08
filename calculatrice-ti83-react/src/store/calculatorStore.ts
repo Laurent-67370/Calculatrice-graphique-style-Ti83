@@ -149,6 +149,19 @@ const initialWindowSettings: WindowSettings = {
   yMin: -10,
   yMax: 10,
   yScale: 1,
+  // Parametric
+  tMin: 0,
+  tMax: 6.283185307179586, // 2π
+  tStep: 0.1308996938995747, // π/24
+  // Polar
+  θMin: 0,
+  θMax: 6.283185307179586, // 2π
+  θStep: 0.1308996938995747, // π/24
+  // Sequence
+  nMin: 1,
+  nMax: 10,
+  plotStart: 1,
+  plotStep: 1,
 };
 
 const initialTableSettings: TableSettings = {
@@ -191,6 +204,7 @@ const initialConfig: CalculatorConfig = {
   fixedDecimals: 2,
   scientificNotation: false,
   complexMode: 'REAL',
+  graphMode: 'FUNC',
 };
 
 const initialState: CalculatorState = {

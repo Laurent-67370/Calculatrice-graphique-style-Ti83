@@ -1239,6 +1239,7 @@ export const Calculator: React.FC = () => {
           angleMode={config.angleMode}
           floatMode={config.floatMode}
           fixedDecimals={config.fixedDecimals}
+          graphMode={config.graphMode}
           onSave={(modeConfig) => {
             setConfig(modeConfig);
             setMode('NORMAL');

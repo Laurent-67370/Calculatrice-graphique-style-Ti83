@@ -653,6 +653,16 @@ export class GraphingEngine {
       yMin: yCenter - yRange / (2 * factor),
       yMax: yCenter + yRange / (2 * factor),
       yScale: window.yScale / factor,
+      tMin: window.tMin,
+      tMax: window.tMax,
+      tStep: window.tStep,
+      θMin: window.θMin,
+      θMax: window.θMax,
+      θStep: window.θStep,
+      nMin: window.nMin,
+      nMax: window.nMax,
+      plotStart: window.plotStart,
+      plotStep: window.plotStep,
     };
   }
 
@@ -672,6 +682,16 @@ export class GraphingEngine {
       yMin: yCenter - (yRange * factor) / 2,
       yMax: yCenter + (yRange * factor) / 2,
       yScale: window.yScale * factor,
+      tMin: window.tMin,
+      tMax: window.tMax,
+      tStep: window.tStep,
+      θMin: window.θMin,
+      θMax: window.θMax,
+      θStep: window.θStep,
+      nMin: window.nMin,
+      nMax: window.nMax,
+      plotStart: window.plotStart,
+      plotStep: window.plotStep,
     };
   }
 
