@@ -1329,6 +1329,10 @@ export const Calculator: React.FC = () => {
           functions={graphFunctions}
           activeFunctions={activeFunctions}
           settings={tableSettings}
+          graphMode={config.graphMode}
+          parametricFunctionsX={parametricFunctionsX}
+          parametricFunctionsY={parametricFunctionsY}
+          activeParametricFunctions={activeParametricFunctions}
           onClose={() => setMode('NORMAL')}
         />
       );
