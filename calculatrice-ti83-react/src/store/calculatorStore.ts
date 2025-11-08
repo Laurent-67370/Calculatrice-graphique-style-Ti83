@@ -23,6 +23,14 @@ export interface StoredVariables {
   [key: string]: number | string;
 }
 
+// Type pour les paramètres TABLE
+export interface TableSettings {
+  tblStart: number;   // Valeur de départ
+  deltaTbl: number;   // Incrément
+  indpnt: 'AUTO' | 'ASK';  // Mode automatique ou demande
+  depend: 'AUTO' | 'ASK';  // Mode automatique ou demande
+}
+
 interface CalculatorStore extends CalculatorState {
   // Configuration
   config: CalculatorConfig;
@@ -87,6 +95,11 @@ interface CalculatorStore extends CalculatorState {
   setWindowSettings: (settings: Partial<WindowSettings>) => void;
   resetWindowSettings: () => void;
 
+  // Actions pour TABLE
+  tableSettings: TableSettings;
+  setTableSettings: (settings: Partial<TableSettings>) => void;
+  resetTableSettings: () => void;
+
   // Actions pour l'éditeur
   setCurrentEditor: (editor: string | undefined) => void;
   setEditingField: (field: string | undefined) => void;
@@ -117,6 +130,13 @@ const initialWindowSettings: WindowSettings = {
   yMin: -10,
   yMax: 10,
   yScale: 1,
+};
+
+const initialTableSettings: TableSettings = {
+  tblStart: 0,
+  deltaTbl: 1,
+  indpnt: 'AUTO',
+  depend: 'AUTO',
 };
 
 const initialConfig: CalculatorConfig = {
@@ -176,6 +196,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
       // État initial des matrices et variables
       matrices: initialMatrices,
       variables: {},
+
+      // État initial TABLE
+      tableSettings: initialTableSettings,
 
       // État initial du mode TRACE
       isTraceMode: false,
@@ -380,6 +403,15 @@ export const useCalculatorStore = create<CalculatorStore>()(
 
       resetWindowSettings: () =>
         set({ windowSettings: initialWindowSettings }, false, 'resetWindowSettings'),
+
+      // Actions pour TABLE
+      setTableSettings: (settings: Partial<TableSettings>) =>
+        set((state) => ({
+          tableSettings: { ...state.tableSettings, ...settings },
+        }), false, 'setTableSettings'),
+
+      resetTableSettings: () =>
+        set({ tableSettings: initialTableSettings }, false, 'resetTableSettings'),
 
       // Actions pour l'éditeur
       setCurrentEditor: (editor: string | undefined) =>
