@@ -432,8 +432,7 @@ export const Calculator: React.FC = () => {
       if (action === 'matrix') {
         setMode('MATRIX');
         setGraphMode(false);
-        // Désactiver le mode ALPHA si actif
-        if (isAlphaMode) toggleAlphaMode();
+        // Note: Le mode alpha est désactivé automatiquement par handleKeyPressWithAutoDeactivate
         return;
       }
 
