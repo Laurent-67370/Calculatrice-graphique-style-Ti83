@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.7.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.8.0-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -21,7 +21,7 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 - ✅ Menu STAT : **100% complet** (14/14 fonctions)
 - ✅ Menu CALC : **100% complet** (7/7 fonctions)
 - ✅ Menu MATH : **100% complet** (38 fonctions, 6 catégories)
-- ✅ Menu VARS : **100% complet** (Window, Zoom, XY, Matrix)
+- ✅ Menu VARS : **100% complet** (Window dynamique PAR/POL/SEQ, Zoom, XY, Matrix)
 - ✅ PWA : **100%** (Installable, Hors ligne, Auto-update) 🎉
 - ✅ Prêt pour production
 
@@ -29,9 +29,64 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 
 ---
 
-## 🎉 Version 2.2.7.0 - TABLE, STAT PLOT et Modes Graphiques ! 🎯
+## 🎉 Version 2.2.8.0 - Optimisations Modes Graphiques ! 🎯
 
-### 🚀 Nouvelles Fonctionnalités v2.2.7.0
+### 🚀 Nouvelles Fonctionnalités v2.2.8.0
+
+#### 🎛️ Menu VARS Dynamique
+Le menu VARS s'adapte maintenant automatiquement au mode graphique sélectionné !
+
+**Window dynamique selon le mode** :
+- **Mode FUNC** : Xmin, Xmax, Xscl, Ymin, Ymax, Yscl
+- **Mode PAR** : + Tmin, Tmax, Tstep (variables paramétriques)
+- **Mode POL** : + θmin, θmax, θstep (variables polaires)
+- **Mode SEQ** : + nMin, nMax, PlotStart, PlotStep (variables de séquence)
+
+```
+MODE → PAR
+VARS → Window... → Affiche Tmin, Tmax, Tstep
+```
+
+#### 🔤 Touche X,T,θ,n Intelligente
+La touche X,T,θ,n insère automatiquement la bonne variable selon le mode !
+
+- **Mode FUNC** → insère **X**
+- **Mode PAR** → insère **T**
+- **Mode POL** → insère **θ**
+- **Mode SEQ** → insère **n**
+
+```
+MODE → POL
+Y= → r1= → [X,T,θ,n] → insère θ automatiquement
+```
+
+#### 📊 Indicateur de Mode Graphique
+Le mode actif s'affiche en temps réel dans la barre d'état (coin supérieur gauche) :
+- **PAR** affiché en mode paramétrique
+- **POL** affiché en mode polaire
+- **SEQ** affiché en mode séquence
+- Mode FUNC n'affiche rien (par défaut)
+
+#### 📈 TABLE Paramétrique
+Support complet du mode paramétrique dans TABLE !
+- En mode **PAR** : Colonnes **T, X1T, Y1T, X2T, Y2T**...
+- En mode **FUNC** : Colonnes **X, Y1, Y2**...
+- Évaluation correcte de X(T) et Y(T)
+
+```
+MODE → PAR
+Y= → X1T=cos(T), Y1T=sin(T)
+2ND + GRAPH → TABLE → Affiche T, X1T, Y1T
+```
+
+#### ⚡ Service Worker Optimisé
+Mises à jour automatiques améliorées :
+- **NetworkFirst** au lieu de CacheFirst
+- Cache valide 7 jours au lieu de 1 an
+- Nettoyage automatique des anciens caches
+- Mise à jour immédiate lors du déploiement
+
+### 🎯 Hérite de v2.2.7.0
 
 #### 📊 TABLE & TBLSET - Affichage Tabulaire
 Visualisez vos fonctions sous forme de tableau comme sur une vraie TI-83 Plus !
@@ -103,7 +158,7 @@ Parametric: X1T=cos(T), Y1T=sin(T) → Cercle
 Polar: r1=1+cos(θ) → Cardioïde
 ```
 
-### 💾 Hérite de toutes les fonctionnalités v2.2.6.4
+### 💾 Hérite de v2.2.6.4 et antérieures
 
 - ✅ **Menu VARS** - Variables système (Window, Zoom, XY, Matrix)
 - ✅ **STO→ et RCL** - Stockage et rappel de 26 variables (A-Z)
@@ -117,12 +172,12 @@ Polar: r1=1+cos(θ) → Cardioïde
 
 ## 📦 Téléchargement et Déploiement
 
-### Archives PWA v2.2.7.0
+### Archives PWA v2.2.8.0
 
 Les archives de déploiement sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.7.0.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.7.0.zip) (337 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.7.0.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.7.0.tar.gz) (336 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.8.0.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.8.0.zip) (340 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.8.0.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.8.0.tar.gz) (341 KB)
 
 ### Déploiement Rapide
 
@@ -134,8 +189,8 @@ Les archives de déploiement sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.7.0.tar.gz
-tar -xzf calculatrice-ti83-pwa-v2.2.7.0.tar.gz -C /var/www/html/calculatrice/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.8.0.tar.gz
+tar -xzf calculatrice-ti83-pwa-v2.2.8.0.tar.gz -C /var/www/html/calculatrice/
 ```
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
@@ -198,8 +253,12 @@ npm run preview
 - **Listes** : Support complet de L1-L6
 - **Superposition** : Compatible avec les fonctions Y1-Y6
 
-### ✅ Menu VARS (Variables Système)
-- **Window** : Variables de fenêtre (Xmin, Xmax, Xscl, Ymin, Ymax, Yscl)
+### ✅ Menu VARS (Variables Système) - Dynamique !
+- **Window** : S'adapte au mode graphique
+  - Mode FUNC : Xmin, Xmax, Xscl, Ymin, Ymax, Yscl
+  - Mode PAR : + Tmin, Tmax, Tstep
+  - Mode POL : + θmin, θmax, θstep
+  - Mode SEQ : + nMin, nMax, PlotStart, PlotStep
 - **Zoom** : Variables de zoom (ZXmin, ZXmax, ZXscl, ZYmin, ZYmax, ZYscl)
 - **XY** : Coordonnées du dernier point tracé
 - **Matrix** : Matrices [A] à [J]
@@ -232,8 +291,8 @@ npm run preview
 - 📲 **Installable** sur Android (Chrome)
 - 📴 **Mode hors ligne** complet
 - ⚡ **Chargement instantané**
-- 🔄 **Mises à jour automatiques**
-- 💾 **Légère** : 337 KB seulement
+- 🔄 **Mises à jour automatiques** (NetworkFirst)
+- 💾 **Légère** : 340 KB seulement
 
 ---
 
@@ -265,9 +324,9 @@ npm run preview
 
 ### Performance PWA
 - **Build time** : < 10s
-- **Bundle total** : 337 KB (283 KB compressé)
-- **Service Worker** : 1.9 KB
-- **Cache** : 13 fichiers
+- **Bundle total** : 340 KB (287 KB compressé)
+- **Service Worker** : NetworkFirst optimisé
+- **Cache** : 13 fichiers, 7 jours
 - **Lighthouse score** : 90+
 
 ### Complétion
@@ -286,7 +345,14 @@ npm run preview
 
 ## 📝 Historique des Versions
 
-### v2.2.7.0 (Novembre 2025) - Actuelle ⭐
+### v2.2.8.0 (Novembre 2025) - Actuelle ⭐
+- **VARS dynamique** : Menu Window s'adapte au mode (PAR/POL/SEQ)
+- **Touche X,T,θ,n** : Insère automatiquement la bonne variable selon le mode
+- **Indicateur mode** : Affichage PAR/POL/SEQ dans la barre d'état
+- **TABLE paramétrique** : Colonnes T, X1T, Y1T en mode PAR
+- **Service Worker** : NetworkFirst + cache 7j pour mises à jour rapides
+
+### v2.2.7.0 (Novembre 2025)
 - **TABLE & TBLSET** : Affichage tabulaire complet des fonctions
 - **STAT PLOT** : 3 plots statistiques (scatter, histogram, box plots)
 - **Modes Par/Pol** : Support graphique paramétrique et polaire
@@ -393,7 +459,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.7.0 (PWA)** | **8 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.8.0 (PWA)** | **8 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
