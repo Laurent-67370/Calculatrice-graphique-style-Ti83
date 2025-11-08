@@ -59,6 +59,12 @@ export const Calculator: React.FC = () => {
     traceFunctionIndex,
     graphFunctions,
     activeFunctions,
+    parametricFunctionsX,
+    parametricFunctionsY,
+    activeParametricFunctions,
+    polarFunctions,
+    activePolarFunctions,
+    editingParametricComponent,
     windowSettings,
     tableSettings,
     statPlots,
@@ -85,6 +91,10 @@ export const Calculator: React.FC = () => {
     setTraceX,
     setTraceFunctionIndex,
     setFunctionExpression,
+    setParametricFunctionX,
+    setParametricFunctionY,
+    setPolarFunction,
+    setEditingParametricComponent,
     currentFunction,
     setCurrentFunction,
     setWindowSettings,
@@ -347,7 +357,19 @@ export const Calculator: React.FC = () => {
       if (action === 'y-vars') {
         setMode('Y_EDITOR');
         setGraphMode(false);
-        setInput(`Y${currentFunction + 1}=${graphFunctions[currentFunction]}`);
+
+        // Afficher le bon format selon le mode graphique
+        if (config.graphMode === 'PAR') {
+          // En mode paramétrique, commencer par X
+          setEditingParametricComponent('X');
+          setInput(`X${currentFunction + 1}T=${parametricFunctionsX[currentFunction]}`);
+        } else if (config.graphMode === 'POL') {
+          // En mode polaire
+          setInput(`r${currentFunction + 1}=${polarFunctions[currentFunction]}`);
+        } else {
+          // Mode FUNC par défaut
+          setInput(`Y${currentFunction + 1}=${graphFunctions[currentFunction]}`);
+        }
         return;
       }
 
@@ -725,14 +747,52 @@ export const Calculator: React.FC = () => {
       // En mode Y_EDITOR
       if (currentMode === 'Y_EDITOR') {
         if (action === 'enter') {
-          // Extraire la fonction de l'entrée (format: Y1=expression)
-          const match = currentInput.match(/Y(\d+)=(.+)/);
-          if (match) {
-            const funcIndex = parseInt(match[1]) - 1;
-            const expression = match[2];
-            setFunctionExpression(funcIndex, expression);
-            addToHistory(`Y${funcIndex + 1}=${expression}`);
-            addToHistory('Appuyez GRAPH pour tracer');
+          // Parser selon le mode graphique
+          if (config.graphMode === 'PAR') {
+            // Mode paramétrique: X1T= ou Y1T=
+            const matchX = currentInput.match(/X(\d+)T=(.+)/);
+            const matchY = currentInput.match(/Y(\d+)T=(.+)/);
+
+            if (matchX) {
+              const funcIndex = parseInt(matchX[1]) - 1;
+              const expression = matchX[2];
+              setParametricFunctionX(funcIndex, expression);
+              addToHistory(`X${funcIndex + 1}T=${expression}`);
+
+              // Passer automatiquement à Y
+              setEditingParametricComponent('Y');
+              setInput(`Y${funcIndex + 1}T=${parametricFunctionsY[funcIndex]}`);
+              return; // Ne pas fermer l'éditeur
+            } else if (matchY) {
+              const funcIndex = parseInt(matchY[1]) - 1;
+              const expression = matchY[2];
+              setParametricFunctionY(funcIndex, expression);
+              addToHistory(`Y${funcIndex + 1}T=${expression}`);
+              addToHistory('Appuyez GRAPH pour tracer');
+              setMode('NORMAL');
+              clearInput();
+              return;
+            }
+          } else if (config.graphMode === 'POL') {
+            // Mode polaire: r1=
+            const match = currentInput.match(/r(\d+)=(.+)/);
+            if (match) {
+              const funcIndex = parseInt(match[1]) - 1;
+              const expression = match[2];
+              setPolarFunction(funcIndex, expression);
+              addToHistory(`r${funcIndex + 1}=${expression}`);
+              addToHistory('Appuyez GRAPH pour tracer');
+            }
+          } else {
+            // Mode FUNC: Y1=
+            const match = currentInput.match(/Y(\d+)=(.+)/);
+            if (match) {
+              const funcIndex = parseInt(match[1]) - 1;
+              const expression = match[2];
+              setFunctionExpression(funcIndex, expression);
+              addToHistory(`Y${funcIndex + 1}=${expression}`);
+              addToHistory('Appuyez GRAPH pour tracer');
+            }
           }
           setMode('NORMAL');
           clearInput();
@@ -744,8 +804,35 @@ export const Calculator: React.FC = () => {
             ? (currentFunction + 5) % 6
             : (currentFunction + 1) % 6;
           setCurrentFunction(newIndex);
-          setInput(`Y${newIndex + 1}=${graphFunctions[newIndex]}`);
+
+          // Afficher le bon format selon le mode graphique
+          if (config.graphMode === 'PAR') {
+            if (editingParametricComponent === 'X') {
+              setInput(`X${newIndex + 1}T=${parametricFunctionsX[newIndex]}`);
+            } else {
+              setInput(`Y${newIndex + 1}T=${parametricFunctionsY[newIndex]}`);
+            }
+          } else if (config.graphMode === 'POL') {
+            setInput(`r${newIndex + 1}=${polarFunctions[newIndex]}`);
+          } else {
+            setInput(`Y${newIndex + 1}=${graphFunctions[newIndex]}`);
+          }
           return;
+        }
+
+        // En mode PAR, permettre de passer de X à Y avec les flèches gauche/droite
+        if (config.graphMode === 'PAR' && (action === 'left' || action === 'right')) {
+          if (action === 'right' && editingParametricComponent === 'X') {
+            // Passer de X à Y
+            setEditingParametricComponent('Y');
+            setInput(`Y${currentFunction + 1}T=${parametricFunctionsY[currentFunction]}`);
+            return;
+          } else if (action === 'left' && editingParametricComponent === 'Y') {
+            // Passer de Y à X
+            setEditingParametricComponent('X');
+            setInput(`X${currentFunction + 1}T=${parametricFunctionsX[currentFunction]}`);
+            return;
+          }
         }
       }
 
@@ -1141,12 +1228,42 @@ export const Calculator: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyPressWithAutoDeactivate, currentMode]);
 
-  // Préparer les fonctions pour le graphique
-  const graphFunctionsData: GraphFunction[] = graphFunctions.map((expr, index) => ({
-    index,
-    expression: expr,
-    active: activeFunctions[index],
-  }));
+  // Préparer les fonctions pour le graphique selon le mode
+  const graphFunctionsData: GraphFunction[] = useMemo(() => {
+    if (config.graphMode === 'PAR') {
+      // En mode paramétrique, utiliser les fonctions paramétriques
+      return parametricFunctionsX.map((expr, index) => ({
+        index,
+        expression: expr,
+        active: activeParametricFunctions[index],
+      }));
+    } else if (config.graphMode === 'POL') {
+      // En mode polaire, utiliser les fonctions polaires
+      return polarFunctions.map((expr, index) => ({
+        index,
+        expression: expr,
+        active: activePolarFunctions[index],
+      }));
+    } else {
+      // Mode FUNC par défaut
+      return graphFunctions.map((expr, index) => ({
+        index,
+        expression: expr,
+        active: activeFunctions[index],
+      }));
+    }
+  }, [config.graphMode, graphFunctions, activeFunctions, parametricFunctionsX, activeParametricFunctions, polarFunctions, activePolarFunctions]);
+
+  // Préparer les fonctions paramétriques
+  const parametricFunctionsData = useMemo(() => {
+    if (config.graphMode === 'PAR') {
+      return {
+        x: parametricFunctionsX,
+        y: parametricFunctionsY
+      };
+    }
+    return undefined;
+  }, [config.graphMode, parametricFunctionsX, parametricFunctionsY]);
 
   // Préparer les listes pour les stat plots
   const listsData = useMemo(() => {
@@ -1323,6 +1440,7 @@ export const Calculator: React.FC = () => {
           graphMode={config.graphMode}
           statPlots={statPlots}
           lists={listsData}
+          parametricFunctions={parametricFunctionsData}
         />
       );
     }
