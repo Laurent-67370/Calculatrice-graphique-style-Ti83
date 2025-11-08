@@ -1,8 +1,8 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version React + TypeScript - Robuste et Optimisée
+## Version 2.3.0.1 - React + TypeScript + PWA
 
-Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**.
+Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
 ---
 
@@ -64,27 +64,94 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 
 ## 🎯 Fonctionnalités Principales
 
+### 🎯 **SOLVER & CATALOG** (Nouveauté v2.3.0.0)
+- **SOLVER** (MATH > 0) : Résolveur d'équations f(X)=0
+  - Méthode de Newton-Raphson avec fallback bisection
+  - Précision : 10 décimales
+  - Support complet des fonctions mathématiques
+  - Affichage du nombre d'itérations
+- **CATALOG** (2ND + 0) : Liste alphabétique de 100+ fonctions
+  - Recherche rapide par lettre (A-Z)
+  - Navigation intuitive ↑↓
+  - Insertion directe dans l'input
+
 ### 📊 **Graphiques**
 - Tracer jusqu'à 6 fonctions simultanément (Y1 à Y6)
+- **Modes graphiques** : Function, Parametric, Polar
 - Zoom In/Out, presets (Standard, Decimal, Trig, Square)
 - Mode Trace pour suivre les courbes
-- Calculs sur courbe (zéros, min, max, intégrale)
+- Calculs sur courbe (zéros, min, max, intégrale, dérivée)
+- **TABLE** (2ND + GRAPH) : Affichage tabulaire avec TBLSET
+
+### 📈 **Statistiques & Listes**
+- Édition de listes (L1-L6) avec éditeur complet
+- **STAT PLOT** (2ND + Y=) : 5 types de graphiques
+  - Scatter, xyLine, Histogram, Box Plot (normal et modifié)
+  - 3 plots indépendants configurables
+  - Marqueurs personnalisables (□, +, •)
+- Statistiques à 1 et 2 variables (mean, Sx, σx, Q1, Med, Q3)
+- **12 types de régressions** :
+  - LinReg, QuadReg, CubicReg, QuartReg
+  - ExpReg, PwrReg, LnReg, SinReg, Logistic
+  - Med-Med, LinReg(a+bx)
+
+### 🧮 **MATH - 38 Fonctions en 6 Catégories**
+- **MATH** : ³√, logBASE, e^x, 10^x, hypot
+- **NUM** : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod
+- **CPX** : conj, real, imag, angle, abs, Rect, Polar
+- **PRB** : rand, nPr, nCr, !, randInt, randNorm, randBin
+- **ANGLE** : °→rad, rad→°, →DMS, →Dec
+- **TRIG** : sinh, cosh, tanh, asinh, acosh, atanh
+
+### 💾 **Mémoire & Variables**
+- **MEM** (2ND + +) : Gestion mémoire complète
+  - Reset total ou suppression sélective
+  - Variables A-Z, θ (stockage avec STO→)
+  - Listes L1-L6
+  - Matrices A-J
+- **MATRIX** (2ND + X⁻¹) : Calcul matriciel complet
+  - Éditeur de grille avec navigation
+  - Opérations : +, −, ×, ^, transposée
+  - Fonctions : det, dim, Fill, identity, randM
+  - Support des calculs complexes
 
 ### 🔢 **Calculs**
 - Opérations arithmétiques de base (+, −, ×, ÷)
-- Fonctions trigonométriques (sin, cos, tan)
-- Fonctions exponentielles et logarithmiques (ln, log, exp)
-- Racines carrées et puissances (√, ^)
+- Fonctions trigonométriques (sin, cos, tan, asin, acos, atan)
+- Fonctions exponentielles et logarithmiques (ln, log, exp, e^x, 10^x)
+- Racines et puissances (√, ³√, ^, x²)
 - Parenthèses et ordre des opérations
-
-### 📈 **Statistiques** (à venir)
-- Édition de listes (L1-L6)
-- Statistiques à 1 et 2 variables
-- Régressions multiples
+- **ANS** : Calculs en chaîne avec le dernier résultat
+- **STO→** et **RCL** : Stockage et rappel de variables
 
 ---
 
 ## 🚀 Guide d'Utilisation Rapide
+
+### Résoudre une équation avec le SOLVER
+
+1. **Ouvrir le Solver**
+   - Cliquer sur **MATH**
+   - Sélectionner **0:Solver...**
+
+2. **Entrer l'équation**
+   - **Équation** : Taper `X^2-4` (résout X²-4=0)
+   - **Estimation** : Taper `1` (valeur de départ)
+   - Appuyer sur **GRAPH** pour résoudre
+
+3. **Résultat**
+   - X = 2.0000000000 (10 décimales)
+   - Affiche le nombre d'itérations
+
+### Exemples d'équations pour le Solver
+
+```
+X^2-4            → Racines: X = ±2
+X^3-2*X-5        → X = 2.0945514815
+sin(X)-0.5       → X = 0.5235987756 (rad)
+ln(X)-2          → X = 7.3890560989
+cos(X)-X         → X = 0.7390851332
+```
 
 ### Tracer un graphique
 
@@ -113,6 +180,19 @@ ln(X)            → Logarithme
 sqrt(X)          → Racine carrée
 abs(X)           → Valeur absolue
 ```
+
+### Utiliser le CATALOG
+
+1. **Ouvrir le Catalog**
+   - Appuyer sur **2ND + 0**
+   - Liste de 100+ fonctions apparaît
+
+2. **Recherche rapide**
+   - Taper **S** pour sauter aux fonctions commençant par S
+   - Utiliser **↑↓** pour naviguer
+
+3. **Insérer**
+   - Appuyer sur **ENTER** pour insérer la fonction sélectionnée
 
 ---
 
@@ -152,11 +232,13 @@ src/
 
 | Technologie | Version | Utilisation |
 |------------|---------|-------------|
-| React | 18.3+ | Framework UI |
-| TypeScript | 5.6+ | Typage statique |
-| Zustand | 5.0+ | Gestion d'état |
-| Vite | 5.4+ | Build tool |
-| MathJS | 14.0+ | Calculs mathématiques |
+| React | 19.1+ | Framework UI avec Virtual DOM |
+| TypeScript | 5.6+ | Typage statique et sécurité |
+| Zustand | 5.0+ | Gestion d'état centralisée |
+| Vite | 7.2+ | Build tool ultra-rapide |
+| MathJS | 14.0+ | Calculs mathématiques complexes |
+| Workbox | 7.3+ | Service Worker pour PWA |
+| Sharp | 0.34+ | Génération d'icônes PWA |
 
 ---
 
