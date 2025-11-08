@@ -2,7 +2,7 @@
 
 Une calculatrice graphique scientifique moderne qui reproduit fidèlement l'interface et les fonctionnalités de la célèbre **TI-83 Plus** de Texas Instruments, construite avec **React 19**, **TypeScript 5.6**, et **Vite 7**. Maintenant **installable sur Android** comme une vraie application ! 📱
 
-![Version](https://img.shields.io/badge/version-2.2.6.4-blue)
+![Version](https://img.shields.io/badge/version-2.2.7.0-blue)
 ![PWA](https://img.shields.io/badge/PWA-Ready-success)
 ![React](https://img.shields.io/badge/React-19.1-61dafb?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript)
@@ -29,58 +29,83 @@ Cette calculatrice web offre une expérience complète de la TI-83 Plus avec une
 
 ---
 
-## 🎉 Version 2.2.6.4 - Corrections UX & Menu VARS ! 🎯
+## 🎉 Version 2.2.7.0 - TABLE, STAT PLOT et Modes Graphiques ! 🎯
 
-### 🚀 Nouvelles Fonctionnalités v2.2.6.4
+### 🚀 Nouvelles Fonctionnalités v2.2.7.0
 
-#### ✨ Améliorations UX
-- **Champ vide au démarrage** - Plus intuitif, pas de "0" affiché au lancement
-- **Touche CLEAR quitte le graphique** - Navigation simplifiée pour revenir à l'écran principal
-- **CLEAR désactive TRACE** - Sortie complète du mode graphique en un seul appui
+#### 📊 TABLE & TBLSET - Affichage Tabulaire
+Visualisez vos fonctions sous forme de tableau comme sur une vraie TI-83 Plus !
 
-#### 📊 Menu VARS Complet (Variables Système)
-Accédez rapidement aux variables système comme sur une vraie TI-83 Plus !
+**TABLE (2ND + GRAPH)** :
+- Affichage tabulaire de toutes les fonctions actives (Y1-Y6)
+- 50 lignes de valeurs calculées automatiquement
+- Navigation verticale et horizontale avec les flèches
+- Scroll indicator pour les grandes tables
 
-**4 sous-menus disponibles :**
-- **Window...** : Xmin, Xmax, Xscl, Ymin, Ymax, Yscl
-- **Zoom...** : ZXmin, ZXmax, ZXscl, ZYmin, ZYmax, ZYscl
-- **XY** : Coordonnées X, Y du dernier point tracé
-- **Matrix...** : Matrices [A] à [J] ⭐ NOUVEAU
+**TBLSET (2ND + WINDOW)** :
+- **TblStart** : Valeur de départ du tableau
+- **ΔTbl** : Incrément entre chaque valeur
+- **Indpnt** : Mode AUTO ou ASK
+- **Depend** : Mode AUTO ou ASK
 
-#### 🔢 Variables de fenêtre dans les calculs
-Les variables système sont maintenant disponibles dans toutes vos expressions :
 ```
-Xmin + Xmax → Calcule la somme des limites
-(Xmax - Xmin) / 2 → Centre de la fenêtre
-Ymax - Ymin → Hauteur de la fenêtre
-```
-
-#### 📐 Matrices via VARS
-Insérez rapidement les matrices [A] à [J] dans vos expressions :
-```
-VARS → Matrix... → [A] ENTER
-det([A]) → Déterminant de la matrice A
-[A] + [B] → Addition de matrices
+Y= → Entrez Y1=X²
+2ND + WINDOW → TBLSET (TblStart=0, ΔTbl=1)
+2ND + GRAPH → TABLE (affiche le tableau)
 ```
 
-### ✨ Comment Utiliser
+#### 📈 STAT PLOT - Graphiques Statistiques
+3 plots statistiques configurables indépendamment !
 
-**Menu VARS** :
+**Types de graphiques** :
+- **Scatter** (nuage de points) : avec marqueurs □, +, •
+- **xyLine** : Ligne reliant les points
+- **Histogram** : Histogramme avec bins automatiques
+- **Box Plot** : Boîtes à moustaches (modifié et normal)
+- **Normal Probability Plot** : Graphique de probabilité
+
+**Configuration (2ND + Y=)** :
+- On/Off pour chaque plot (Plot1, Plot2, Plot3)
+- Choix du type de graphique
+- Sélection des listes X et Y (L1-L6)
+- Style de marqueur
+
 ```
-VARS → Ouvre le menu VARS
-↑↓ → Naviguer entre les sous-menus
-ENTER → Ouvrir un sous-menu
-ENTER sur une variable → L'insérer dans l'input
+STAT → Edit → Entrez des données dans L1 et L2
+2ND + Y= → Plot1 → ON → scatter → L1, L2
+GRAPH → Affiche le scatter plot
 ```
 
-**Sortir du graphique** :
+#### 🔄 Modes Graphiques Parametric et Polar
+Support complet des équations paramétriques et polaires !
+
+**Mode Parametric (Par)** :
+- Tracé de courbes X(T), Y(T)
+- Paramètres : tMin, tMax, tStep
+- Parfait pour les spirales, ellipses, cycloides
+
+**Mode Polar (Pol)** :
+- Tracé de courbes r(θ)
+- Paramètres : θMin, θMax, θStep
+- Conversion automatique polaire → cartésien
+
+**Sélection du mode** :
 ```
-GRAPH → Affiche le graphique
-CLEAR → Retour à l'écran de calcul principal ✅ NOUVEAU
+MODE → Func/Par/Pol/Seq
+WINDOW → Configure tMin, tMax, θMin, θMax, etc.
+Y= → Entrez vos équations
+GRAPH → Tracé automatique
 ```
 
-### 💾 Hérite de toutes les fonctionnalités v2.2.6
+**Exemples** :
+```
+Parametric: X1T=cos(T), Y1T=sin(T) → Cercle
+Polar: r1=1+cos(θ) → Cardioïde
+```
 
+### 💾 Hérite de toutes les fonctionnalités v2.2.6.4
+
+- ✅ **Menu VARS** - Variables système (Window, Zoom, XY, Matrix)
 - ✅ **STO→ et RCL** - Stockage et rappel de 26 variables (A-Z)
 - ✅ **Menu MEM** - Gestion complète de la mémoire
 - ✅ **Menu MATRIX** - Édition de 10 matrices [A]-[J]
@@ -92,12 +117,12 @@ CLEAR → Retour à l'écran de calcul principal ✅ NOUVEAU
 
 ## 📦 Téléchargement et Déploiement
 
-### Archives PWA v2.2.6.4
+### Archives PWA v2.2.7.0
 
 Les archives de déploiement sont disponibles sur GitHub :
 
-- **ZIP** : [calculatrice-ti83-pwa-v2.2.6.4.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.4.zip) (333 KB)
-- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.6.4.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.4.tar.gz) (332 KB)
+- **ZIP** : [calculatrice-ti83-pwa-v2.2.7.0.zip](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.7.0.zip) (337 KB)
+- **TAR.GZ** : [calculatrice-ti83-pwa-v2.2.7.0.tar.gz](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.7.0.tar.gz) (336 KB)
 
 ### Déploiement Rapide
 
@@ -109,8 +134,8 @@ Les archives de déploiement sont disponibles sur GitHub :
 **Via SSH :**
 ```bash
 # Télécharger et déployer
-wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUtMTEAxLXqVMAqTbyqLH/calculatrice-ti83-pwa-v2.2.6.4.tar.gz
-tar -xzf calculatrice-ti83-pwa-v2.2.6.4.tar.gz -C /var/www/html/calculatrice/
+wget https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/raw/claude/fix-alpha-mode-011CUveJoEnZmwdn8FvFoBpk/calculatrice-ti83-pwa-v2.2.7.0.tar.gz
+tar -xzf calculatrice-ti83-pwa-v2.2.7.0.tar.gz -C /var/www/html/calculatrice/
 ```
 
 ⚠️ **Important** : Les PWA nécessitent **HTTPS obligatoirement**.
@@ -155,10 +180,23 @@ npm run preview
 
 ### ✅ Mode Graphique Complet
 - **Éditeur Y=** : 6 fonctions simultanées (Y1-Y6)
-- **Éditeur WINDOW** : Configuration complète de la fenêtre
+- **Modes graphiques** : Function, Parametric, Polar, Sequence
+- **Éditeur WINDOW** : Configuration complète (xMin/Max, tMin/Max, θMin/Max)
 - **Menu ZOOM** : 10 modes prédéfinis (ZStandard, ZDecimal, ZTrig, etc.)
 - **Mode TRACE** : Navigation interactive sur les courbes
-- **GraphCanvas** : Tracé multi-courbes optimisé
+- **GraphCanvas** : Tracé multi-courbes optimisé avec support Par/Pol
+
+### ✅ TABLE & TBLSET - Affichage Tabulaire
+- **TABLE (2ND + GRAPH)** : Tableau de valeurs pour Y1-Y6
+- **TBLSET (2ND + WINDOW)** : Configuration TblStart, ΔTbl
+- **Navigation** : Scroll vertical (50 lignes) et horizontal
+- **Évaluation automatique** : Toutes les fonctions actives
+
+### ✅ STAT PLOT - Graphiques Statistiques
+- **3 plots indépendants** : Plot1, Plot2, Plot3
+- **Types** : Scatter (□,+,•), xyLine, Histogram, Box Plot
+- **Listes** : Support complet de L1-L6
+- **Superposition** : Compatible avec les fonctions Y1-Y6
 
 ### ✅ Menu VARS (Variables Système)
 - **Window** : Variables de fenêtre (Xmin, Xmax, Xscl, Ymin, Ymax, Yscl)
@@ -195,7 +233,7 @@ npm run preview
 - 📴 **Mode hors ligne** complet
 - ⚡ **Chargement instantané**
 - 🔄 **Mises à jour automatiques**
-- 💾 **Légère** : 333 KB seulement
+- 💾 **Légère** : 337 KB seulement
 
 ---
 
@@ -227,7 +265,7 @@ npm run preview
 
 ### Performance PWA
 - **Build time** : < 10s
-- **Bundle total** : 333 KB (280 KB compressé)
+- **Bundle total** : 337 KB (283 KB compressé)
 - **Service Worker** : 1.9 KB
 - **Cache** : 13 fichiers
 - **Lighthouse score** : 90+
@@ -248,7 +286,14 @@ npm run preview
 
 ## 📝 Historique des Versions
 
-### v2.2.6.4 (Novembre 2025) - Actuelle
+### v2.2.7.0 (Novembre 2025) - Actuelle ⭐
+- **TABLE & TBLSET** : Affichage tabulaire complet des fonctions
+- **STAT PLOT** : 3 plots statistiques (scatter, histogram, box plots)
+- **Modes Par/Pol** : Support graphique paramétrique et polaire
+- **Sélection MODE** : Choix Func/Par/Pol/Seq dans l'écran MODE
+- Intégration complète avec navigation clavier
+
+### v2.2.6.4 (Novembre 2025)
 - Champ vide au démarrage
 - CLEAR pour sortir du graphique
 - Menu VARS avec sous-menu Matrix
@@ -348,7 +393,7 @@ Ce projet est créé à des fins éducatives et de démonstration.
 
 <div align="center">
 
-**Version 2.2.6.4 (PWA)** | **8 novembre 2025** | **Made with ❤️ for Education**
+**Version 2.2.7.0 (PWA)** | **8 novembre 2025** | **Made with ❤️ for Education**
 
 ⭐ **Si ce projet vous est utile, n'hésitez pas à lui donner une étoile sur GitHub !** ⭐
 
