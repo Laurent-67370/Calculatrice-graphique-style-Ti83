@@ -28,7 +28,8 @@ export type CalculatorMode =
   | 'ZOOM'
   | 'TRACE'
   | 'CATALOG'
-  | 'SOLVER';
+  | 'SOLVER'
+  | 'FINANCE';
 
 // Actions possibles sur les touches
 export type KeyAction =

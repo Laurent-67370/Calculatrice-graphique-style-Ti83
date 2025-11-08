@@ -359,6 +359,71 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Vous pouvez utiliser toutes les fonctions (sin, cos, ln, √, etc.)</li>
               </ul>
 
+              <h3>💰 FINANCE - Calculs Financiers TVM (APPS)</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Calculateur financier professionnel avec Time Value of Money (TVM) !
+              </p>
+
+              <h4>💼 Utilisation du TVM Solver</h4>
+              <ol>
+                <li><strong>APPS</strong> : Ouvrir le Finance TVM Solver</li>
+                <li><strong>↑ ↓</strong> : Naviguer entre les 7 variables TVM</li>
+                <li><strong>ENTER</strong> : Éditer une variable / Sortir de l'édition</li>
+                <li>Entrer les valeurs connues dans les champs appropriés</li>
+                <li>Sélectionner la variable à calculer</li>
+                <li><strong>GRAPH</strong> : Calculer la variable sélectionnée</li>
+              </ol>
+
+              <h4>📊 Variables TVM</h4>
+              <div className="help-examples">
+                <strong>N</strong> : Nombre de périodes de paiement<br/>
+                <strong>I%</strong> : Taux d'intérêt annuel (en pourcentage)<br/>
+                <strong>PV</strong> : Valeur actuelle (Present Value) - montant initial<br/>
+                <strong>PMT</strong> : Paiement périodique (Payment)<br/>
+                <strong>FV</strong> : Valeur future (Future Value) - montant final<br/>
+                <strong>P/Y</strong> : Paiements par an (12 pour mensuel, 1 pour annuel)<br/>
+                <strong>C/Y</strong> : Compositions par an (12 pour mensuel, 1 pour annuel)<br/>
+              </div>
+
+              <h4>💡 Exemples de calculs financiers</h4>
+              <div className="help-examples">
+                <strong>Prêt hypothécaire :</strong><br/>
+                • PV = 200000 (emprunt 200k€)<br/>
+                • I% = 3.5 (taux annuel 3.5%)<br/>
+                • N = 240 (20 ans × 12 mois)<br/>
+                • P/Y = 12, C/Y = 12<br/>
+                → Calculer PMT = -1158.03€ (paiement mensuel)<br/>
+                <br/>
+                <strong>Épargne retraite :</strong><br/>
+                • PMT = -500 (versement mensuel 500€)<br/>
+                • I% = 5 (rendement annuel 5%)<br/>
+                • N = 300 (25 ans × 12 mois)<br/>
+                • PV = 0, P/Y = 12, C/Y = 12<br/>
+                → Calculer FV = 295488.06€ (capital à la retraite)<br/>
+                <br/>
+                <strong>Durée d'un prêt :</strong><br/>
+                • PV = 15000 (crédit auto 15k€)<br/>
+                • PMT = -350 (mensualité 350€)<br/>
+                • I% = 4.2 (taux annuel 4.2%)<br/>
+                • FV = 0, P/Y = 12, C/Y = 12<br/>
+                → Calculer N = 46.27 mois (≈ 3.9 ans)<br/>
+              </div>
+
+              <h4>🔢 Mode de paiement</h4>
+              <p style={{ fontSize: '0.85em', color: '#666' }}>
+                <strong>END</strong> : Paiements en fin de période (défaut - prêts classiques)<br/>
+                <strong>BEGIN</strong> : Paiements en début de période (rentes immédiates)<br/>
+                Cliquez sur le bouton END/BEGIN pour basculer entre les modes.
+              </p>
+
+              <h4>⚠️ Conventions financières</h4>
+              <ul>
+                <li>Flux entrants = positifs (ex: dépôts, revenus)</li>
+                <li>Flux sortants = négatifs (ex: prêts reçus, paiements effectués)</li>
+                <li>PV négatif = argent emprunté ; PV positif = argent investi</li>
+                <li>PMT négatif = paiement effectué ; PMT positif = paiement reçu</li>
+              </ul>
+
               <h3>📚 CATALOG - Liste des Fonctions (2ND + 0)</h3>
               <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
                 Accédez rapidement à TOUTES les fonctions mathématiques disponibles !
@@ -635,7 +700,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.3.0.1 (PWA) • 🎯 SOLVER & CATALOG • 📊 TABLE & STAT PLOT • 📈 Par/Pol • 💾 MEM & MATRIX
+            Version 2.4.0.0 (PWA) • 💰 FINANCE TVM • 🎯 SOLVER & CATALOG • 📊 TABLE & STAT PLOT • 📈 Par/Pol • 💾 MEM & MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

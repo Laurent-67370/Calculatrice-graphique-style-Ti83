@@ -6,6 +6,49 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [2.4.0.0] - 2025-11-08
+
+### ✨ Ajouté
+- **FINANCE TVM** (APPS) : Calculateur financier professionnel complet
+  - **TVM Solver** : Time Value of Money (Valeur Temporelle de l'Argent)
+  - **7 variables** : N, I%, PV, PMT, FV, P/Y, C/Y
+  - Calcul automatique de n'importe quelle variable
+  - **Mode END/BEGIN** : Paiements en fin ou début de période
+  - **Méthode de Newton-Raphson** pour le calcul du taux d'intérêt I%
+  - Précision financière professionnelle (6 décimales)
+  - Interface intuitive avec navigation ↑↓
+  - **Exemples d'utilisation** :
+    - Prêts hypothécaires : calcul de mensualités
+    - Épargne retraite : projection du capital futur
+    - Crédits auto : calcul de la durée de remboursement
+    - Investissements : calcul du taux de rendement effectif
+
+### 📝 Fonctionnalités TVM
+- **solveN()** : Calcul du nombre de périodes
+- **solveI()** : Calcul du taux d'intérêt annuel (Newton-Raphson)
+- **solvePV()** : Calcul de la valeur actuelle
+- **solvePMT()** : Calcul du paiement périodique
+- **solveFV()** : Calcul de la valeur future
+- Conversion automatique des taux périodiques
+- Support des fréquences de paiement et composition différentes
+- Gestion des paiements en début ou fin de période
+
+### 🎨 Interface Finance
+- Affichage clair des 7 variables avec valeurs
+- Indicateur visuel du champ sélectionné
+- Bouton END/BEGIN pour basculer le mode de paiement
+- Messages d'erreur explicites
+- Affichage du nombre d'itérations pour I%
+
+### 📚 Documentation
+- Section Finance complète dans le HelpModal
+- Guide d'utilisation avec 3 exemples détaillés
+- Documentation des conventions financières (flux positifs/négatifs)
+- Exemples dans le README.md
+- Mise à jour de la version à 2.4.0.0
+
+---
+
 ## [2.3.0.1] - 2025-11-08
 
 ### 🐛 Corrigé
