@@ -92,8 +92,14 @@ export const createZoomHandlers = (
  */
 export const createMathHandlers = (
   appendInput: (value: string) => void,
-  setCurrentMenu: (menu: string | null) => void
+  setCurrentMenu: (menu: string | null) => void,
+  setMode?: (mode: string) => void
 ) => ({
+  // Solver
+  'solver': () => {
+    if (setMode) setMode('SOLVER');
+    setCurrentMenu(null);
+  },
   // Menu NUM
   'abs': () => { appendInput('abs('); setCurrentMenu(null); },
   'round': () => { appendInput('round('); setCurrentMenu(null); },

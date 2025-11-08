@@ -18,6 +18,8 @@ import { MatrixGridEditor, type MatrixGridEditorHandle } from '../Editors/Matrix
 import { TableSetEditor, type TableSetEditorHandle } from '../Editors/TableSetEditor';
 import { TableViewer, type TableViewerHandle } from '../Editors/TableViewer';
 import { StatPlotEditor, type StatPlotEditorHandle } from '../Editors/StatPlotEditor';
+import { CatalogViewer, type CatalogViewerHandle } from '../Editors/CatalogViewer';
+import { SolverEditor, type SolverEditorHandle } from '../Editors/SolverEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -47,6 +49,8 @@ export const Calculator: React.FC = () => {
   const tableSetEditorRef = useRef<TableSetEditorHandle>(null);
   const tableViewerRef = useRef<TableViewerHandle>(null);
   const statPlotEditorRef = useRef<StatPlotEditorHandle>(null);
+  const catalogViewerRef = useRef<CatalogViewerHandle>(null);
+  const solverEditorRef = useRef<SolverEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -186,8 +190,8 @@ export const Calculator: React.FC = () => {
   );
 
   const mathHandlers = useMemo(() =>
-    createMathHandlers(appendInput, setCurrentMenu),
-    [appendInput, setCurrentMenu]
+    createMathHandlers(appendInput, setCurrentMenu, setMode as (mode: string) => void),
+    [appendInput, setCurrentMenu, setMode]
   );
 
   const statHandlers = useMemo(() =>
@@ -437,6 +441,13 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer CATALOG (2ND + 0)
+      if (action === 'catalog') {
+        setMode('CATALOG');
+        setGraphMode(false);
+        return;
+      }
+
       // Gérer TBLSET
       if (action === 'tblset') {
         setMode('TBLSET');
@@ -604,6 +615,75 @@ export const Calculator: React.FC = () => {
         }
         if (action === 'clear') {
           setMode('NORMAL');
+          return;
+        }
+      }
+
+      // En mode CATALOG - gérer la navigation via ref
+      if (currentMode === 'CATALOG' && catalogViewerRef.current) {
+        if (action === 'up') {
+          catalogViewerRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          catalogViewerRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          catalogViewerRef.current.select();
+          return;
+        }
+        if (action === 'clear') {
+          catalogViewerRef.current.close();
+          return;
+        }
+      }
+
+      // En mode SOLVER - gérer la navigation via ref
+      if (currentMode === 'SOLVER' && solverEditorRef.current) {
+        if (action === 'up') {
+          solverEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          solverEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          solverEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'del') {
+          solverEditorRef.current.handleDelete();
+          return;
+        }
+        if ((action as string) === 'graph') {
+          solverEditorRef.current.solve();
+          return;
+        }
+        if (action === 'clear') {
+          solverEditorRef.current.close();
+          return;
+        }
+        // Gérer les chiffres, opérateurs et symboles pour l'édition
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'dot' || action === 'negative' || action === 'add' || action === 'subtract' ||
+            action === 'multiply' || action === 'divide' || action === 'left-paren' || action === 'right-paren' ||
+            action === 'x' || action === 'pow') {
+          const inputMap: Record<string, string> = {
+            'negative': '-',
+            'dot': '.',
+            'add': '+',
+            'subtract': '-',
+            'multiply': '*',
+            'divide': '/',
+            'left-paren': '(',
+            'right-paren': ')',
+            'x': 'X',
+            'pow': '^',
+          };
+          solverEditorRef.current.handleInput(inputMap[action] || action);
           return;
         }
       }
@@ -1035,7 +1115,7 @@ export const Calculator: React.FC = () => {
           return;
         }
 
-        if (action === 'catalog' || action === 'entry' || action === 'list') {
+        if ((action as string) === 'catalog' || (action as string) === 'entry' || (action as string) === 'list') {
           // Actions non implémentées pour l'instant
           console.log(`Action ${action} non implémentée`);
           return;
@@ -1394,6 +1474,30 @@ export const Calculator: React.FC = () => {
           parametricFunctionsX={parametricFunctionsX}
           parametricFunctionsY={parametricFunctionsY}
           activeParametricFunctions={activeParametricFunctions}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Affichage du Catalog
+    if (currentMode === 'CATALOG') {
+      return (
+        <CatalogViewer
+          ref={catalogViewerRef}
+          onInsert={(text) => {
+            appendInput(text);
+            setMode('NORMAL');
+          }}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Affichage du Solver
+    if (currentMode === 'SOLVER') {
+      return (
+        <SolverEditor
+          ref={solverEditorRef}
           onClose={() => setMode('NORMAL')}
         />
       );
