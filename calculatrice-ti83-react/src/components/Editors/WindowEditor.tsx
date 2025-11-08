@@ -4,10 +4,11 @@
  */
 
 import { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from 'react';
-import type { WindowSettings } from '../../types';
+import type { WindowSettings, GraphMode } from '../../types';
 
 interface WindowEditorProps {
   settings: WindowSettings;
+  graphMode: GraphMode;
   onSave: (settings: WindowSettings) => void;
   onClose: () => void;
 }
@@ -22,6 +23,7 @@ export interface WindowEditorHandle {
 
 export const WindowEditor = forwardRef<WindowEditorHandle, WindowEditorProps>(({
   settings,
+  graphMode,
   onSave,
   onClose
 }, ref) => {
@@ -30,15 +32,46 @@ export const WindowEditor = forwardRef<WindowEditorHandle, WindowEditorProps>(({
   const [editMode, setEditMode] = useState(false);
   const [editValue, setEditValue] = useState('');
 
-  // Mémoriser les champs pour éviter de recréer l'array à chaque render
-  const fields = useMemo(() => [
-    { name: 'Xmin', key: 'xMin' as keyof WindowSettings },
-    { name: 'Xmax', key: 'xMax' as keyof WindowSettings },
-    { name: 'Xscl', key: 'xScale' as keyof WindowSettings },
-    { name: 'Ymin', key: 'yMin' as keyof WindowSettings },
-    { name: 'Ymax', key: 'yMax' as keyof WindowSettings },
-    { name: 'Yscl', key: 'yScale' as keyof WindowSettings },
-  ], []);
+  // Mémoriser les champs selon le mode graphique
+  const fields = useMemo(() => {
+    const baseFields = [
+      { name: 'Xmin', key: 'xMin' as keyof WindowSettings },
+      { name: 'Xmax', key: 'xMax' as keyof WindowSettings },
+      { name: 'Xscl', key: 'xScale' as keyof WindowSettings },
+      { name: 'Ymin', key: 'yMin' as keyof WindowSettings },
+      { name: 'Ymax', key: 'yMax' as keyof WindowSettings },
+      { name: 'Yscl', key: 'yScale' as keyof WindowSettings },
+    ];
+
+    if (graphMode === 'PAR') {
+      // Mode paramétrique : ajouter tMin, tMax, tStep
+      return [
+        ...baseFields,
+        { name: 'Tmin', key: 'tMin' as keyof WindowSettings },
+        { name: 'Tmax', key: 'tMax' as keyof WindowSettings },
+        { name: 'Tstep', key: 'tStep' as keyof WindowSettings },
+      ];
+    } else if (graphMode === 'POL') {
+      // Mode polaire : ajouter θMin, θMax, θStep
+      return [
+        ...baseFields,
+        { name: 'θmin', key: 'θMin' as keyof WindowSettings },
+        { name: 'θmax', key: 'θMax' as keyof WindowSettings },
+        { name: 'θstep', key: 'θStep' as keyof WindowSettings },
+      ];
+    } else if (graphMode === 'SEQ') {
+      // Mode séquence : ajouter nMin, nMax, etc.
+      return [
+        ...baseFields,
+        { name: 'nMin', key: 'nMin' as keyof WindowSettings },
+        { name: 'nMax', key: 'nMax' as keyof WindowSettings },
+        { name: 'PlotStart', key: 'plotStart' as keyof WindowSettings },
+        { name: 'PlotStep', key: 'plotStep' as keyof WindowSettings },
+      ];
+    }
+
+    return baseFields;
+  }, [graphMode]);
 
   // Exposer les méthodes au parent via ref
   useImperativeHandle(ref, () => ({
