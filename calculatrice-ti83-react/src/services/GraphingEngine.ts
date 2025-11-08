@@ -593,8 +593,20 @@ export class GraphingEngine {
       });
     } else if (graphMode === 'PAR' && parametricFunctions) {
       // Mode paramétrique (X(T), Y(T))
+      console.log('📐 Mode PAR détecté:', {
+        parametricFunctions,
+        functions: functions.map(f => ({ active: f.active, expr: f.expression }))
+      });
       for (let i = 0; i < 6; i++) {
+        console.log(`Fonction ${i}:`, {
+          active: functions[i]?.active,
+          hasX: !!parametricFunctions.x[i],
+          hasY: !!parametricFunctions.y[i],
+          x: parametricFunctions.x[i],
+          y: parametricFunctions.y[i]
+        });
         if (functions[i]?.active && parametricFunctions.x[i] && parametricFunctions.y[i]) {
+          console.log(`🎨 Traçage fonction paramétrique ${i+1}:`, parametricFunctions.x[i], parametricFunctions.y[i]);
           this.plotParametric(
             parametricFunctions.x[i],
             parametricFunctions.y[i],
