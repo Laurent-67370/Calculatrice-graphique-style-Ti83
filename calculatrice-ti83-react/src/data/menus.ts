@@ -163,4 +163,18 @@ export const varsMenuItems: MenuItem[] = [
     { id: 'x', label: 'X', action: () => {} },
     { id: 'y', label: 'Y', action: () => {} },
   ]},
+
+  // Sous-menu Matrix (matrices A à J)
+  { id: 'vars-matrix', label: 'Matrix...', action: () => {}, submenu: [
+    { id: 'matrix-a', label: '[A]', action: () => {} },
+    { id: 'matrix-b', label: '[B]', action: () => {} },
+    { id: 'matrix-c', label: '[C]', action: () => {} },
+    { id: 'matrix-d', label: '[D]', action: () => {} },
+    { id: 'matrix-e', label: '[E]', action: () => {} },
+    { id: 'matrix-f', label: '[F]', action: () => {} },
+    { id: 'matrix-g', label: '[G]', action: () => {} },
+    { id: 'matrix-h', label: '[H]', action: () => {} },
+    { id: 'matrix-i', label: '[I]', action: () => {} },
+    { id: 'matrix-j', label: '[J]', action: () => {} },
+  ]},
 ];
