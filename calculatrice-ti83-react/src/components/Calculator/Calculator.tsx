@@ -117,6 +117,8 @@ export const Calculator: React.FC = () => {
   // Obtenir les items du menu actuel AVANT handleKeyPress
   // Générer le menu VARS dynamiquement selon le mode graphique
   const varsMenuItemsDynamic = useMemo(() => {
+    console.log('[VARS Menu] Mode graphique actuel:', config.graphMode);
+
     // Créer le sous-menu Window selon le mode graphique
     const windowSubmenu = [
       { id: 'xmin', label: 'Xmin', action: () => {} },
@@ -129,25 +131,32 @@ export const Calculator: React.FC = () => {
 
     // Ajouter les variables spécifiques au mode
     if (config.graphMode === 'PAR') {
+      console.log('[VARS Menu] Ajout des variables paramétriques Tmin, Tmax, Tstep');
       windowSubmenu.push(
         { id: 'tmin', label: 'Tmin', action: () => {} },
         { id: 'tmax', label: 'Tmax', action: () => {} },
         { id: 'tstep', label: 'Tstep', action: () => {} }
       );
     } else if (config.graphMode === 'POL') {
+      console.log('[VARS Menu] Ajout des variables polaires θmin, θmax, θstep');
       windowSubmenu.push(
         { id: 'θmin', label: 'θmin', action: () => {} },
         { id: 'θmax', label: 'θmax', action: () => {} },
         { id: 'θstep', label: 'θstep', action: () => {} }
       );
     } else if (config.graphMode === 'SEQ') {
+      console.log('[VARS Menu] Ajout des variables de séquence nMin, nMax, PlotStart, PlotStep');
       windowSubmenu.push(
         { id: 'nmin', label: 'nMin', action: () => {} },
         { id: 'nmax', label: 'nMax', action: () => {} },
         { id: 'plotstart', label: 'PlotStart', action: () => {} },
         { id: 'plotstep', label: 'PlotStep', action: () => {} }
       );
+    } else {
+      console.log('[VARS Menu] Mode FUNC - pas de variables supplémentaires');
     }
+
+    console.log('[VARS Menu] Sous-menu Window contient', windowSubmenu.length, 'items:', windowSubmenu.map(i => i.label).join(', '));
 
     // Retourner le menu VARS complet avec Window dynamique
     return [
