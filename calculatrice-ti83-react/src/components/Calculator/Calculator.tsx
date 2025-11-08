@@ -283,6 +283,8 @@ export const Calculator: React.FC = () => {
         clearInput();
         setMode('NORMAL');
         setCurrentMenu(null);
+        setGraphMode(false);  // Sortir du mode graphique
+        setTraceMode(false);   // Désactiver le mode trace
         return;
       }
 
