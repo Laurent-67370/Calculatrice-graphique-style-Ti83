@@ -359,6 +359,71 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Vous pouvez utiliser toutes les fonctions (sin, cos, ln, √, etc.)</li>
               </ul>
 
+              <h3>💰 FINANCE - Calculs Financiers TVM (APPS)</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Calculateur financier professionnel avec Time Value of Money (TVM) !
+              </p>
+
+              <h4>💼 Utilisation du TVM Solver</h4>
+              <ol>
+                <li><strong>APPS</strong> : Ouvrir le Finance TVM Solver</li>
+                <li><strong>↑ ↓</strong> : Naviguer entre les 7 variables TVM</li>
+                <li><strong>ENTER</strong> : Éditer une variable / Sortir de l'édition</li>
+                <li>Entrer les valeurs connues dans les champs appropriés</li>
+                <li>Sélectionner la variable à calculer</li>
+                <li><strong>GRAPH</strong> : Calculer la variable sélectionnée</li>
+              </ol>
+
+              <h4>📊 Variables TVM</h4>
+              <div className="help-examples">
+                <strong>N</strong> : Nombre de périodes de paiement<br/>
+                <strong>I%</strong> : Taux d'intérêt annuel (en pourcentage)<br/>
+                <strong>PV</strong> : Valeur actuelle (Present Value) - montant initial<br/>
+                <strong>PMT</strong> : Paiement périodique (Payment)<br/>
+                <strong>FV</strong> : Valeur future (Future Value) - montant final<br/>
+                <strong>P/Y</strong> : Paiements par an (12 pour mensuel, 1 pour annuel)<br/>
+                <strong>C/Y</strong> : Compositions par an (12 pour mensuel, 1 pour annuel)<br/>
+              </div>
+
+              <h4>💡 Exemples de calculs financiers</h4>
+              <div className="help-examples">
+                <strong>Prêt hypothécaire :</strong><br/>
+                • PV = 200000 (emprunt 200k€)<br/>
+                • I% = 3.5 (taux annuel 3.5%)<br/>
+                • N = 240 (20 ans × 12 mois)<br/>
+                • P/Y = 12, C/Y = 12<br/>
+                → Calculer PMT = -1158.03€ (paiement mensuel)<br/>
+                <br/>
+                <strong>Épargne retraite :</strong><br/>
+                • PMT = -500 (versement mensuel 500€)<br/>
+                • I% = 5 (rendement annuel 5%)<br/>
+                • N = 300 (25 ans × 12 mois)<br/>
+                • PV = 0, P/Y = 12, C/Y = 12<br/>
+                → Calculer FV = 295488.06€ (capital à la retraite)<br/>
+                <br/>
+                <strong>Durée d'un prêt :</strong><br/>
+                • PV = 15000 (crédit auto 15k€)<br/>
+                • PMT = -350 (mensualité 350€)<br/>
+                • I% = 4.2 (taux annuel 4.2%)<br/>
+                • FV = 0, P/Y = 12, C/Y = 12<br/>
+                → Calculer N = 46.27 mois (≈ 3.9 ans)<br/>
+              </div>
+
+              <h4>🔢 Mode de paiement</h4>
+              <p style={{ fontSize: '0.85em', color: '#666' }}>
+                <strong>END</strong> : Paiements en fin de période (défaut - prêts classiques)<br/>
+                <strong>BEGIN</strong> : Paiements en début de période (rentes immédiates)<br/>
+                Cliquez sur le bouton END/BEGIN pour basculer entre les modes.
+              </p>
+
+              <h4>⚠️ Conventions financières</h4>
+              <ul>
+                <li>Flux entrants = positifs (ex: dépôts, revenus)</li>
+                <li>Flux sortants = négatifs (ex: prêts reçus, paiements effectués)</li>
+                <li>PV négatif = argent emprunté ; PV positif = argent investi</li>
+                <li>PMT négatif = paiement effectué ; PMT positif = paiement reçu</li>
+              </ul>
+
               <h3>📚 CATALOG - Liste des Fonctions (2ND + 0)</h3>
               <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
                 Accédez rapidement à TOUTES les fonctions mathématiques disponibles !
@@ -387,6 +452,86 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 Par exemple, tapez <strong>S</strong> pour sauter directement aux fonctions
                 commençant par S (sin, sqrt, sign, etc.).
               </p>
+
+              <h3>📊 DISTR - Distributions Statistiques</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Fonctions de probabilité pour l'analyse statistique avancée
+              </p>
+
+              <h4>📈 Distributions continues</h4>
+              <div className="help-examples">
+                <strong>Normale :</strong><br/>
+                • <code>normalcdf(lower, upper, μ, σ)</code> : P(lower ≤ X ≤ upper)<br/>
+                • <code>normalpdf(x, μ, σ)</code> : Densité de probabilité en x<br/>
+                • <code>invNorm(area, μ, σ)</code> : Quantile (inverse de cdf)<br/>
+                <br/>
+                <strong>Student (t) :</strong><br/>
+                • <code>tcdf(lower, upper, df)</code> : P(lower ≤ T ≤ upper)<br/>
+                • <code>tpdf(x, df)</code> : Densité en x<br/>
+                <br/>
+                <strong>Chi-carré (χ²) :</strong><br/>
+                • <code>χ²cdf(lower, upper, df)</code> : P(lower ≤ χ² ≤ upper)<br/>
+                • <code>χ²pdf(x, df)</code> : Densité en x<br/>
+                <br/>
+                <strong>Fisher (F) :</strong><br/>
+                • <code>Fcdf(lower, upper, df1, df2)</code> : P(lower ≤ F ≤ upper)<br/>
+                • <code>Fpdf(x, df1, df2)</code> : Densité en x<br/>
+              </div>
+
+              <h4>🎲 Distributions discrètes</h4>
+              <div className="help-examples">
+                <strong>Binomiale :</strong><br/>
+                • <code>binompdf(n, p, k)</code> : P(X = k)<br/>
+                • <code>binomcdf(n, p, k)</code> : P(X ≤ k)<br/>
+                <br/>
+                <strong>Poisson :</strong><br/>
+                • <code>poissonpdf(λ, k)</code> : P(X = k)<br/>
+                • <code>poissoncdf(λ, k)</code> : P(X ≤ k)<br/>
+                <br/>
+                <strong>Géométrique :</strong><br/>
+                • <code>geometpdf(p, k)</code> : P(X = k)<br/>
+                • <code>geometcdf(p, k)</code> : P(X ≤ k)<br/>
+              </div>
+
+              <h4>💡 Exemples d'utilisation</h4>
+              <div className="help-examples">
+                <code>normalcdf(-1.96, 1.96, 0, 1)</code> → 0.95 (intervalle à 95%)<br/>
+                <code>invNorm(0.975, 0, 1)</code> → 1.96 (quantile 97.5%)<br/>
+                <code>binomcdf(10, 0.5, 5)</code> → 0.623 (10 lancers, ≤5 succès)<br/>
+                <code>tcdf(-2, 2, 9)</code> → 0.926 (t avec 9 degrés de liberté)<br/>
+              </div>
+
+              <h3>🔍 TEST & LOGIC - Opérateurs de Comparaison et Logiques</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Opérateurs retournant 1 (vrai) ou 0 (faux)
+              </p>
+
+              <h4>⚖️ Opérateurs TEST</h4>
+              <div className="help-examples">
+                • <code>=</code> : Égalité<br/>
+                • <code>≠</code> : Non-égalité<br/>
+                • <code>&gt;</code> : Supérieur<br/>
+                • <code>≥</code> : Supérieur ou égal<br/>
+                • <code>&lt;</code> : Inférieur<br/>
+                • <code>≤</code> : Inférieur ou égal<br/>
+              </div>
+
+              <h4>🔗 Opérateurs LOGIC</h4>
+              <div className="help-examples">
+                • <code>and</code> : ET logique (1 si les deux vrais)<br/>
+                • <code>or</code> : OU logique (1 si au moins un vrai)<br/>
+                • <code>xor</code> : OU exclusif (1 si exactement un vrai)<br/>
+                • <code>not(x)</code> : NON logique (1 si x=0, 0 sinon)<br/>
+              </div>
+
+              <h4>💡 Exemples</h4>
+              <div className="help-examples">
+                <code>5 &gt; 3</code> → 1 (vrai)<br/>
+                <code>2 = 3</code> → 0 (faux)<br/>
+                <code>(5 &gt; 3) and (2 &lt; 4)</code> → 1 (les deux vrais)<br/>
+                <code>(1 = 1) or (2 = 3)</code> → 1 (au moins un vrai)<br/>
+                <code>not(0)</code> → 1 (NON de faux = vrai)<br/>
+              </div>
 
               <h3>🧠 Menu MEM (Mémoire)</h3>
               <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
@@ -635,7 +780,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.3.0.1 (PWA) • 🎯 SOLVER & CATALOG • 📊 TABLE & STAT PLOT • 📈 Par/Pol • 💾 MEM & MATRIX
+            Version 2.5.0.0 (PWA) • 📊 DISTR & TEST/LOGIC • 💰 FINANCE TVM • 🎯 SOLVER & CATALOG • 📈 Par/Pol • 💾 MEM & MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

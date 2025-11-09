@@ -19,10 +19,10 @@ interface CatalogViewerProps {
 const catalogItems = [
   'abs(', 'acos(', 'and', 'angle(', 'Ans', 'asin(', 'atan(',
   'binomcdf(', 'binompdf(',
-  'ceil(', 'conj(', 'cos(', 'cosh(', 'cumSum(',
+  'ceil(', 'chi2cdf(', 'chi2pdf(', 'conj(', 'cos(', 'cosh(', 'cumSum(',
   'det(', 'dim(',
   'e', 'e^(', 'exp(',
-  'factorial(', 'Fill(', 'floor(', 'fMax(', 'fMin(', 'fPart(',
+  'factorial(', 'Fcdf(', 'Fill(', 'floor(', 'fMax(', 'fMin(', 'Fpdf(', 'fPart(',
   'gcd(', 'geometcdf(', 'geometpdf(',
   'hypot(',
   'i', 'identity(', 'imag(', 'int(', 'invNorm(', 'iPart(',
@@ -33,7 +33,7 @@ const catalogItems = [
   'π', 'Polar(', 'poissonpdf(', 'poissoncdf(',
   'rand', 'randBin(', 'randInt(', 'randNorm(', 'real(', 'Rect(', 'round(',
   'seq(', 'sign(', 'sin(', 'sinh(', 'solve(', 'SortA(', 'SortD(', 'sqrt(', 'stdDev(', 'sum(',
-  'tan(', 'tanh(', 'transpose(', 'trunc(',
+  'tan(', 'tanh(', 'tcdf(', 'tpdf(', 'transpose(', 'trunc(',
   'variance(',
   'xor',
   '→DMS', '→Dec', '³√(',
@@ -41,6 +41,7 @@ const catalogItems = [
   '∫(',
   '√(',
   'θ',
+  'χ²cdf(', 'χ²pdf(',
 ];
 
 export const CatalogViewer = forwardRef<CatalogViewerHandle, CatalogViewerProps>(({

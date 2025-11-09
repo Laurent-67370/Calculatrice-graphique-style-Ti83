@@ -1,7 +1,9 @@
 /**
  * Service de fonctions mathématiques pour TI-83 Plus
- * NUM, CPX, PRB
+ * NUM, CPX, PRB, DISTR
  */
+
+import { distributionService } from './DistributionService';
 
 export class MathFunctionsService {
   /**
@@ -404,6 +406,148 @@ export class MathFunctionsService {
       if (Math.random() < p) count++;
     }
     return count;
+  }
+
+  /**
+   * MENU DISTR - Distributions statistiques
+   */
+
+  // Distribution normale - PDF
+  normalpdf(x: number, μ = 0, σ = 1): number {
+    return distributionService.normalpdf(x, μ, σ);
+  }
+
+  // Distribution normale - CDF
+  normalcdf(lower: number, upper: number, μ = 0, σ = 1): number {
+    return distributionService.normalcdf(lower, upper, μ, σ);
+  }
+
+  // Inverse de la distribution normale
+  invNorm(area: number, μ = 0, σ = 1): number {
+    return distributionService.invNorm(area, μ, σ);
+  }
+
+  // Distribution t de Student - PDF
+  tpdf(x: number, df: number): number {
+    return distributionService.tpdf(x, df);
+  }
+
+  // Distribution t de Student - CDF
+  tcdf(lower: number, upper: number, df: number): number {
+    return distributionService.tcdf(lower, upper, df);
+  }
+
+  // Distribution Chi-carré - PDF
+  chi2pdf(x: number, df: number): number {
+    return distributionService.chi2pdf(x, df);
+  }
+
+  // Distribution Chi-carré - CDF
+  chi2cdf(lower: number, upper: number, df: number): number {
+    return distributionService.chi2cdf(lower, upper, df);
+  }
+
+  // Distribution F - PDF
+  Fpdf(x: number, df1: number, df2: number): number {
+    return distributionService.Fpdf(x, df1, df2);
+  }
+
+  // Distribution F - CDF
+  Fcdf(lower: number, upper: number, df1: number, df2: number): number {
+    return distributionService.Fcdf(lower, upper, df1, df2);
+  }
+
+  // Distribution binomiale - PDF
+  binompdf(n: number, p: number, x: number): number {
+    return distributionService.binompdf(n, p, x);
+  }
+
+  // Distribution binomiale - CDF
+  binomcdf(n: number, p: number, x: number): number {
+    return distributionService.binomcdf(n, p, x);
+  }
+
+  // Distribution de Poisson - PDF
+  poissonpdf(λ: number, x: number): number {
+    return distributionService.poissonpdf(λ, x);
+  }
+
+  // Distribution de Poisson - CDF
+  poissoncdf(λ: number, x: number): number {
+    return distributionService.poissoncdf(λ, x);
+  }
+
+  // Distribution géométrique - PDF
+  geometpdf(p: number, x: number): number {
+    return distributionService.geometpdf(p, x);
+  }
+
+  // Distribution géométrique - CDF
+  geometcdf(p: number, x: number): number {
+    return distributionService.geometcdf(p, x);
+  }
+
+  /**
+   * MENU TEST - Opérateurs de comparaison
+   * Retournent 1 (vrai) ou 0 (faux)
+   */
+
+  // Égalité
+  testEqual(a: number, b: number): number {
+    return a === b ? 1 : 0;
+  }
+
+  // Non-égalité
+  testNotEqual(a: number, b: number): number {
+    return a !== b ? 1 : 0;
+  }
+
+  // Supérieur
+  testGreater(a: number, b: number): number {
+    return a > b ? 1 : 0;
+  }
+
+  // Supérieur ou égal
+  testGreaterEqual(a: number, b: number): number {
+    return a >= b ? 1 : 0;
+  }
+
+  // Inférieur
+  testLess(a: number, b: number): number {
+    return a < b ? 1 : 0;
+  }
+
+  // Inférieur ou égal
+  testLessEqual(a: number, b: number): number {
+    return a <= b ? 1 : 0;
+  }
+
+  /**
+   * MENU LOGIC - Opérateurs logiques
+   * Retournent 1 (vrai) ou 0 (faux)
+   * 0 = faux, tout autre nombre = vrai
+   */
+
+  // ET logique
+  logicAnd(a: number, b: number): number {
+    return (a !== 0 && b !== 0) ? 1 : 0;
+  }
+
+  // OU logique
+  logicOr(a: number, b: number): number {
+    return (a !== 0 || b !== 0) ? 1 : 0;
+  }
+
+  // OU exclusif (XOR)
+  logicXor(a: number, b: number): number {
+    const aBool = a !== 0;
+    const bBool = b !== 0;
+    return (aBool !== bBool) ? 1 : 0;
+  }
+
+  // NON logique
+  logicNot(a: number): number {
+    return a === 0 ? 1 : 0;
   }
 }
 
