@@ -4,7 +4,7 @@
  */
 
 import { create, all } from 'mathjs';
-import type { DrawElement, DrawLine, DrawHorizontal, DrawVertical, DrawCircle, DrawText, DrawFunction, DrawShade, DrawPoint } from '../types/draw.types';
+import type { DrawElement, DrawLine, DrawHorizontal, DrawVertical, DrawCircle, DrawText, DrawFunction, DrawShade, DrawPoint, DrawTangent, DrawInverse } from '../types/draw.types';
 import type { WindowSettings } from '../types/calculator.types';
 
 const math = create(all);
@@ -281,6 +281,104 @@ export class DrawingService {
   }
 
   /**
+   * Dessiner la tangente à une fonction en un point
+   */
+  static drawTangent(
+    ctx: CanvasRenderingContext2D,
+    element: DrawTangent,
+    windowSettings: WindowSettings,
+    canvasWidth: number,
+    canvasHeight: number
+  ): void {
+    try {
+      const compiled = math.compile(element.expr);
+      const x0 = element.x;
+      const h = 0.0001; // Petit incrément pour la dérivée numérique
+
+      // Calculer f(x0)
+      const y0 = compiled.evaluate({ x: x0, X: x0 });
+      if (typeof y0 !== 'number' || isNaN(y0) || !isFinite(y0)) {
+        console.error('Erreur Tangent: point invalide');
+        return;
+      }
+
+      // Calculer la dérivée f'(x0) par approximation numérique
+      const yPlus = compiled.evaluate({ x: x0 + h, X: x0 + h });
+      const yMinus = compiled.evaluate({ x: x0 - h, X: x0 - h });
+      const slope = (yPlus - yMinus) / (2 * h);
+
+      // Équation de la tangente: y = f(x0) + f'(x0) * (x - x0)
+      const { xMin, xMax } = windowSettings;
+      const y1 = y0 + slope * (xMin - x0);
+      const y2 = y0 + slope * (xMax - x0);
+
+      // Dessiner la ligne tangente
+      const x1Px = this.graphToPixelX(xMin, windowSettings, canvasWidth);
+      const y1Px = this.graphToPixelY(y1, windowSettings, canvasHeight);
+      const x2Px = this.graphToPixelX(xMax, windowSettings, canvasWidth);
+      const y2Px = this.graphToPixelY(y2, windowSettings, canvasHeight);
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x1Px, y1Px);
+      ctx.lineTo(x2Px, y2Px);
+      ctx.stroke();
+    } catch (error) {
+      console.error('Erreur Tangent:', error);
+    }
+  }
+
+  /**
+   * Dessiner l'inverse d'une fonction (symétrie par rapport à y=x)
+   */
+  static drawInverse(
+    ctx: CanvasRenderingContext2D,
+    element: DrawInverse,
+    windowSettings: WindowSettings,
+    canvasWidth: number,
+    canvasHeight: number
+  ): void {
+    try {
+      const compiled = math.compile(element.expr);
+      const { yMin, yMax } = windowSettings;
+      const step = (yMax - yMin) / canvasWidth;
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+
+      let firstPoint = true;
+      // Pour l'inverse, on parcourt Y et on calcule X
+      for (let y = yMin; y <= yMax; y += step) {
+        try {
+          // On utilise y comme variable d'entrée pour obtenir x
+          const x = compiled.evaluate({ x: y, X: y });
+          if (typeof x === 'number' && !isNaN(x) && isFinite(x)) {
+            const xPx = this.graphToPixelX(x, windowSettings, canvasWidth);
+            const yPx = this.graphToPixelY(y, windowSettings, canvasHeight);
+
+            if (firstPoint) {
+              ctx.moveTo(xPx, yPx);
+              firstPoint = false;
+            } else {
+              ctx.lineTo(xPx, yPx);
+            }
+          } else {
+            firstPoint = true;
+          }
+        } catch {
+          firstPoint = true;
+        }
+      }
+
+      ctx.stroke();
+    } catch (error) {
+      console.error('Erreur DrawInv:', error);
+    }
+  }
+
+  /**
    * Dessiner tous les éléments
    */
   static drawAll(
@@ -315,6 +413,12 @@ export class DrawingService {
           break;
         case 'point':
           this.drawPoint(ctx, element, windowSettings, canvasWidth, canvasHeight);
+          break;
+        case 'tangent':
+          this.drawTangent(ctx, element, windowSettings, canvasWidth, canvasHeight);
+          break;
+        case 'inverse':
+          this.drawInverse(ctx, element, windowSettings, canvasWidth, canvasHeight);
           break;
       }
     }
