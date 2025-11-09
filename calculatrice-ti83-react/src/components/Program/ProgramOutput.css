@@ -1,0 +1,220 @@
+/**
+ * Styles pour l'affichage de sortie des programmes TI-BASIC
+ */
+
+.program-output {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #2c3e50;
+  font-family: 'Courier New', monospace;
+  color: #ecf0f1;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #1a252f;
+  border-bottom: 2px solid #34495e;
+}
+
+.output-title {
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.output-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-continue,
+.btn-stop,
+.btn-close-output {
+  padding: 6px 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-continue {
+  background-color: #27ae60;
+}
+
+.btn-continue:hover {
+  background-color: #229954;
+}
+
+.btn-stop {
+  background-color: #e74c3c;
+}
+
+.btn-stop:hover {
+  background-color: #c0392b;
+}
+
+.btn-close-output:hover {
+  background-color: #2980b9;
+}
+
+.output-screen {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  background-color: #9dbf87;
+  color: #000000;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: repeat(8, auto);
+  gap: 2px;
+  min-height: 100%;
+}
+
+.output-line {
+  grid-column: 1 / -1;
+  padding: 2px 0;
+  word-break: break-all;
+}
+
+.output-positioned {
+  padding: 2px;
+  word-break: break-all;
+}
+
+.output-error {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  padding: 10px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.5;
+  }
+}
+
+.output-pause {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  padding: 10px;
+  background-color: #f39c12;
+  color: #000000;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.output-input {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  padding: 15px;
+  background-color: #2c3e50;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.input-prompt {
+  color: #ecf0f1;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.input-field {
+  display: flex;
+  gap: 10px;
+}
+
+.input-value {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #3498db;
+  border-radius: 4px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  font-weight: bold;
+  outline: none;
+}
+
+.input-value:focus {
+  border-color: #2980b9;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.btn-submit-input {
+  padding: 8px 20px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-submit-input:hover {
+  background-color: #229954;
+}
+
+.output-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #1a252f;
+  border-top: 1px solid #34495e;
+  font-size: 12px;
+}
+
+.output-info {
+  color: #95a5a6;
+}
+
+/* Scrollbar personnalisée pour l'écran de sortie */
+.output-screen::-webkit-scrollbar {
+  width: 8px;
+}
+
+.output-screen::-webkit-scrollbar-track {
+  background: #7a9b69;
+}
+
+.output-screen::-webkit-scrollbar-thumb {
+  background: #5a7b49;
+  border-radius: 4px;
+}
+
+.output-screen::-webkit-scrollbar-thumb:hover {
+  background: #4a6b39;
+}

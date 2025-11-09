@@ -32,6 +32,8 @@ import { createDrawHandlers } from '../../utils/drawHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import { ProgramMenu } from '../Program/ProgramMenu';
 import { ProgramEditor } from '../Program/ProgramEditor';
+import { ProgramOutput } from '../Program/ProgramOutput';
+import { useProgramStore } from '../../store/programStore';
 import type { KeyAction, GraphFunction } from '../../types';
 
 // Créer une instance de mathjs avec toutes les fonctions
@@ -60,6 +62,10 @@ export const Calculator: React.FC = () => {
   const catalogViewerRef = useRef<CatalogViewerHandle>(null);
   const solverEditorRef = useRef<SolverEditorHandle>(null);
   const financeEditorRef = useRef<FinanceEditorHandle>(null);
+
+  // State du programme en cours d'exécution
+  const { executingProgram } = useProgramStore();
+
   const {
     currentInput,
     history,
@@ -1786,6 +1792,11 @@ export const Calculator: React.FC = () => {
 
   // Rendu de l'écran selon l'état
   const renderScreen = () => {
+    // Si un programme est en cours d'exécution
+    if (executingProgram) {
+      return <ProgramOutput onClose={() => setMode('NORMAL')} />;
+    }
+
     // Si un menu est ouvert
     if (currentMenu) {
       return (

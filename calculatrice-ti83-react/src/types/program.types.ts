@@ -26,6 +26,7 @@ export interface ExecutionContext {
   isWaitingInput: boolean;       // Attente d'input utilisateur
   inputPrompt?: string;          // Message d'input en cours
   inputVariable?: string;        // Variable à affecter après input
+  promptQueue?: string[];        // Queue de variables pour Prompt
   output: OutputLine[];          // Lignes de sortie
   error?: string;                // Erreur d'exécution
 }
@@ -40,10 +41,12 @@ export interface StackFrame {
 // État d'une boucle For
 export interface ForLoopState {
   variable: string;       // Variable de boucle
+  start: number;          // Valeur initiale
   current: number;        // Valeur actuelle
   end: number;            // Valeur finale
   step: number;           // Pas d'incrémentation
   startLine: number;      // Ligne de début de boucle
+  endLine: number;        // Ligne de fin de boucle (End)
 }
 
 // État d'une boucle While
@@ -68,17 +71,23 @@ export interface IfState {
 }
 
 // Ligne de sortie (pour Disp, Output)
-export interface OutputLine {
-  text: string;           // Texte à afficher
-  row?: number;           // Ligne d'affichage (pour Output)
-  col?: number;           // Colonne d'affichage (pour Output)
-}
+export type OutputLine =
+  | {
+      type: 'text';
+      content: string;
+    }
+  | {
+      type: 'positioned';
+      content: string;
+      row: number;
+      col: number;
+    };
 
 // Commande parsée
 export interface ParsedCommand {
   type: CommandType;
   params?: any;
-  line: number;
+  line?: number; // Optionnel car le parser peut ne pas connaître le numéro de ligne
 }
 
 // Types de commandes TI-BASIC
@@ -115,7 +124,9 @@ export type CommandType =
   // Affectation
   | 'ASSIGN'
   // Expression simple
-  | 'EXPRESSION';
+  | 'EXPRESSION'
+  // Commentaire
+  | 'COMMENT';
 
 // Paramètres pour commande For
 export interface ForParams {
