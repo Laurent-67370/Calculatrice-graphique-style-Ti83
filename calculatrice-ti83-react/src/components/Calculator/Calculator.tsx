@@ -530,6 +530,20 @@ export const Calculator: React.FC = () => {
         return;
       }
 
+      // Gérer TEST (2ND + MATH)
+      if (action === 'test') {
+        setCurrentMenu('TEST');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer DISTR (2ND + VARS)
+      if (action === 'distr') {
+        setCurrentMenu('DISTR');
+        setGraphMode(false);
+        return;
+      }
+
       // Gérer MODE
       if (action === 'mode') {
         setMode('MODE');
