@@ -29,7 +29,8 @@ export type CalculatorMode =
   | 'TRACE'
   | 'CATALOG'
   | 'SOLVER'
-  | 'FINANCE';
+  | 'FINANCE'
+  | 'PRGM_EDIT';
 
 // Actions possibles sur les touches
 export type KeyAction =
