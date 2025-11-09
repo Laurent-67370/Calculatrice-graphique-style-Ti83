@@ -1099,7 +1099,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>Compatibilité</strong> : Chrome 80+, Safari 14+, Samsung Internet 12+</li>
                 <li><strong>Cache</strong> : 13 fichiers en cache local</li>
                 <li><strong>Mises à jour</strong> : Automatiques en arrière-plan</li>
-                <li><strong>Version</strong> : 2.6.0.0</li>
+                <li><strong>Version</strong> : 2.7.0.0</li>
               </ul>
 
               <h3>💡 Astuce pour les étudiants</h3>
@@ -1114,7 +1114,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.6.0.0 (PWA) • 🎨 DRAW & LIST OPS • 📊 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 📈 Par/Pol • 💾 MATRIX
+            Version 2.7.0.0 (PWA) • 🎨 DRAW 100% (15/15) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
