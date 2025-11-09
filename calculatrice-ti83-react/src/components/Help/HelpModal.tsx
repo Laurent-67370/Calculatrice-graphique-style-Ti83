@@ -337,13 +337,136 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Combinez DRAW avec TRACE pour des annotations précises</li>
               </ul>
 
-              <h3>🔮 Fonctions DRAW avancées (à venir)</h3>
+              <h3>📐 Tangent - Tangente à une fonction</h3>
+              <div className="help-examples">
+                <strong>Syntaxe :</strong> <code>Tangent(expression, x)</code><br/>
+                <br/>
+                <strong>Exemple 1 - Tangente à une parabole :</strong><br/>
+                <code>Tangent(X^2, 3)</code> → Tangente à x² au point x=3<br/>
+                <br/>
+                <strong>Exemple 2 - Tangente à une fonction trigonométrique :</strong><br/>
+                <code>Tangent(sin(X), 1)</code> → Tangente à sin(x) en x=1<br/>
+                <br/>
+                <strong>Exemple 3 - Workflow complet :</strong><br/>
+                1. <code>Y=</code> → <code>X^2</code> → <code>ENTER</code><br/>
+                2. <code>GRAPH</code> (voir la parabole)<br/>
+                3. <code>2ND + PRGM</code> → <code>Tangent(X^2, 2)</code> → <code>ENTER</code><br/>
+                → Tangente affichée au point (2, 4) !
+              </div>
+
+              <h3>📊 DrawF - Dessiner une fonction</h3>
+              <div className="help-examples">
+                <strong>Syntaxe :</strong> <code>DrawF expression</code><br/>
+                <br/>
+                <strong>Exemple 1 - Dessiner une cubique :</strong><br/>
+                <code>DrawF X^3-2*X</code> → Dessine la fonction cubique<br/>
+                <br/>
+                <strong>Exemple 2 - Sinus :</strong><br/>
+                <code>DrawF sin(X)</code> → Dessine une sinusoïde<br/>
+                <br/>
+                <strong>Exemple 3 - Fonction rationnelle :</strong><br/>
+                <code>DrawF 1/X</code> → Dessine une hyperbole<br/>
+                <br/>
+                <strong>Note :</strong> DrawF dessine sans utiliser Y1-Y6, utile pour ajouter des courbes temporaires !
+              </div>
+
+              <h3>🔄 DrawInv - Fonction inverse</h3>
+              <div className="help-examples">
+                <strong>Syntaxe :</strong> <code>DrawInv expression</code><br/>
+                <br/>
+                <strong>Concept :</strong> Dessine la symétrie de la fonction par rapport à y=x<br/>
+                <br/>
+                <strong>Exemple 1 - Inverse de x² :</strong><br/>
+                <code>DrawInv X^2</code> → Dessine la racine carrée (√x)<br/>
+                <br/>
+                <strong>Exemple 2 - Comparer fonction et inverse :</strong><br/>
+                1. <code>DrawF X^2</code><br/>
+                2. <code>DrawInv X^2</code><br/>
+                3. <code>Line(-10,-10,10,10)</code> (droite y=x)<br/>
+                → Visualisation de la symétrie !
+              </div>
+
+              <h3>🌈 Shade - Ombrage entre courbes</h3>
+              <div className="help-examples">
+                <strong>Syntaxe :</strong> <code>Shade(f1, f2, xmin, xmax)</code><br/>
+                <br/>
+                <strong>Exemple 1 - Zone entre parabole et droite :</strong><br/>
+                <code>Shade(X^2, 2*X, -2, 2)</code><br/>
+                → Ombre la zone entre x² et 2x de x=-2 à x=2<br/>
+                <br/>
+                <strong>Exemple 2 - Zone sous une courbe :</strong><br/>
+                <code>Shade(0, sin(X), 0, 3.14)</code><br/>
+                → Ombre sous sin(x) de 0 à π<br/>
+                <br/>
+                <strong>Utilité :</strong> Visualiser des intégrales et aires !
+              </div>
+
+              <h3>🔘 Pt-On / Pt-Off / Pt-Change - Gestion de points</h3>
+              <div className="help-examples">
+                <strong>Pt-On(x,y) :</strong> Active un point<br/>
+                <code>Pt-On(3, 5)</code> → Affiche un point en (3,5)<br/>
+                <br/>
+                <strong>Pt-Off(x,y) :</strong> Désactive un point<br/>
+                <code>Pt-Off(3, 5)</code> → Efface le point en (3,5)<br/>
+                <br/>
+                <strong>Pt-Change(x,y) :</strong> Bascule l'état d'un point<br/>
+                <code>Pt-Change(3, 5)</code> → Affiche si absent, efface si présent<br/>
+                <br/>
+                <strong>Exemple - Nuage de points :</strong><br/>
+                <code>Pt-On(1, 2)</code><br/>
+                <code>Pt-On(3, 5)</code><br/>
+                <code>Pt-On(5, 3)</code><br/>
+                <code>Pt-On(7, 8)</code><br/>
+                → 4 points affichés !
+              </div>
+
+              <h3>💾 StorePic / RecallPic - Sauvegarder des images</h3>
+              <div className="help-examples">
+                <strong>StorePic n :</strong> Sauvegarde l'écran dans Pic1-Pic10<br/>
+                <code>StorePic 1</code> → Sauvegarde dans Pic1<br/>
+                <br/>
+                <strong>RecallPic n :</strong> Rappelle une image sauvegardée<br/>
+                <code>RecallPic 1</code> → Rappelle Pic1<br/>
+                <br/>
+                <strong>Exemple - Workflow :</strong><br/>
+                1. Créez un dessin complexe (lignes, cercles...)<br/>
+                2. <code>StorePic 1</code> → Sauvegarde<br/>
+                3. <code>ClrDraw</code> → Efface tout<br/>
+                4. Faites autre chose...<br/>
+                5. <code>RecallPic 1</code> → Récupère le dessin !<br/>
+                <br/>
+                <strong>Capacité :</strong> 10 images (Pic1 à Pic10)
+              </div>
+
+              <h3>🎯 Récapitulatif des 15 commandes DRAW</h3>
+              <div className="help-examples">
+                <strong>✅ 100% Compatibilité TI-83 Plus</strong><br/>
+                <br/>
+                1. <code>ClrDraw</code> - Effacer tous les dessins<br/>
+                2. <code>Line(x1,y1,x2,y2)</code> - Ligne entre deux points<br/>
+                3. <code>Horizontal y</code> - Ligne horizontale<br/>
+                4. <code>Vertical x</code> - Ligne verticale<br/>
+                5. <code>Tangent(expr,x)</code> - Tangente à une fonction<br/>
+                6. <code>DrawF expr</code> - Dessiner une fonction<br/>
+                7. <code>Shade(f1,f2,xmin,xmax)</code> - Ombrage<br/>
+                8. <code>DrawInv expr</code> - Inverse d'une fonction<br/>
+                9. <code>Circle(x,y,r)</code> - Cercle<br/>
+                10. <code>Text(x,y,"texte")</code> - Texte<br/>
+                11. <code>Pt-On(x,y)</code> - Activer un point<br/>
+                12. <code>Pt-Off(x,y)</code> - Désactiver un point<br/>
+                13. <code>Pt-Change(x,y)</code> - Basculer un point<br/>
+                14. <code>StorePic n</code> - Sauvegarder (1-10)<br/>
+                15. <code>RecallPic n</code> - Rappeler (1-10)<br/>
+              </div>
+
+              <h3>💡 Conseils DRAW</h3>
               <ul>
-                <li><strong>Tangent(</strong> : Tangente à une fonction</li>
-                <li><strong>DrawF</strong> : Dessiner une fonction</li>
-                <li><strong>Shade(</strong> : Ombrage entre courbes</li>
-                <li><strong>Pt-On/Off/Change</strong> : Gestion de points</li>
-                <li><strong>StorePic/RecallPic</strong> : Sauvegarder et rappeler des images</li>
+                <li>Les dessins utilisent le système de coordonnées de la fenêtre (WINDOW)</li>
+                <li>Ajustez votre fenêtre avant de dessiner : <code>ZOOM → ZStandard</code></li>
+                <li>Les dessins persistent jusqu'à <code>ClrDraw</code></li>
+                <li>Pour voir vos dessins, le graphique doit être affiché (<code>GRAPH</code>)</li>
+                <li>Combinez DRAW avec TRACE pour des annotations précises</li>
+                <li>Utilisez StorePic/RecallPic pour sauvegarder vos créations</li>
               </ul>
             </div>
           )}
