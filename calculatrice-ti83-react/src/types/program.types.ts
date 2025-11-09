@@ -68,17 +68,23 @@ export interface IfState {
 }
 
 // Ligne de sortie (pour Disp, Output)
-export interface OutputLine {
-  text: string;           // Texte à afficher
-  row?: number;           // Ligne d'affichage (pour Output)
-  col?: number;           // Colonne d'affichage (pour Output)
-}
+export type OutputLine =
+  | {
+      type: 'text';
+      content: string;
+    }
+  | {
+      type: 'positioned';
+      content: string;
+      row: number;
+      col: number;
+    };
 
 // Commande parsée
 export interface ParsedCommand {
   type: CommandType;
   params?: any;
-  line: number;
+  line?: number; // Optionnel car le parser peut ne pas connaître le numéro de ligne
 }
 
 // Types de commandes TI-BASIC
@@ -115,7 +121,9 @@ export type CommandType =
   // Affectation
   | 'ASSIGN'
   // Expression simple
-  | 'EXPRESSION';
+  | 'EXPRESSION'
+  // Commentaire
+  | 'COMMENT';
 
 // Paramètres pour commande For
 export interface ForParams {

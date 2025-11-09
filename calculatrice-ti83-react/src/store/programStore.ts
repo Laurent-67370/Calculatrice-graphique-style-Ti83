@@ -10,6 +10,7 @@ import type {
   ExecutionContext,
   OutputLine,
 } from '../types/program.types';
+import { ProgramInterpreter } from '../services/ProgramInterpreter';
 
 interface ProgramStore extends ProgramState {
   // Actions pour gérer les programmes
@@ -122,8 +123,27 @@ export const useProgramStore = create<ProgramStore>()(
           executionContext: context,
         });
 
-        // L'exécution sera gérée par ProgramInterpreter
-        // qui lira executionContext et exécutera ligne par ligne
+        // Lancer l'exécution avec le ProgramInterpreter
+        ProgramInterpreter.executeProgram(
+          program.lines,
+          context,
+          // Callback pour ajouter une ligne de sortie
+          (line: OutputLine) => {
+            get().addOutput(line);
+          },
+          // Callback pour effacer l'écran
+          () => {
+            get().clearOutput();
+          },
+          // Callback quand le programme est terminé
+          () => {
+            get().stopProgram();
+          },
+          // Callback en cas d'erreur
+          (error: string) => {
+            get().setError(error);
+          }
+        );
       },
 
       // Arrêter l'exécution
@@ -150,16 +170,40 @@ export const useProgramStore = create<ProgramStore>()(
 
       // Reprendre l'exécution
       resumeProgram: () => {
-        set((state) => {
-          if (!state.executionContext) return state;
+        const state = get();
+        if (!state.executionContext || !state.executingProgram) return;
 
-          return {
-            executionContext: {
-              ...state.executionContext,
-              isPaused: false,
-            },
-          };
+        const program = state.programs[state.executingProgram];
+        if (!program) return;
+
+        // Désactiver la pause
+        set({
+          executionContext: {
+            ...state.executionContext,
+            isPaused: false,
+          },
         });
+
+        // Reprendre l'exécution
+        const context = get().executionContext;
+        if (!context) return;
+
+        ProgramInterpreter.executeProgram(
+          program.lines,
+          context,
+          (line: OutputLine) => {
+            get().addOutput(line);
+          },
+          () => {
+            get().clearOutput();
+          },
+          () => {
+            get().stopProgram();
+          },
+          (error: string) => {
+            get().setError(error);
+          }
+        );
       },
 
       // Exécuter une ligne (pour debug pas à pas)
