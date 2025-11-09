@@ -57,22 +57,23 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
         cleanupOutdatedCaches: true,
+        navigateFallback: null, // Évite les problèmes avec le mode avion
         runtimeCaching: [
           {
+            // Stratégie CacheFirst pour les ressources statiques (offline-first)
             urlPattern: /^https:\/\/www\.lhusser\.fr\/calculatrice\/.*/i,
-            handler: 'NetworkFirst',
+            handler: 'CacheFirst',
             options: {
-              cacheName: 'ti83-cache-v2',
+              cacheName: 'ti83-cache-v3',
               expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 jours
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 jours
               },
               cacheableResponse: {
                 statuses: [0, 200]
-              },
-              networkTimeoutSeconds: 3
+              }
             }
           }
         ]
