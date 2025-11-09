@@ -118,6 +118,8 @@ export const Calculator: React.FC = () => {
     exitSubmenu,
     setVariable,
     getVariable,
+    addDrawElement,
+    clearDraw,
   } = useCalculatorStore();
 
   // Supprimer warnings pour services importés
@@ -1242,6 +1244,95 @@ export const Calculator: React.FC = () => {
         // Gérer ENTER pour évaluer
         if (action === 'enter' && currentMode === 'NORMAL') {
           try {
+            // Détecter les commandes DRAW
+            const input = currentInput.trim();
+
+            // ClrDraw : Effacer tous les dessins
+            if (input === 'ClrDraw') {
+              clearDraw();
+              addToHistory('ClrDraw');
+              setInput('Done');
+              setGraphMode(true); // Afficher le graphique
+              return;
+            }
+
+            // Line(x1,y1,x2,y2) : Tracer une ligne
+            const lineMatch = input.match(/^Line\s*\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*\)$/);
+            if (lineMatch) {
+              const [, x1, y1, x2, y2] = lineMatch;
+              addDrawElement({
+                type: 'line',
+                x1: parseFloat(x1),
+                y1: parseFloat(y1),
+                x2: parseFloat(x2),
+                y2: parseFloat(y2),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Horizontal y : Ligne horizontale
+            const horizMatch = input.match(/^Horizontal\s+(-?\d+\.?\d*)$/);
+            if (horizMatch) {
+              const [, y] = horizMatch;
+              addDrawElement({
+                type: 'horizontal',
+                y: parseFloat(y),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Vertical x : Ligne verticale
+            const vertMatch = input.match(/^Vertical\s+(-?\d+\.?\d*)$/);
+            if (vertMatch) {
+              const [, x] = vertMatch;
+              addDrawElement({
+                type: 'vertical',
+                x: parseFloat(x),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Circle(x,y,r) : Dessiner un cercle
+            const circleMatch = input.match(/^Circle\s*\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*(\d+\.?\d*)\s*\)$/);
+            if (circleMatch) {
+              const [, x, y, r] = circleMatch;
+              addDrawElement({
+                type: 'circle',
+                x: parseFloat(x),
+                y: parseFloat(y),
+                r: parseFloat(r),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Text(x,y,"texte") : Afficher du texte
+            const textMatch = input.match(/^Text\s*\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*["'](.+)["']\s*\)$/);
+            if (textMatch) {
+              const [, x, y, text] = textMatch;
+              addDrawElement({
+                type: 'text',
+                x: parseFloat(x),
+                y: parseFloat(y),
+                text: text,
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
             // Détecter si c'est un stockage de variable (→)
             const storeMatch = currentInput.match(/^(.+)→([A-Z])$/);
 
@@ -1402,6 +1493,8 @@ export const Calculator: React.FC = () => {
       navigateMenu,
       enterSubmenu,
       getVariable,
+      addDrawElement,
+      clearDraw,
       zoomHandlers,
       mathHandlers,
       statHandlers,
