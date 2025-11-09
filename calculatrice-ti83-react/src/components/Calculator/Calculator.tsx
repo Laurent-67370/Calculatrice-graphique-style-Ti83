@@ -28,7 +28,7 @@ import { mathFunctionsService } from '../../services/MathFunctionsService';
 import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems, distrMenuItems, testMenuItems, logicMenuItems, listMenuItems, drawMenuItems } from '../../data/menus';
 import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers, createDistrHandlers, createTestHandlers, createLogicHandlers } from '../../utils/menuHandlers';
 import { listHandlers } from '../../utils/listHandlers';
-import { drawHandlers } from '../../utils/drawHandlers';
+import { createDrawHandlers } from '../../utils/drawHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
@@ -235,6 +235,11 @@ export const Calculator: React.FC = () => {
 
   const logicHandlers = useMemo(() =>
     createLogicHandlers(appendInput, setCurrentMenu),
+    [appendInput, setCurrentMenu]
+  );
+
+  const drawHandlers = useMemo(() =>
+    createDrawHandlers(appendInput, setCurrentMenu),
     [appendInput, setCurrentMenu]
   );
 
