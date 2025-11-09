@@ -40,10 +40,12 @@ export interface StackFrame {
 // État d'une boucle For
 export interface ForLoopState {
   variable: string;       // Variable de boucle
+  start: number;          // Valeur initiale
   current: number;        // Valeur actuelle
   end: number;            // Valeur finale
   step: number;           // Pas d'incrémentation
   startLine: number;      // Ligne de début de boucle
+  endLine: number;        // Ligne de fin de boucle (End)
 }
 
 // État d'une boucle While
