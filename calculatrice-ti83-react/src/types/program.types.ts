@@ -29,6 +29,7 @@ export interface ExecutionContext {
   promptQueue?: string[];        // Queue de variables pour Prompt
   output: OutputLine[];          // Lignes de sortie
   error?: string;                // Erreur d'exécution
+  gotoLine?: number;             // Ligne de saut (pour Goto et Return)
 }
 
 // Frame de la pile d'appels
