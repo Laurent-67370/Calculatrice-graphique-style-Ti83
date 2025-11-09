@@ -13,7 +13,9 @@ export type MenuType =
   | 'LOGIC'
   | 'ANGLE'
   | 'VARS'
-  | 'CATALOG';
+  | 'CATALOG'
+  | 'LIST'
+  | 'DISTR';
 
 // Item de menu
 export interface MenuItem {

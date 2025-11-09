@@ -222,3 +222,43 @@ export const testMenuItems: MenuItem[] = [
   { id: 'less', label: '<', action: () => {} },
   { id: 'less-equal', label: '≤', action: () => {} },
 ];
+
+// Menu LIST - NAMES (sous-menu)
+export const listNamesMenuItems: MenuItem[] = [
+  { id: 'L1', label: 'L₁', action: () => {} },
+  { id: 'L2', label: 'L₂', action: () => {} },
+  { id: 'L3', label: 'L₃', action: () => {} },
+  { id: 'L4', label: 'L₄', action: () => {} },
+  { id: 'L5', label: 'L₅', action: () => {} },
+  { id: 'L6', label: 'L₆', action: () => {} },
+];
+
+// Menu LIST - OPS (sous-menu)
+export const listOpsMenuItems: MenuItem[] = [
+  { id: 'sortA', label: 'SortA(', action: () => {} },
+  { id: 'sortD', label: 'SortD(', action: () => {} },
+  { id: 'dim', label: 'dim(', action: () => {} },
+  { id: 'fill', label: 'Fill(', action: () => {} },
+  { id: 'seq', label: 'seq(', action: () => {} },
+  { id: 'cumSum', label: 'cumSum(', action: () => {} },
+  { id: 'deltaList', label: 'ΔList(', action: () => {} },
+];
+
+// Menu LIST - MATH (sous-menu)
+export const listMathMenuItems: MenuItem[] = [
+  { id: 'min', label: 'min(', action: () => {} },
+  { id: 'max', label: 'max(', action: () => {} },
+  { id: 'mean', label: 'mean(', action: () => {} },
+  { id: 'median', label: 'median(', action: () => {} },
+  { id: 'sum', label: 'sum(', action: () => {} },
+  { id: 'prod', label: 'prod(', action: () => {} },
+  { id: 'stdDev', label: 'stdDev(', action: () => {} },
+  { id: 'variance', label: 'variance(', action: () => {} },
+];
+
+// Menu LIST principal (2ND + STAT)
+export const listMenuItems: MenuItem[] = [
+  { id: 'list-names', label: 'NAMES', action: () => {}, submenu: listNamesMenuItems },
+  { id: 'list-ops', label: 'OPS', action: () => {}, submenu: listOpsMenuItems },
+  { id: 'list-math', label: 'MATH', action: () => {}, submenu: listMathMenuItems },
+];

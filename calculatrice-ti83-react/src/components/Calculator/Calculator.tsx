@@ -25,8 +25,9 @@ import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
-import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems, distrMenuItems, testMenuItems, logicMenuItems } from '../../data/menus';
+import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems, distrMenuItems, testMenuItems, logicMenuItems, listMenuItems } from '../../data/menus';
 import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers, createDistrHandlers, createTestHandlers, createLogicHandlers } from '../../utils/menuHandlers';
+import { listHandlers } from '../../utils/listHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
@@ -185,6 +186,7 @@ export const Calculator: React.FC = () => {
     if (currentMenu === 'DISTR') return distrMenuItems;
     if (currentMenu === 'TEST') return testMenuItems;
     if (currentMenu === 'LOGIC') return logicMenuItems;
+    if (currentMenu === 'LIST') return listMenuItems;
     return [];
   }, [currentMenu, menuStack, varsMenuItemsDynamic]);
 
@@ -283,6 +285,8 @@ export const Calculator: React.FC = () => {
               handler = (testHandlers as any)[currentItem.id];
             } else if (currentMenu === 'LOGIC') {
               handler = (logicHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'LIST') {
+              handler = (listHandlers as any)[currentItem.id];
             } else if (currentMenu === 'RCL') {
               // Menu RCL : insérer la variable sélectionnée dans l'input
               const varName = currentItem.label;
@@ -540,6 +544,13 @@ export const Calculator: React.FC = () => {
       // Gérer DISTR (2ND + VARS)
       if (action === 'distr') {
         setCurrentMenu('DISTR');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer LIST (2ND + STAT via 2ND + 2)
+      if (action === 'list') {
+        setCurrentMenu('LIST');
         setGraphMode(false);
         return;
       }
