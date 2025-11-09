@@ -516,13 +516,6 @@ export const Calculator: React.FC = () => {
         return;
       }
 
-      // Gérer APPS - Ouvrir le Finance TVM Solver
-      if (action === 'apps') {
-        setMode('FINANCE');
-        setGraphMode(false);
-        return;
-      }
-
       // Gérer VARS
       if (action === 'vars') {
         setCurrentMenu('VARS');
