@@ -20,6 +20,7 @@ import { TableViewer, type TableViewerHandle } from '../Editors/TableViewer';
 import { StatPlotEditor, type StatPlotEditorHandle } from '../Editors/StatPlotEditor';
 import { CatalogViewer, type CatalogViewerHandle } from '../Editors/CatalogViewer';
 import { SolverEditor, type SolverEditorHandle } from '../Editors/SolverEditor';
+import { FinanceEditor, type FinanceEditorHandle } from '../Editors/FinanceEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -51,6 +52,7 @@ export const Calculator: React.FC = () => {
   const statPlotEditorRef = useRef<StatPlotEditorHandle>(null);
   const catalogViewerRef = useRef<CatalogViewerHandle>(null);
   const solverEditorRef = useRef<SolverEditorHandle>(null);
+  const financeEditorRef = useRef<FinanceEditorHandle>(null);
   const {
     currentInput,
     history,
@@ -387,13 +389,13 @@ export const Calculator: React.FC = () => {
       }
 
       // Gérer DEL (sauf les modes qui ont leur propre gestion)
-      if (action === 'del' && currentMode !== 'STAT_EDIT' && currentMode !== 'SOLVER' && currentMode !== 'MATRIX_EDIT' && currentMode !== 'TBLSET') {
+      if (action === 'del' && currentMode !== 'STAT_EDIT' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE' && currentMode !== 'MATRIX_EDIT' && currentMode !== 'TBLSET') {
         deleteLastChar();
         return;
       }
 
-      // Gérer GRAPH
-      if (action === 'graph') {
+      // Gérer GRAPH (sauf les modes qui ont leur propre gestion)
+      if (action === 'graph' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE') {
         setGraphMode(true);
         setTraceMode(false);
         setMode('NORMAL');
@@ -468,6 +470,13 @@ export const Calculator: React.FC = () => {
       // Gérer CATALOG (2ND + 0)
       if (action === 'catalog') {
         setMode('CATALOG');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer APPS - Ouvrir le Finance TVM Solver
+      if (action === 'apps') {
+        setMode('FINANCE');
         setGraphMode(false);
         return;
       }
@@ -717,6 +726,45 @@ export const Calculator: React.FC = () => {
             'inverse': '1/',
           };
           solverEditorRef.current.handleInput(inputMap[action] || action);
+          return;
+        }
+      }
+
+      // En mode FINANCE - gérer la navigation via ref
+      if (currentMode === 'FINANCE' && financeEditorRef.current) {
+        if (action === 'up') {
+          financeEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          financeEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          financeEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'del') {
+          financeEditorRef.current.handleDelete();
+          return;
+        }
+        if ((action as string) === 'graph') {
+          financeEditorRef.current.solve();
+          return;
+        }
+        if (action === 'clear') {
+          financeEditorRef.current.close();
+          return;
+        }
+        // Gérer les chiffres, opérateurs et symboles pour l'édition
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'dot' || action === 'negative') {
+          const inputMap: Record<string, string> = {
+            'negative': '-',
+            'dot': '.',
+          };
+          financeEditorRef.current.handleInput(inputMap[action] || action);
           return;
         }
       }
@@ -1531,6 +1579,16 @@ export const Calculator: React.FC = () => {
       return (
         <SolverEditor
           ref={solverEditorRef}
+          onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Affichage du Finance TVM Solver
+    if (currentMode === 'FINANCE') {
+      return (
+        <FinanceEditor
+          ref={financeEditorRef}
           onClose={() => setMode('NORMAL')}
         />
       );
