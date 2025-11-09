@@ -17,6 +17,7 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
     stopProgram,
     resumeProgram,
     provideInput,
+    provideMenuSelection,
   } = useProgramStore();
 
   const outputRef = useRef<HTMLDivElement>(null);
@@ -144,6 +145,24 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
               <button onClick={handleSubmitInput} className="btn-submit-input">
                 OK
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Menu interactif */}
+        {executionContext.isWaitingMenu && executionContext.menuOptions && (
+          <div className="output-menu">
+            <div className="menu-prompt">Sélectionnez une option :</div>
+            <div className="menu-options">
+              {executionContext.menuOptions.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => provideMenuSelection(index)}
+                  className="btn-menu-option"
+                >
+                  {index + 1}: {option.label}
+                </button>
+              ))}
             </div>
           </div>
         )}

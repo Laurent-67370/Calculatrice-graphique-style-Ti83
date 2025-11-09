@@ -27,9 +27,15 @@ export interface ExecutionContext {
   inputPrompt?: string;          // Message d'input en cours
   inputVariable?: string;        // Variable à affecter après input
   promptQueue?: string[];        // Queue de variables pour Prompt
+  isWaitingMenu: boolean;        // Attente de sélection menu
+  menuTitle?: string;            // Titre du menu
+  menuOptions?: MenuOption[];    // Options du menu
   output: OutputLine[];          // Lignes de sortie
   error?: string;                // Erreur d'exécution
   gotoLine?: number;             // Ligne de saut (pour Goto et Return)
+  allPrograms?: Record<string, Program>; // Tous les programmes disponibles (pour prgm)
+  programLines?: Record<string, string[]>; // Lignes de tous les programmes (cache)
+  callProgram?: string;          // Nom du programme à appeler (pour prgm)
 }
 
 // Frame de la pile d'appels
