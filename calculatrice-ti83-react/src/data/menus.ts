@@ -181,3 +181,40 @@ export const varsMenuItems: MenuItem[] = [
     { id: 'matrix-j', label: '[J]', action: () => {} },
   ]},
 ];
+
+// Menu DISTR (2ND + VARS)
+export const distrMenuItems: MenuItem[] = [
+  { id: 'normalpdf', label: 'normalpdf(', action: () => {} },
+  { id: 'normalcdf', label: 'normalcdf(', action: () => {} },
+  { id: 'invnorm', label: 'invNorm(', action: () => {} },
+  { id: 'tpdf', label: 'tpdf(', action: () => {} },
+  { id: 'tcdf', label: 'tcdf(', action: () => {} },
+  { id: 'chi2pdf', label: 'χ²pdf(', action: () => {} },
+  { id: 'chi2cdf', label: 'χ²cdf(', action: () => {} },
+  { id: 'fpdf', label: 'Fpdf(', action: () => {} },
+  { id: 'fcdf', label: 'Fcdf(', action: () => {} },
+  { id: 'binompdf', label: 'binompdf(', action: () => {} },
+  { id: 'binomcdf', label: 'binomcdf(', action: () => {} },
+  { id: 'poissonpdf', label: 'poissonpdf(', action: () => {} },
+  { id: 'poissoncdf', label: 'poissoncdf(', action: () => {} },
+  { id: 'geometpdf', label: 'geometpdf(', action: () => {} },
+  { id: 'geometcdf', label: 'geometcdf(', action: () => {} },
+];
+
+// Menu TEST (2ND + MATH)
+export const testMenuItems: MenuItem[] = [
+  { id: 'equal', label: '=', action: () => {} },
+  { id: 'not-equal', label: '≠', action: () => {} },
+  { id: 'greater', label: '>', action: () => {} },
+  { id: 'greater-equal', label: '≥', action: () => {} },
+  { id: 'less', label: '<', action: () => {} },
+  { id: 'less-equal', label: '≤', action: () => {} },
+];
+
+// Menu LOGIC (2ND + MATH, sous-menu)
+export const logicMenuItems: MenuItem[] = [
+  { id: 'and', label: 'and', action: () => {} },
+  { id: 'or', label: 'or', action: () => {} },
+  { id: 'xor', label: 'xor', action: () => {} },
+  { id: 'not', label: 'not(', action: () => {} },
+];

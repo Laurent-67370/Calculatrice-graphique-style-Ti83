@@ -25,8 +25,8 @@ import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
-import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems } from '../../data/menus';
-import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers } from '../../utils/menuHandlers';
+import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems, distrMenuItems, testMenuItems, logicMenuItems } from '../../data/menus';
+import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers, createDistrHandlers, createTestHandlers, createLogicHandlers } from '../../utils/menuHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
@@ -182,6 +182,9 @@ export const Calculator: React.FC = () => {
     if (currentMenu === 'ZOOM') return zoomMenuItems;
     if (currentMenu === 'CALC') return calcMenuItems;
     if (currentMenu === 'VARS') return varsMenuItemsDynamic;
+    if (currentMenu === 'DISTR') return distrMenuItems;
+    if (currentMenu === 'TEST') return testMenuItems;
+    if (currentMenu === 'LOGIC') return logicMenuItems;
     return [];
   }, [currentMenu, menuStack, varsMenuItemsDynamic]);
 
@@ -211,6 +214,21 @@ export const Calculator: React.FC = () => {
       setCurrentMenu
     ),
     [graphFunctions, activeFunctions, windowSettings, config.angleMode, addToHistory, setCurrentMenu]
+  );
+
+  const distrHandlers = useMemo(() =>
+    createDistrHandlers(appendInput, setCurrentMenu),
+    [appendInput, setCurrentMenu]
+  );
+
+  const testHandlers = useMemo(() =>
+    createTestHandlers(appendInput, setCurrentMenu),
+    [appendInput, setCurrentMenu]
+  );
+
+  const logicHandlers = useMemo(() =>
+    createLogicHandlers(appendInput, setCurrentMenu),
+    [appendInput, setCurrentMenu]
   );
 
   /**
@@ -259,6 +277,12 @@ export const Calculator: React.FC = () => {
               handler = (statHandlers as any)[currentItem.id];
             } else if (currentMenu === 'CALC') {
               handler = (calcHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'DISTR') {
+              handler = (distrHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'TEST') {
+              handler = (testHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'LOGIC') {
+              handler = (logicHandlers as any)[currentItem.id];
             } else if (currentMenu === 'RCL') {
               // Menu RCL : insérer la variable sélectionnée dans l'input
               const varName = currentItem.label;
@@ -446,6 +470,13 @@ export const Calculator: React.FC = () => {
       // Gérer CATALOG (2ND + 0)
       if (action === 'catalog') {
         setMode('CATALOG');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer APPS - Ouvrir le Finance TVM Solver
+      if (action === 'apps') {
+        setMode('FINANCE');
         setGraphMode(false);
         return;
       }
@@ -732,7 +763,7 @@ export const Calculator: React.FC = () => {
           financeEditorRef.current.close();
           return;
         }
-        // Gérer les chiffres et symboles pour l'édition
+        // Gérer les chiffres, opérateurs et symboles pour l'édition
         if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
             action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
             action === 'dot' || action === 'negative') {

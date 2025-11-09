@@ -647,6 +647,58 @@ export const createCalcHandlers = (
 });
 
 /**
+ * Handlers pour le menu DISTR (distributions)
+ */
+export const createDistrHandlers = (
+  appendInput: (value: string) => void,
+  setCurrentMenu: (menu: string | null) => void
+) => ({
+  'normalpdf': () => { appendInput('normalpdf('); setCurrentMenu(null); },
+  'normalcdf': () => { appendInput('normalcdf('); setCurrentMenu(null); },
+  'invnorm': () => { appendInput('invNorm('); setCurrentMenu(null); },
+  'tpdf': () => { appendInput('tpdf('); setCurrentMenu(null); },
+  'tcdf': () => { appendInput('tcdf('); setCurrentMenu(null); },
+  'chi2pdf': () => { appendInput('χ²pdf('); setCurrentMenu(null); },
+  'chi2cdf': () => { appendInput('χ²cdf('); setCurrentMenu(null); },
+  'fpdf': () => { appendInput('Fpdf('); setCurrentMenu(null); },
+  'fcdf': () => { appendInput('Fcdf('); setCurrentMenu(null); },
+  'binompdf': () => { appendInput('binompdf('); setCurrentMenu(null); },
+  'binomcdf': () => { appendInput('binomcdf('); setCurrentMenu(null); },
+  'poissonpdf': () => { appendInput('poissonpdf('); setCurrentMenu(null); },
+  'poissoncdf': () => { appendInput('poissoncdf('); setCurrentMenu(null); },
+  'geometpdf': () => { appendInput('geometpdf('); setCurrentMenu(null); },
+  'geometcdf': () => { appendInput('geometcdf('); setCurrentMenu(null); },
+});
+
+/**
+ * Handlers pour le menu TEST (comparaisons)
+ */
+export const createTestHandlers = (
+  appendInput: (value: string) => void,
+  setCurrentMenu: (menu: string | null) => void
+) => ({
+  'equal': () => { appendInput('='); setCurrentMenu(null); },
+  'not-equal': () => { appendInput('≠'); setCurrentMenu(null); },
+  'greater': () => { appendInput('>'); setCurrentMenu(null); },
+  'greater-equal': () => { appendInput('≥'); setCurrentMenu(null); },
+  'less': () => { appendInput('<'); setCurrentMenu(null); },
+  'less-equal': () => { appendInput('≤'); setCurrentMenu(null); },
+});
+
+/**
+ * Handlers pour le menu LOGIC (opérateurs logiques)
+ */
+export const createLogicHandlers = (
+  appendInput: (value: string) => void,
+  setCurrentMenu: (menu: string | null) => void
+) => ({
+  'and': () => { appendInput(' and '); setCurrentMenu(null); },
+  'or': () => { appendInput(' or '); setCurrentMenu(null); },
+  'xor': () => { appendInput(' xor '); setCurrentMenu(null); },
+  'not': () => { appendInput('not('); setCurrentMenu(null); },
+});
+
+/**
  * Fonction utilitaire pour obtenir le handler d'un menu
  */
 export const getMenuHandler = (
