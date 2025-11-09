@@ -192,6 +192,36 @@ export class ProgramInterpreter {
       };
     }
 
+    // Lbl nom
+    const lblMatch = trimmedLine.match(/^Lbl\s+([A-Z0-9θ]+)$/i);
+    if (lblMatch) {
+      return {
+        type: 'LBL',
+        params: {
+          name: lblMatch[1].toUpperCase(),
+        },
+      };
+    }
+
+    // Goto nom
+    const gotoMatch = trimmedLine.match(/^Goto\s+([A-Z0-9θ]+)$/i);
+    if (gotoMatch) {
+      return {
+        type: 'GOTO',
+        params: {
+          label: gotoMatch[1].toUpperCase(),
+        },
+      };
+    }
+
+    // Return
+    if (trimmedLine.match(/^Return$/i)) {
+      return {
+        type: 'RETURN',
+        params: {},
+      };
+    }
+
     // End
     if (trimmedLine.match(/^End$/i)) {
       return {
@@ -289,6 +319,23 @@ export class ProgramInterpreter {
       console.error('Erreur évaluation condition:', condition, error);
       throw new Error(`Erreur de condition: ${condition}`);
     }
+  }
+
+  /**
+   * Scanner tous les labels dans un programme
+   */
+  static scanLabels(lines: string[]): Record<string, number> {
+    const labels: Record<string, number> = {};
+
+    for (let i = 0; i < lines.length; i++) {
+      const command = this.parseLine(lines[i]);
+      if (command?.type === 'LBL') {
+        const labelName = command.params.name as string;
+        labels[labelName] = i;
+      }
+    }
+
+    return labels;
   }
 
   /**
@@ -415,6 +462,40 @@ export class ProgramInterpreter {
         break;
       }
 
+      case 'LBL': {
+        // Les labels sont déjà scannés au début, ne rien faire à l'exécution
+        break;
+      }
+
+      case 'GOTO': {
+        const label = command.params.label as string;
+        const lineNumber = context.labels[label];
+
+        if (lineNumber === undefined) {
+          throw new Error(`ERR:LABEL ${label}`);
+        }
+
+        // Marquer qu'on doit sauter à cette ligne
+        // (la ligne sera changée dans executeProgram)
+        context.gotoLine = lineNumber;
+        break;
+      }
+
+      case 'RETURN': {
+        // Retourner d'un sous-programme
+        if (context.stack.length === 0) {
+          // Pas de sous-programme, arrêter le programme
+          context.error = 'STOP';
+        } else {
+          // Dépiler la frame et retourner à la ligne de retour
+          const frame = context.stack.pop()!;
+          context.gotoLine = frame.returnLine;
+          // Restaurer les variables (optionnel selon le comportement souhaité)
+          // Sur TI-83, les variables sont globales, donc on ne restaure pas
+        }
+        break;
+      }
+
       case 'COMMENT':
       case 'END':
         // Ne rien faire
@@ -517,6 +598,11 @@ export class ProgramInterpreter {
     onError: (error: string) => void
   ): Promise<void> {
     try {
+      // Scanner les labels au début du programme (si pas déjà fait)
+      if (Object.keys(context.labels).length === 0) {
+        context.labels = this.scanLabels(lines);
+      }
+
       while (context.currentLine < lines.length) {
         // Vérifier si le programme est en pause
         if (context.isPaused) {
@@ -713,7 +799,14 @@ export class ProgramInterpreter {
 
         // Exécuter les commandes normales
         this.executeCommand(command, context, onOutput, onClearScreen);
-        context.currentLine++;
+
+        // Vérifier si on doit sauter à une ligne (Goto ou Return)
+        if (context.gotoLine !== undefined) {
+          context.currentLine = context.gotoLine;
+          context.gotoLine = undefined; // Réinitialiser
+        } else {
+          context.currentLine++;
+        }
 
         // Petit délai pour permettre à l'UI de se mettre à jour
         await new Promise(resolve => setTimeout(resolve, 10));
