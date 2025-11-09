@@ -89,11 +89,11 @@ const keyLayout: Key[][] = [
   ],
   // Ligne 9 : STO→, 1, 2, 3, +
   [
-    { action: 'sto', secondAction: 'rcl', primary: 'STO→', second: 'RCL', alpha: 'H' },
+    { action: 'sto', secondAction: 'rcl', primary: 'STO→', second: 'RCL', alpha: 'L' },
     { action: '1', primary: '1', alpha: 'I' },
     { action: '2', secondAction: 'list', primary: '2', second: 'LIST', alpha: 'J' },
     { action: '3', primary: '3', alpha: 'K' },
-    { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: 'L' },
+    { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: '"' },
   ],
   // Ligne 10 : ON, 0, ., (−), ENTER
   [
