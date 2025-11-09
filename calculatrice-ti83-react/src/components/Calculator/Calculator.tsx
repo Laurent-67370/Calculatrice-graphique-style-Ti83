@@ -120,6 +120,8 @@ export const Calculator: React.FC = () => {
     getVariable,
     addDrawElement,
     clearDraw,
+    storePicture,
+    recallPicture,
   } = useCalculatorStore();
 
   // Supprimer warnings pour services importés
@@ -1336,6 +1338,145 @@ export const Calculator: React.FC = () => {
               setInput('Done');
               setGraphMode(true);
               return;
+            }
+
+            // Tangent(expr,x) : Dessiner la tangente à une fonction
+            const tangentMatch = input.match(/^Tangent\s*\(\s*(.+?)\s*,\s*(-?\d+\.?\d*)\s*\)$/);
+            if (tangentMatch) {
+              const [, expr, x] = tangentMatch;
+              addDrawElement({
+                type: 'tangent',
+                expr: expr.trim(),
+                x: parseFloat(x),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // DrawF expr : Dessiner une fonction
+            const drawFMatch = input.match(/^DrawF\s+(.+)$/);
+            if (drawFMatch) {
+              const [, expr] = drawFMatch;
+              addDrawElement({
+                type: 'function',
+                expr: expr.trim(),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // DrawInv expr : Dessiner l'inverse d'une fonction
+            const drawInvMatch = input.match(/^DrawInv\s+(.+)$/);
+            if (drawInvMatch) {
+              const [, expr] = drawInvMatch;
+              addDrawElement({
+                type: 'inverse',
+                expr: expr.trim(),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Shade(f1,f2,xmin,xmax) : Ombrage entre deux fonctions
+            const shadeMatch = input.match(/^Shade\s*\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*\)$/);
+            if (shadeMatch) {
+              const [, f1, f2, xMin, xMax] = shadeMatch;
+              addDrawElement({
+                type: 'shade',
+                f1: f1.trim(),
+                f2: f2.trim(),
+                xMin: parseFloat(xMin),
+                xMax: parseFloat(xMax),
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Pt-On(x,y[,mark]) : Activer un point
+            const ptOnMatch = input.match(/^Pt-On\s*\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*(?:,\s*(\d+))?\s*\)$/);
+            if (ptOnMatch) {
+              const [, x, y] = ptOnMatch;
+              addDrawElement({
+                type: 'point',
+                x: parseFloat(x),
+                y: parseFloat(y),
+                on: true,
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Pt-Off(x,y[,mark]) : Désactiver un point
+            const ptOffMatch = input.match(/^Pt-Off\s*\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*(?:,\s*(\d+))?\s*\)$/);
+            if (ptOffMatch) {
+              const [, x, y] = ptOffMatch;
+              addDrawElement({
+                type: 'point',
+                x: parseFloat(x),
+                y: parseFloat(y),
+                on: false,
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // Pt-Change(x,y[,mark]) : Basculer l'état d'un point
+            const ptChangeMatch = input.match(/^Pt-Change\s*\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*(?:,\s*(\d+))?\s*\)$/);
+            if (ptChangeMatch) {
+              const [, x, y] = ptChangeMatch;
+              // Pour Pt-Change, on doit vérifier si le point existe déjà
+              const existingPoint = drawElements.find(
+                el => el.type === 'point' && el.x === parseFloat(x) && el.y === parseFloat(y)
+              );
+              addDrawElement({
+                type: 'point',
+                x: parseFloat(x),
+                y: parseFloat(y),
+                on: existingPoint ? !(existingPoint as any).on : true,
+              });
+              addToHistory(input);
+              setInput('Done');
+              setGraphMode(true);
+              return;
+            }
+
+            // StorePic n : Sauvegarder l'écran dans Pic1-Pic10
+            const storePicMatch = input.match(/^StorePic\s+(\d+)$/);
+            if (storePicMatch) {
+              const [, n] = storePicMatch;
+              const picNum = parseInt(n);
+              if (picNum >= 1 && picNum <= 10) {
+                storePicture(`Pic${picNum}`);
+                addToHistory(input);
+                setInput('Done');
+                return;
+              }
+            }
+
+            // RecallPic n : Rappeler une image sauvegardée
+            const recallPicMatch = input.match(/^RecallPic\s+(\d+)$/);
+            if (recallPicMatch) {
+              const [, n] = recallPicMatch;
+              const picNum = parseInt(n);
+              if (picNum >= 1 && picNum <= 10) {
+                recallPicture(`Pic${picNum}`);
+                addToHistory(input);
+                setInput('Done');
+                setGraphMode(true);
+                return;
+              }
             }
 
             // Détecter si c'est un stockage de variable (→)

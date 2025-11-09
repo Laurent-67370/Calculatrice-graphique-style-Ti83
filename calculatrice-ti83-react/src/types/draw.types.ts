@@ -12,7 +12,9 @@ export type DrawElement =
   | DrawText
   | DrawFunction
   | DrawShade
-  | DrawPoint;
+  | DrawPoint
+  | DrawTangent
+  | DrawInverse;
 
 // Line - Tracer une ligne entre deux points
 export interface DrawLine {
@@ -80,13 +82,15 @@ export interface DrawState {
   pictures: { [key: string]: DrawElement[] }; // Pic1-Pic10
 }
 
-// Paramètres pour l'inverse d'une fonction
-export interface DrawInverseParams {
-  expr: string;
+// Tangent - Dessiner la tangente à une fonction en un point
+export interface DrawTangent {
+  type: 'tangent';
+  expr: string; // Expression de la fonction
+  x: number;    // Point de tangence
 }
 
-// Paramètres pour la tangente
-export interface DrawTangentParams {
-  expr: string;
-  x: number; // Point de tangence
+// DrawInv - Dessiner l'inverse d'une fonction (symétrie par rapport à y=x)
+export interface DrawInverse {
+  type: 'inverse';
+  expr: string; // Expression de la fonction
 }
