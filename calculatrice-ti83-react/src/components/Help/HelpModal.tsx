@@ -263,6 +263,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               <div className="help-examples">
                 <strong>Syntaxe :</strong> <code>Text(x, y, "texte")</code><br/>
                 <br/>
+                <strong>💡 Astuce guillemets :</strong><br/>
+                Pour taper les guillemets <code>"</code>, appuyez sur <code>ALPHA</code> puis <code>+</code><br/>
+                <br/>
                 <strong>Exemple 1 - Label d'axe :</strong><br/>
                 <code>Text(8, 0.5, "X")</code> → "X" à droite de l'axe X<br/>
                 <code>Text(0.5, 8, "Y")</code> → "Y" en haut de l'axe Y<br/>
