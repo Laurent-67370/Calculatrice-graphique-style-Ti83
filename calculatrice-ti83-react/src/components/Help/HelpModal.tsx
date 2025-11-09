@@ -453,6 +453,86 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 commençant par S (sin, sqrt, sign, etc.).
               </p>
 
+              <h3>📊 DISTR - Distributions Statistiques</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Fonctions de probabilité pour l'analyse statistique avancée
+              </p>
+
+              <h4>📈 Distributions continues</h4>
+              <div className="help-examples">
+                <strong>Normale :</strong><br/>
+                • <code>normalcdf(lower, upper, μ, σ)</code> : P(lower ≤ X ≤ upper)<br/>
+                • <code>normalpdf(x, μ, σ)</code> : Densité de probabilité en x<br/>
+                • <code>invNorm(area, μ, σ)</code> : Quantile (inverse de cdf)<br/>
+                <br/>
+                <strong>Student (t) :</strong><br/>
+                • <code>tcdf(lower, upper, df)</code> : P(lower ≤ T ≤ upper)<br/>
+                • <code>tpdf(x, df)</code> : Densité en x<br/>
+                <br/>
+                <strong>Chi-carré (χ²) :</strong><br/>
+                • <code>χ²cdf(lower, upper, df)</code> : P(lower ≤ χ² ≤ upper)<br/>
+                • <code>χ²pdf(x, df)</code> : Densité en x<br/>
+                <br/>
+                <strong>Fisher (F) :</strong><br/>
+                • <code>Fcdf(lower, upper, df1, df2)</code> : P(lower ≤ F ≤ upper)<br/>
+                • <code>Fpdf(x, df1, df2)</code> : Densité en x<br/>
+              </div>
+
+              <h4>🎲 Distributions discrètes</h4>
+              <div className="help-examples">
+                <strong>Binomiale :</strong><br/>
+                • <code>binompdf(n, p, k)</code> : P(X = k)<br/>
+                • <code>binomcdf(n, p, k)</code> : P(X ≤ k)<br/>
+                <br/>
+                <strong>Poisson :</strong><br/>
+                • <code>poissonpdf(λ, k)</code> : P(X = k)<br/>
+                • <code>poissoncdf(λ, k)</code> : P(X ≤ k)<br/>
+                <br/>
+                <strong>Géométrique :</strong><br/>
+                • <code>geometpdf(p, k)</code> : P(X = k)<br/>
+                • <code>geometcdf(p, k)</code> : P(X ≤ k)<br/>
+              </div>
+
+              <h4>💡 Exemples d'utilisation</h4>
+              <div className="help-examples">
+                <code>normalcdf(-1.96, 1.96, 0, 1)</code> → 0.95 (intervalle à 95%)<br/>
+                <code>invNorm(0.975, 0, 1)</code> → 1.96 (quantile 97.5%)<br/>
+                <code>binomcdf(10, 0.5, 5)</code> → 0.623 (10 lancers, ≤5 succès)<br/>
+                <code>tcdf(-2, 2, 9)</code> → 0.926 (t avec 9 degrés de liberté)<br/>
+              </div>
+
+              <h3>🔍 TEST & LOGIC - Opérateurs de Comparaison et Logiques</h3>
+              <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
+                Opérateurs retournant 1 (vrai) ou 0 (faux)
+              </p>
+
+              <h4>⚖️ Opérateurs TEST</h4>
+              <div className="help-examples">
+                • <code>=</code> : Égalité<br/>
+                • <code>≠</code> : Non-égalité<br/>
+                • <code>&gt;</code> : Supérieur<br/>
+                • <code>≥</code> : Supérieur ou égal<br/>
+                • <code>&lt;</code> : Inférieur<br/>
+                • <code>≤</code> : Inférieur ou égal<br/>
+              </div>
+
+              <h4>🔗 Opérateurs LOGIC</h4>
+              <div className="help-examples">
+                • <code>and</code> : ET logique (1 si les deux vrais)<br/>
+                • <code>or</code> : OU logique (1 si au moins un vrai)<br/>
+                • <code>xor</code> : OU exclusif (1 si exactement un vrai)<br/>
+                • <code>not(x)</code> : NON logique (1 si x=0, 0 sinon)<br/>
+              </div>
+
+              <h4>💡 Exemples</h4>
+              <div className="help-examples">
+                <code>5 &gt; 3</code> → 1 (vrai)<br/>
+                <code>2 = 3</code> → 0 (faux)<br/>
+                <code>(5 &gt; 3) and (2 &lt; 4)</code> → 1 (les deux vrais)<br/>
+                <code>(1 = 1) or (2 = 3)</code> → 1 (au moins un vrai)<br/>
+                <code>not(0)</code> → 1 (NON de faux = vrai)<br/>
+              </div>
+
               <h3>🧠 Menu MEM (Mémoire)</h3>
               <p style={{ fontSize: '0.9em', marginBottom: '10px' }}>
                 Accès : <strong>2ND + +</strong> (touche MEM)
@@ -700,7 +780,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.4.0.0 (PWA) • 💰 FINANCE TVM • 🎯 SOLVER & CATALOG • 📊 TABLE & STAT PLOT • 📈 Par/Pol • 💾 MEM & MATRIX
+            Version 2.5.0.0 (PWA) • 📊 DISTR & TEST/LOGIC • 💰 FINANCE TVM • 🎯 SOLVER & CATALOG • 📈 Par/Pol • 💾 MEM & MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

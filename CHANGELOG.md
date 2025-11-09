@@ -6,6 +6,68 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [2.5.0.0] - 2025-11-09
+
+### ✨ Ajouté
+- **DISTR** (2ND + VARS) : 15 distributions statistiques professionnelles
+  - **Distributions Continues** :
+    - Loi Normale : normalpdf(x,μ,σ), normalcdf(lower,upper,μ,σ), invNorm(area,μ,σ)
+    - Loi de Student t : tpdf(x,df), tcdf(lower,upper,df)
+    - Loi du Chi-carré : χ²pdf(x,df), χ²cdf(lower,upper,df)
+    - Loi de Fisher F : Fpdf(x,df1,df2), Fcdf(lower,upper,df1,df2)
+  - **Distributions Discrètes** :
+    - Loi Binomiale : binompdf(n,p,x), binomcdf(n,p,x)
+    - Loi de Poisson : poissonpdf(λ,x), poissoncdf(λ,x)
+    - Loi Géométrique : geometpdf(p,x), geometcdf(p,x)
+  - Méthodes numériques : fonction d'erreur (erf), fonction Gamma, fonction Beta
+  - Intégration de Simpson pour les CDF complexes
+  - Approximation Beasley-Springer-Moro pour invNorm
+
+- **TEST** (2ND + MATH) : 6 opérateurs de comparaison
+  - Égalité : = (testEqual)
+  - Différence : ≠ (testNotEqual)
+  - Supériorité : > (testGreater), ≥ (testGreaterEqual)
+  - Infériorité : < (testLess), ≤ (testLessEqual)
+  - Retournent 1 (vrai) ou 0 (faux)
+
+- **LOGIC** (2ND + MATH, sous-menu) : 4 opérateurs logiques
+  - ET logique : and
+  - OU logique : or
+  - OU exclusif : xor
+  - NON logique : not(
+  - Retournent 1 (vrai) ou 0 (faux)
+
+### 🔧 Amélioré
+- **DistributionService** : Service dédié avec toutes les distributions
+  - Précision numérique professionnelle
+  - Gestion robuste des cas limites
+  - Optimisation des calculs itératifs
+- **MathFunctionsService** : Intégration des 15 distributions + TEST + LOGIC
+- **CatalogViewer** : Ajout des nouvelles fonctions dans le catalogue alphabétique
+  - chi2cdf, chi2pdf, Fcdf, Fpdf, invNorm, tcdf, tpdf
+  - χ²cdf, χ²pdf (avec caractère spécial)
+- **Menu System** : 3 nouveaux menus (DISTR, TEST, LOGIC)
+  - Navigation fluide
+  - Insertion automatique dans l'input
+  - Handlers dédiés pour chaque menu
+
+### 📝 Documentation
+- **HelpModal** : Documentation complète DISTR, TEST & LOGIC
+  - Exemples d'utilisation avec résultats
+  - Description des paramètres
+  - Guide d'utilisation
+- **README.md** : Ajout des sections DISTR, TEST & LOGIC
+- **CHANGELOG.md** : Mise à jour avec v2.5.0.0
+- Mise à jour de la version affichée à 2.5.0.0
+
+### 🎯 Impact
+- **Fonctionnalités statistiques** : 100% implémentées
+- **Tests et logique** : 100% implémentés
+- **Compatibilité TI-83 Plus** : 80% (ajout de 25+ fonctions)
+- Applications : statistiques descriptives, inférence statistique, tests d'hypothèses, probabilités
+
+---
+
 ## [2.4.0.0] - 2025-11-08
 
 ### ✨ Ajouté

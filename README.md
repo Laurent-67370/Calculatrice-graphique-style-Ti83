@@ -1,6 +1,6 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 2.4.0.0 - React + TypeScript + PWA
+## Version 2.5.0.0 - React + TypeScript + PWA
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
@@ -64,17 +64,7 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 
 ## 🎯 Fonctionnalités Principales
 
-### 💰 **FINANCE TVM** (Nouveauté v2.4.0.0)
-- **TVM Solver** (APPS) : Calculateur financier professionnel
-  - Time Value of Money (Valeur Temporelle de l'Argent)
-  - 7 variables : N, I%, PV, PMT, FV, P/Y, C/Y
-  - Calcul automatique de n'importe quelle variable
-  - Mode END/BEGIN pour paiements
-  - Exemples : prêts hypothécaires, épargne retraite, crédits auto
-  - Précision financière professionnelle
-  - Interface intuitive avec navigation ↑↓
-
-### 🎯 **SOLVER & CATALOG** (v2.3.0.0)
+### 🎯 **SOLVER & CATALOG** (Nouveauté v2.3.0.0)
 - **SOLVER** (MATH > 0) : Résolveur d'équations f(X)=0
   - Méthode de Newton-Raphson avec fallback bisection
   - Précision : 10 décimales
@@ -112,6 +102,31 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 - **PRB** : rand, nPr, nCr, !, randInt, randNorm, randBin
 - **ANGLE** : °→rad, rad→°, →DMS, →Dec
 - **TRIG** : sinh, cosh, tanh, asinh, acosh, atanh
+
+### 📊 **DISTR - Distributions Statistiques** (Nouveauté v2.5.0.0)
+- **Distributions Continues** :
+  - Normale : normalpdf, normalcdf, invNorm
+  - Student t : tpdf, tcdf
+  - Chi-carré : χ²pdf, χ²cdf
+  - Fisher F : Fpdf, Fcdf
+- **Distributions Discrètes** :
+  - Binomiale : binompdf, binomcdf
+  - Poisson : poissonpdf, poissoncdf
+  - Géométrique : geometpdf, geometcdf
+- Accès via **2ND + VARS** (DISTR)
+
+### 🔍 **TEST & LOGIC** (Nouveauté v2.5.0.0)
+- **Opérateurs de Comparaison** : =, ≠, >, ≥, <, ≤
+- **Opérateurs Logiques** : and, or, xor, not
+- Retournent **1** (vrai) ou **0** (faux)
+- Accès via **2ND + MATH** (TEST/LOGIC)
+
+### 💰 **Finance TVM** (Nouveauté v2.4.0.0)
+- **Calculateur financier professionnel** (APPS)
+- **7 variables TVM** : N, I%, PV, PMT, FV, P/Y, C/Y
+- Calcul automatique de n'importe quelle variable
+- Mode END/BEGIN pour paiements début/fin de période
+- Applications : prêts, épargne, investissements, retraite
 
 ### 💾 **Mémoire & Variables**
 - **MEM** (2ND + +) : Gestion mémoire complète
