@@ -273,24 +273,79 @@ export const useProgramStore = create<ProgramStore>()(
 
       // Fournir la valeur d'input
       provideInput: (value: number) => {
-        set((state) => {
-          if (!state.executionContext || !state.executionContext.inputVariable) {
-            return state;
-          }
+        const state = get();
+        if (!state.executionContext || !state.executionContext.inputVariable) {
+          return;
+        }
 
-          return {
+        const variable = state.executionContext.inputVariable;
+
+        // Affecter la valeur à la variable
+        const newVariables = {
+          ...state.executionContext.variables,
+          [variable]: value,
+        };
+
+        // Vérifier s'il y a d'autres variables à demander (Prompt)
+        const promptQueue = state.executionContext.promptQueue || [];
+
+        if (promptQueue.length > 0) {
+          // Il reste des variables à demander
+          const nextVariable = promptQueue[0];
+          const remainingQueue = promptQueue.slice(1);
+
+          set({
             executionContext: {
               ...state.executionContext,
-              variables: {
-                ...state.executionContext.variables,
-                [state.executionContext.inputVariable]: value,
-              },
+              variables: newVariables,
+              inputVariable: nextVariable,
+              inputPrompt: `${nextVariable}=?`,
+              promptQueue: remainingQueue.length > 0 ? remainingQueue : undefined,
+            },
+          });
+
+          // Ajouter le prompt à l'output
+          get().addOutput({ type: 'text', content: `${nextVariable}=?` });
+        } else {
+          // Plus de variables à demander, reprendre l'exécution
+          set({
+            executionContext: {
+              ...state.executionContext,
+              variables: newVariables,
               isWaitingInput: false,
               inputPrompt: undefined,
               inputVariable: undefined,
+              promptQueue: undefined,
             },
-          };
-        });
+          });
+
+          // Passer à la ligne suivante
+          const context = get().executionContext;
+          if (context && state.executingProgram) {
+            const program = state.programs[state.executingProgram];
+            if (program) {
+              context.currentLine++;
+
+              // Reprendre l'exécution
+              ProgramInterpreter.executeProgram(
+                program.lines,
+                context,
+                (line) => {
+                  get().addOutput(line);
+                },
+                () => {
+                  get().clearOutput();
+                },
+                () => {
+                  get().stopProgram();
+                },
+                (error) => {
+                  get().setError(error);
+                }
+              );
+            }
+          }
+        }
       },
 
       // Mettre à jour une variable

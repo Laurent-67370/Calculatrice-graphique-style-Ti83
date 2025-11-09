@@ -3,7 +3,7 @@
  * Compatible TI-83 Plus
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useProgramStore } from '../../store/programStore';
 import './ProgramOutput.css';
 
@@ -16,9 +16,11 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
     executionContext,
     stopProgram,
     resumeProgram,
+    provideInput,
   } = useProgramStore();
 
   const outputRef = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState<string>('');
 
   // Auto-scroll vers le bas quand de nouvelles lignes sont ajoutées
   useEffect(() => {
@@ -47,6 +49,20 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
 
   const handleContinue = () => {
     resumeProgram();
+  };
+
+  const handleSubmitInput = () => {
+    const value = parseFloat(inputValue);
+    if (!isNaN(value)) {
+      provideInput(value);
+      setInputValue('');
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmitInput();
+    }
   };
 
   return (
@@ -105,9 +121,30 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
         )}
 
         {/* Message de pause */}
-        {executionContext.isPaused && !executionContext.error && (
+        {executionContext.isPaused && !executionContext.error && !executionContext.isWaitingInput && (
           <div className="output-pause">
             Appuyez sur Continuer pour reprendre
+          </div>
+        )}
+
+        {/* Input utilisateur */}
+        {executionContext.isWaitingInput && (
+          <div className="output-input">
+            <div className="input-prompt">{executionContext.inputPrompt}</div>
+            <div className="input-field">
+              <input
+                type="number"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleInputKeyDown}
+                placeholder="Entrez un nombre..."
+                autoFocus
+                className="input-value"
+              />
+              <button onClick={handleSubmitInput} className="btn-submit-input">
+                OK
+              </button>
+            </div>
           </div>
         )}
       </div>

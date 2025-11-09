@@ -168,6 +168,30 @@ export class ProgramInterpreter {
       };
     }
 
+    // Input "prompt",variable ou Input variable
+    const inputMatch = trimmedLine.match(/^Input\s+(?:"(.+?)"\s*,\s*)?([A-Z])$/i);
+    if (inputMatch) {
+      return {
+        type: 'INPUT',
+        params: {
+          prompt: inputMatch[1]?.trim(),
+          variable: inputMatch[2].toUpperCase(),
+        },
+      };
+    }
+
+    // Prompt variable1,variable2,...
+    const promptMatch = trimmedLine.match(/^Prompt\s+(.+)$/i);
+    if (promptMatch) {
+      const variables = promptMatch[1].split(',').map(v => v.trim().toUpperCase());
+      return {
+        type: 'PROMPT',
+        params: {
+          variables,
+        },
+      };
+    }
+
     // End
     if (trimmedLine.match(/^End$/i)) {
       return {
@@ -349,6 +373,42 @@ export class ProgramInterpreter {
         break;
       }
 
+      case 'INPUT': {
+        const prompt = command.params.prompt as string | undefined;
+        const variable = command.params.variable as string;
+
+        // Afficher le prompt s'il existe
+        if (prompt) {
+          onOutput({ type: 'text', content: prompt });
+        }
+
+        // Mettre le programme en attente d'input
+        context.isWaitingInput = true;
+        context.inputVariable = variable;
+        context.inputPrompt = prompt || `${variable}=?`;
+        break;
+      }
+
+      case 'PROMPT': {
+        const variables = command.params.variables as string[];
+
+        // Prompt demande la première variable de la liste
+        if (variables.length > 0) {
+          const variable = variables[0];
+          onOutput({ type: 'text', content: `${variable}=?` });
+
+          context.isWaitingInput = true;
+          context.inputVariable = variable;
+          context.inputPrompt = `${variable}=?`;
+
+          // Stocker les variables restantes pour les demander après
+          if (variables.length > 1) {
+            context.promptQueue = variables.slice(1);
+          }
+        }
+        break;
+      }
+
       case 'STOP': {
         // Arrêter l'exécution
         context.error = 'STOP';
@@ -460,6 +520,11 @@ export class ProgramInterpreter {
       while (context.currentLine < lines.length) {
         // Vérifier si le programme est en pause
         if (context.isPaused) {
+          break;
+        }
+
+        // Vérifier si le programme attend un input
+        if (context.isWaitingInput) {
           break;
         }
 
