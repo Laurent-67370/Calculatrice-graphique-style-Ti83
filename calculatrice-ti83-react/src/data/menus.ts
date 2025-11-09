@@ -262,3 +262,35 @@ export const listMenuItems: MenuItem[] = [
   { id: 'list-ops', label: 'OPS', action: () => {}, submenu: listOpsMenuItems },
   { id: 'list-math', label: 'MATH', action: () => {}, submenu: listMathMenuItems },
 ];
+
+// Menu DRAW - POINTS (sous-menu)
+export const drawPointsMenuItems: MenuItem[] = [
+  { id: 'pt-on', label: 'Pt-On(', action: () => {} },
+  { id: 'pt-off', label: 'Pt-Off(', action: () => {} },
+  { id: 'pt-change', label: 'Pt-Change(', action: () => {} },
+];
+
+// Menu DRAW - STO (sous-menu)
+export const drawStoMenuItems: MenuItem[] = [
+  { id: 'store-pic', label: 'StorePic', action: () => {} },
+  { id: 'recall-pic', label: 'RecallPic', action: () => {} },
+  { id: 'store-gdb', label: 'StoreGDB', action: () => {} },
+  { id: 'recall-gdb', label: 'RecallGDB', action: () => {} },
+];
+
+// Menu DRAW principal (2ND + PRGM)
+export const drawMenuItems: MenuItem[] = [
+  { id: 'clr-draw', label: 'ClrDraw', action: () => {} },
+  { id: 'line', label: 'Line(', action: () => {} },
+  { id: 'horizontal', label: 'Horizontal', action: () => {} },
+  { id: 'vertical', label: 'Vertical', action: () => {} },
+  { id: 'tangent', label: 'Tangent(', action: () => {} },
+  { id: 'draw-f', label: 'DrawF', action: () => {} },
+  { id: 'shade', label: 'Shade(', action: () => {} },
+  { id: 'draw-inv', label: 'DrawInv', action: () => {} },
+  { id: 'circle', label: 'Circle(', action: () => {} },
+  { id: 'text', label: 'Text(', action: () => {} },
+  { id: 'draw-points', label: 'POINTS', action: () => {}, submenu: drawPointsMenuItems },
+  { id: 'draw-sto', label: 'STO', action: () => {}, submenu: drawStoMenuItems },
+];
+

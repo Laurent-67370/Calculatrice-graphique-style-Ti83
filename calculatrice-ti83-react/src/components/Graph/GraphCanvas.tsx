@@ -6,6 +6,8 @@ import React, { useEffect, useRef } from 'react';
 import { graphingEngine } from '../../services/GraphingEngine';
 import type { GraphFunction, WindowSettings, GraphMode } from '../../types';
 import type { StatPlot } from '../../store/calculatorStore';
+import type { DrawElement } from '../../types/draw.types';
+import { DrawingService } from '../../services/DrawingService';
 
 interface GraphCanvasProps {
   functions: GraphFunction[];
@@ -15,12 +17,13 @@ interface GraphCanvasProps {
   statPlots?: [StatPlot, StatPlot, StatPlot];
   lists?: Record<string, number[]>;
   parametricFunctions?: { x: string[], y: string[] };
+  drawElements?: DrawElement[];
   width?: number;
   height?: number;
 }
 
 export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
-  ({ functions, window, angleMode, graphMode = 'FUNC', statPlots, lists, parametricFunctions, width = 384, height = 256 }) => {
+  ({ functions, window, angleMode, graphMode = 'FUNC', statPlots, lists, parametricFunctions, drawElements = [], width = 384, height = 256 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Initialiser le canvas dans le moteur graphique
@@ -39,11 +42,20 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
           parametricFunctions,
           statPlots,
           window,
-          angleMode
+          angleMode,
+          drawElements: drawElements.length
         });
         graphingEngine.drawGraph(functions, window, angleMode, statPlots, lists, graphMode, parametricFunctions);
+
+        // Dessiner les éléments DRAW par-dessus
+        if (drawElements.length > 0) {
+          const ctx = canvasRef.current.getContext('2d');
+          if (ctx) {
+            DrawingService.drawAll(ctx, drawElements, window, width, height);
+          }
+        }
       }
-    }, [functions, window, angleMode, graphMode, statPlots, lists, parametricFunctions]);
+    }, [functions, window, angleMode, graphMode, statPlots, lists, parametricFunctions, drawElements, width, height]);
 
     return (
       <canvas

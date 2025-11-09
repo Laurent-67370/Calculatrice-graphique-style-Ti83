@@ -10,6 +10,7 @@ import type {
   CalculatorConfig,
   WindowSettings,
 } from '../types';
+import type { DrawElement } from '../types/draw.types';
 
 // Type pour une matrice
 export interface Matrix {
@@ -70,6 +71,10 @@ interface CalculatorStore extends CalculatorState {
 
   // Composant en cours d'édition pour mode paramétrique ('X' ou 'Y')
   editingParametricComponent: 'X' | 'Y';
+
+  // État DRAW (2ND + PRGM)
+  drawElements: DrawElement[];
+  pictures: { [key: string]: DrawElement[] }; // Pic1-Pic10
 
   // État de l'input
   isInputResult: boolean; // Indique si l'input actuel est un résultat de calcul
@@ -159,6 +164,12 @@ interface CalculatorStore extends CalculatorState {
   navigateMenu: (direction: 'up' | 'down', maxIndex: number) => void;
   enterSubmenu: (submenu: any[]) => void;
   exitSubmenu: () => void;
+
+  // Actions pour DRAW
+  addDrawElement: (element: DrawElement) => void;
+  clearDraw: () => void;
+  storePicture: (name: string) => void;
+  recallPicture: (name: string) => void;
 
   // Reset complet
   reset: () => void;
@@ -305,6 +316,10 @@ export const useCalculatorStore = create<CalculatorStore>()(
       polarFunctions: initialPolarFunctions,
       activePolarFunctions: initialActivePolarFunctions,
       editingParametricComponent: 'X',
+
+      // État initial DRAW
+      drawElements: [],
+      pictures: {},
 
       // État initial de l'input
       isInputResult: false,
@@ -670,12 +685,40 @@ export const useCalculatorStore = create<CalculatorStore>()(
           };
         }, false, 'exitSubmenu'),
 
+      // Actions pour DRAW
+      addDrawElement: (element: DrawElement) =>
+        set((state) => ({
+          drawElements: [...state.drawElements, element],
+        }), false, 'addDrawElement'),
+
+      clearDraw: () =>
+        set({ drawElements: [] }, false, 'clearDraw'),
+
+      storePicture: (name: string) =>
+        set((state) => ({
+          pictures: {
+            ...state.pictures,
+            [name]: [...state.drawElements],
+          },
+        }), false, 'storePicture'),
+
+      recallPicture: (name: string) =>
+        set((state) => {
+          const picture = state.pictures[name];
+          if (picture) {
+            return { drawElements: [...picture] };
+          }
+          return state;
+        }, false, 'recallPicture'),
+
       // Reset mémoire seulement (variables + matrices)
       resetMemory: () =>
         set({
           matrices: initialMatrices,
           variables: {},
           history: [],
+          drawElements: [],
+          pictures: {},
         }, false, 'resetMemory'),
 
       // Reset complet
@@ -693,6 +736,8 @@ export const useCalculatorStore = create<CalculatorStore>()(
           polarFunctions: initialPolarFunctions,
           activePolarFunctions: initialActivePolarFunctions,
           editingParametricComponent: 'X',
+          drawElements: [],
+          pictures: {},
         }, false, 'reset'),
     }),
     { name: 'TI-83 Calculator' }

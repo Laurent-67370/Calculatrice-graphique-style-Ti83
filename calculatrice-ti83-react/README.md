@@ -1,6 +1,6 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 2.4.0.0 - React + TypeScript + PWA
+## Version 2.6.0.0 - React + TypeScript + PWA
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
@@ -84,6 +84,28 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
   - Recherche rapide par lettre (A-Z)
   - Navigation intuitive ↑↓
   - Insertion directe dans l'input
+
+### 🎨 **DRAW - Outils de Dessin** (Nouveauté v2.6.0.0)
+- **DRAW** (2ND + PRGM) : Menu complet d'outils de dessin
+  - **ClrDraw** : Effacer tous les dessins
+  - **Line(** : Tracer une ligne entre deux points
+  - **Horizontal/Vertical** : Lignes horizontales et verticales
+  - **Circle(** : Dessiner des cercles
+  - **Text(** : Afficher du texte sur le graphique
+  - **Tangent(** : Tracer la tangente à une fonction
+  - **DrawF/DrawInv** : Dessiner fonction et son inverse
+  - **Shade(** : Ombrage entre deux courbes
+  - **POINTS** : Pt-On, Pt-Off, Pt-Change
+  - **STO** : StorePic, RecallPic, StoreGDB, RecallGDB
+
+### 📊 **LIST OPS & MATH** (Nouveauté v2.6.0.0)
+- **LIST** (2ND + STAT) : Menu complet des opérations sur listes
+  - **NAMES** : Accès rapide L₁ à L₆
+  - **OPS** : SortA, SortD, dim, Fill, seq, cumSum, ΔList
+  - **MATH** : min, max, mean, median, sum, prod, stdDev, variance
+- Service ListService avec 15 fonctions complètes
+- Support des séquences avec expressions mathématiques
+- Statistiques descriptives avancées
 
 ### 📊 **Graphiques**
 - Tracer jusqu'à 6 fonctions simultanément (Y1 à Y6)
