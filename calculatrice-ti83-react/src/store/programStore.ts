@@ -32,6 +32,7 @@ interface ProgramStore extends ProgramState {
   setError: (error: string | undefined) => void;
   setWaitingInput: (waiting: boolean, prompt?: string, variable?: string) => void;
   provideInput: (value: number) => void;
+  provideMenuSelection: (optionIndex: number) => void;
   updateVariable: (name: string, value: number) => void;
   clearHomeScreen: () => void;
 }
@@ -102,6 +103,13 @@ export const useProgramStore = create<ProgramStore>()(
           return;
         }
 
+        // Préparer les lignes de tous les programmes pour les appels prgm
+        const allPrograms = get().programs;
+        const programLines: Record<string, string[]> = {};
+        Object.keys(allPrograms).forEach(key => {
+          programLines[key] = allPrograms[key].lines;
+        });
+
         // Initialiser le contexte d'exécution
         const context: ExecutionContext = {
           programName: name,
@@ -115,7 +123,9 @@ export const useProgramStore = create<ProgramStore>()(
           ifStack: [],
           isPaused: false,
           isWaitingInput: false,
+          isWaitingMenu: false,
           output: [],
+          programLines, // Ajouter toutes les lignes de programmes
         };
 
         set({
@@ -363,6 +373,73 @@ export const useProgramStore = create<ProgramStore>()(
             },
           };
         });
+      },
+
+      // Fournir la sélection de menu
+      provideMenuSelection: (optionIndex: number) => {
+        const state = get();
+        if (!state.executionContext || !state.executionContext.menuOptions) {
+          return;
+        }
+
+        const options = state.executionContext.menuOptions;
+
+        // Vérifier que l'index est valide
+        if (optionIndex < 0 || optionIndex >= options.length) {
+          console.error('Index de menu invalide:', optionIndex);
+          return;
+        }
+
+        const selectedOption = options[optionIndex];
+        const targetLabel = selectedOption.targetLabel;
+
+        // Trouver le label correspondant
+        const labelLine = state.executionContext.labels[targetLabel];
+
+        if (labelLine === undefined) {
+          set({
+            executionContext: {
+              ...state.executionContext,
+              error: `ERR:LABEL ${targetLabel}`,
+            },
+          });
+          return;
+        }
+
+        // Mettre à jour le contexte pour aller au label
+        set({
+          executionContext: {
+            ...state.executionContext,
+            isWaitingMenu: false,
+            menuTitle: undefined,
+            menuOptions: undefined,
+            currentLine: labelLine,
+          },
+        });
+
+        // Reprendre l'exécution
+        const context = get().executionContext;
+        if (context && state.executingProgram) {
+          const program = state.programs[state.executingProgram];
+          if (program) {
+            ProgramInterpreter.executeProgram(
+              program.lines,
+              context,
+              (line) => {
+                get().addOutput(line);
+              },
+              () => {
+                get().clearOutput();
+              },
+              () => {
+                get().stopProgram();
+              },
+              (error) => {
+                get().setError(error);
+              }
+            );
+          }
+        }
       },
 
       // Effacer l'écran d'accueil (ClrHome)

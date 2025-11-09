@@ -222,6 +222,99 @@ export class ProgramInterpreter {
       };
     }
 
+    // DelVar variable
+    const delVarMatch = trimmedLine.match(/^DelVar\s+([A-Zθ])$/i);
+    if (delVarMatch) {
+      return {
+        type: 'DELVAR',
+        params: {
+          variable: delVarMatch[1].toUpperCase(),
+        },
+      };
+    }
+
+    // ClrList L1,L2,...
+    const clrListMatch = trimmedLine.match(/^ClrList\s+(.+)$/i);
+    if (clrListMatch) {
+      const lists = clrListMatch[1].split(',').map(l => l.trim());
+      return {
+        type: 'CLRLIST',
+        params: {
+          lists,
+        },
+      };
+    }
+
+    // prgm NOM
+    const prgmMatch = trimmedLine.match(/^prgm\s+([A-Z0-9]+)$/i);
+    if (prgmMatch) {
+      return {
+        type: 'PRGM',
+        params: {
+          programName: prgmMatch[1].toUpperCase(),
+        },
+      };
+    }
+
+    // Menu("titre","opt1",lbl1,"opt2",lbl2,...)
+    const menuMatch = trimmedLine.match(/^Menu\s*\((.+)\)$/i);
+    if (menuMatch) {
+      // Parser les paramètres du menu
+      const paramsStr = menuMatch[1];
+      const params: string[] = [];
+
+      let current = '';
+      let inQuotes = false;
+      let depth = 0;
+
+      for (let i = 0; i < paramsStr.length; i++) {
+        const char = paramsStr[i];
+
+        if (char === '"') {
+          inQuotes = !inQuotes;
+          current += char;
+        } else if (char === '(' && !inQuotes) {
+          depth++;
+          current += char;
+        } else if (char === ')' && !inQuotes) {
+          depth--;
+          current += char;
+        } else if (char === ',' && !inQuotes && depth === 0) {
+          params.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+
+      if (current.trim()) {
+        params.push(current.trim());
+      }
+
+      // Extraire le titre et les options
+      if (params.length < 3 || params.length % 2 === 0) {
+        console.error('Menu: nombre de paramètres invalide');
+        return null;
+      }
+
+      const title = params[0].replace(/^"|"$/g, ''); // Enlever les guillemets
+      const options: { label: string; targetLabel: string }[] = [];
+
+      for (let i = 1; i < params.length; i += 2) {
+        const optionLabel = params[i].replace(/^"|"$/g, '');
+        const targetLabel = params[i + 1];
+        options.push({ label: optionLabel, targetLabel });
+      }
+
+      return {
+        type: 'MENU',
+        params: {
+          title,
+          options,
+        },
+      };
+    }
+
     // End
     if (trimmedLine.match(/^End$/i)) {
       return {
@@ -496,6 +589,53 @@ export class ProgramInterpreter {
         break;
       }
 
+      case 'DELVAR': {
+        const variable = command.params.variable as string;
+        // Supprimer la variable du contexte
+        delete context.variables[variable];
+        break;
+      }
+
+      case 'CLRLIST': {
+        // ClrList sera géré plus tard avec l'intégration complète des listes
+        // Pour l'instant, on ne fait rien (les listes sont gérées ailleurs)
+        console.log('ClrList: à implémenter avec le système de listes');
+        break;
+      }
+
+      case 'PRGM': {
+        const programName = command.params.programName as string;
+
+        // Vérifier que le programme existe
+        if (!context.programLines || !context.programLines[programName]) {
+          throw new Error(`ERR:UNDEFINED ${programName}`);
+        }
+
+        // Marquer qu'on doit appeler un sous-programme
+        context.callProgram = programName;
+        break;
+      }
+
+      case 'MENU': {
+        const title = command.params.title as string;
+        const options = command.params.options as { label: string; targetLabel: string }[];
+
+        // Afficher le titre du menu
+        onOutput({ type: 'text', content: title });
+        onOutput({ type: 'text', content: '' }); // Ligne vide
+
+        // Afficher les options
+        options.forEach((option, index) => {
+          onOutput({ type: 'text', content: `${index + 1}:${option.label}` });
+        });
+
+        // Marquer qu'on attend une sélection de menu
+        context.isWaitingMenu = true;
+        context.menuTitle = title;
+        context.menuOptions = options;
+        break;
+      }
+
       case 'COMMENT':
       case 'END':
         // Ne rien faire
@@ -611,6 +751,11 @@ export class ProgramInterpreter {
 
         // Vérifier si le programme attend un input
         if (context.isWaitingInput) {
+          break;
+        }
+
+        // Vérifier si le programme attend une sélection de menu
+        if (context.isWaitingMenu) {
           break;
         }
 
@@ -800,8 +945,58 @@ export class ProgramInterpreter {
         // Exécuter les commandes normales
         this.executeCommand(command, context, onOutput, onClearScreen);
 
+        // Vérifier si on doit appeler un sous-programme (prgm)
+        if (context.callProgram !== undefined) {
+          const subProgramName = context.callProgram;
+          const subProgramLines = context.programLines?.[subProgramName];
+
+          if (subProgramLines) {
+            // Empiler la frame actuelle (pour Return)
+            context.stack.push({
+              programName: context.programName,
+              returnLine: context.currentLine + 1,
+              variables: { ...context.variables }, // Copie des variables
+            });
+
+            // Préparer le contexte pour le sous-programme
+            const subContext: ExecutionContext = {
+              ...context,
+              programName: subProgramName,
+              currentLine: 0,
+              labels: {}, // Sera scanné au début
+              callProgram: undefined,
+            };
+
+            // Exécuter le sous-programme de manière récursive
+            await this.executeProgram(
+              subProgramLines,
+              subContext,
+              onOutput,
+              onClearScreen,
+              () => {
+                // Quand le sous-programme est terminé, ne rien faire
+                // On va continuer l'exécution du programme principal
+              },
+              onError
+            );
+
+            // Après l'exécution du sous-programme, restaurer le contexte
+            if (subContext.error && subContext.error !== 'STOP') {
+              // Propager l'erreur
+              context.error = subContext.error;
+              break;
+            }
+
+            // Mettre à jour les variables (elles sont globales)
+            context.variables = subContext.variables;
+
+            // Continuer à la ligne suivante du programme principal
+            context.currentLine++;
+            context.callProgram = undefined;
+          }
+        }
         // Vérifier si on doit sauter à une ligne (Goto ou Return)
-        if (context.gotoLine !== undefined) {
+        else if (context.gotoLine !== undefined) {
           context.currentLine = context.gotoLine;
           context.gotoLine = undefined; // Réinitialiser
         } else {
