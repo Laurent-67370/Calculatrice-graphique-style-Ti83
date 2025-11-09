@@ -30,6 +30,8 @@ import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcH
 import { listHandlers } from '../../utils/listHandlers';
 import { createDrawHandlers } from '../../utils/drawHandlers';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
+import { ProgramMenu } from '../Program/ProgramMenu';
+import { ProgramEditor } from '../Program/ProgramEditor';
 import type { KeyAction, GraphFunction } from '../../types';
 
 // Créer une instance de mathjs avec toutes les fonctions
@@ -38,6 +40,9 @@ const math = create(all);
 export const Calculator: React.FC = () => {
   // State pour le modal d'aide
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  // State pour le menu PRGM
+  const [showProgramMenu, setShowProgramMenu] = useState(false);
 
   // State pour la matrice en cours d'édition
   const [editingMatrixName, setEditingMatrixName] = useState<string | null>(null);
@@ -530,6 +535,13 @@ export const Calculator: React.FC = () => {
       // Gérer MATH
       if (action === 'math') {
         setCurrentMenu('MATH');
+        setGraphMode(false);
+        return;
+      }
+
+      // Gérer PRGM
+      if (action === 'prgm') {
+        setShowProgramMenu(true);
         setGraphMode(false);
         return;
       }
@@ -1944,6 +1956,11 @@ export const Calculator: React.FC = () => {
       );
     }
 
+    // Si l'éditeur de programmes est ouvert
+    if (currentMode === 'PRGM_EDIT') {
+      return <ProgramEditor onClose={() => setMode('NORMAL')} />;
+    }
+
     // Si l'éditeur STAT LIST est ouvert
     if (currentMode === 'STAT_EDIT') {
       return (
@@ -2027,6 +2044,14 @@ export const Calculator: React.FC = () => {
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
       />
+
+      {/* Menu PRGM */}
+      {showProgramMenu && (
+        <ProgramMenu
+          onClose={() => setShowProgramMenu(false)}
+          onEdit={() => setMode('PRGM_EDIT')}
+        />
+      )}
     </div>
   );
 };
