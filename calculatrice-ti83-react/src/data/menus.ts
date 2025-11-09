@@ -201,20 +201,24 @@ export const distrMenuItems: MenuItem[] = [
   { id: 'geometcdf', label: 'geometcdf(', action: () => {} },
 ];
 
+// Menu LOGIC (sous-menu de TEST)
+export const logicMenuItems: MenuItem[] = [
+  { id: 'and', label: 'and', action: () => {} },
+  { id: 'or', label: 'or', action: () => {} },
+  { id: 'xor', label: 'xor', action: () => {} },
+  { id: 'not', label: 'not(', action: () => {} },
+];
+
 // Menu TEST (2ND + MATH)
 export const testMenuItems: MenuItem[] = [
+  // Sous-menu LOGIC en premier (comme sur la vraie TI-83)
+  { id: 'test-logic', label: 'LOGIC', action: () => {}, submenu: logicMenuItems },
+
+  // Opérateurs de comparaison
   { id: 'equal', label: '=', action: () => {} },
   { id: 'not-equal', label: '≠', action: () => {} },
   { id: 'greater', label: '>', action: () => {} },
   { id: 'greater-equal', label: '≥', action: () => {} },
   { id: 'less', label: '<', action: () => {} },
   { id: 'less-equal', label: '≤', action: () => {} },
-];
-
-// Menu LOGIC (2ND + MATH, sous-menu)
-export const logicMenuItems: MenuItem[] = [
-  { id: 'and', label: 'and', action: () => {} },
-  { id: 'or', label: 'or', action: () => {} },
-  { id: 'xor', label: 'xor', action: () => {} },
-  { id: 'not', label: 'not(', action: () => {} },
 ];
