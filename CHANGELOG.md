@@ -6,6 +6,76 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [2.6.0.0] - 2025-11-09
+
+### ✨ Ajouté
+- **DRAW** (2ND + PRGM) : Outils de dessin graphique complets
+  - **DrawingService** : Service dédié pour le rendu des éléments graphiques
+  - **Commandes de base** :
+    - ClrDraw : Effacer tous les dessins
+    - Line( : Tracer une ligne entre deux points
+    - Horizontal : Ligne horizontale à une valeur Y
+    - Vertical : Ligne verticale à une valeur X
+    - Circle( : Dessiner un cercle (centre + rayon)
+    - Text( : Afficher du texte sur le graphique
+  - **Commandes avancées** :
+    - Tangent( : Tracer la tangente à une fonction en un point
+    - DrawF : Dessiner une fonction
+    - DrawInv : Dessiner l'inverse d'une fonction
+    - Shade( : Ombrage entre deux courbes
+  - **POINTS** (sous-menu) :
+    - Pt-On( : Activer un point
+    - Pt-Off( : Désactiver un point
+    - Pt-Change( : Inverser l'état d'un point
+  - **STO** (sous-menu) :
+    - StorePic : Sauvegarder le graphique actuel (Pic1-Pic10)
+    - RecallPic : Rappeler un graphique sauvegardé
+    - StoreGDB : Sauvegarder la base de données graphique
+    - RecallGDB : Rappeler une base de données graphique
+  - Conversion automatique coordonnées graphiques ↔ pixels
+  - Rendu canvas optimisé avec anti-aliasing
+
+- **LIST OPS & MATH** (2ND + STAT) : Opérations complètes sur les listes
+  - **ListService** : Service dédié avec 15 fonctions statistiques
+  - **NAMES** (sous-menu) : Accès rapide aux listes
+    - L₁, L₂, L₃, L₄, L₅, L₆ (avec indices en exposant)
+  - **OPS** (sous-menu) : 7 opérations sur listes
+    - SortA( : Tri croissant
+    - SortD( : Tri décroissant
+    - dim( : Dimension (taille) d'une liste
+    - Fill( : Remplir une liste avec une valeur
+    - seq( : Générer une séquence selon une expression
+    - cumSum( : Somme cumulée
+    - ΔList( : Différences successives (delta)
+  - **MATH** (sous-menu) : 8 fonctions mathématiques
+    - min( : Minimum d'une liste
+    - max( : Maximum d'une liste
+    - mean( : Moyenne arithmétique
+    - median( : Médiane
+    - sum( : Somme de tous les éléments
+    - prod( : Produit de tous les éléments
+    - stdDev( : Écart-type (échantillon)
+    - variance( : Variance (échantillon)
+  - Support des expressions mathématiques dans seq()
+  - Intégration avec MathJS pour évaluation d'expressions
+
+### 🔧 Amélioré
+- **calculatorStore** : Ajout de l'état DRAW (drawElements, pictures)
+  - Actions : addDrawElement, clearDraw, storePicture, recallPicture
+- **GraphCanvas** : Rendu des éléments DRAW par-dessus les graphiques
+  - Intégration transparente avec le moteur graphique
+- **Menu System** : Nouveaux menus DRAW et LIST avec sous-menus
+- **Types TypeScript** : draw.types.ts avec 8 types d'éléments dessinés
+  - DrawLine, DrawHorizontal, DrawVertical, DrawCircle
+  - DrawText, DrawFunction, DrawShade, DrawPoint
+
+### 📚 Documentation
+- README : Ajout des sections DRAW et LIST OPS
+- Types draw.types.ts entièrement documentés
+- ROADMAP-DRAW-LIST.md : Plan détaillé d'implémentation
+
+---
+
 ## [2.5.0.0] - 2025-11-09
 
 ### ✨ Ajouté

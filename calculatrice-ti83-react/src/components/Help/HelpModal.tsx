@@ -780,7 +780,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.5.0.0 (PWA) • 📊 DISTR & TEST/LOGIC • 💰 FINANCE TVM • 🎯 SOLVER & CATALOG • 📈 Par/Pol • 💾 MEM & MATRIX
+            Version 2.6.0.0 (PWA) • 🎨 DRAW & LIST OPS • 📊 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 📈 Par/Pol • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
