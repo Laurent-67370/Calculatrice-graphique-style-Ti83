@@ -1622,6 +1622,7 @@ export const Calculator: React.FC = () => {
 
             // Préparer l'expression
             expr = expr
+              .replace(/−/g, '-')  // Remplacer le signe moins Unicode (U+2212) par le tiret ASCII
               .replace(/×/g, '*')
               .replace(/÷/g, '/')
               .replace(/π/g, 'pi')
