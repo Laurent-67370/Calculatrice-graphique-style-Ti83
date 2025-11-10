@@ -22,6 +22,7 @@ export const ProgramEditor: React.FC<ProgramEditorProps> = ({ onClose }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState<number>(0);
   const [editingLine, setEditingLine] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Charger les lignes du programme courant
   useEffect(() => {
@@ -42,6 +43,13 @@ export const ProgramEditor: React.FC<ProgramEditorProps> = ({ onClose }) => {
       setIsEditing(false);
     }
   }, [currentProgram, programs]);
+
+  // Forcer le focus sur l'input quand on commence à éditer
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   // Sauvegarder les modifications
   const handleSave = () => {
@@ -166,6 +174,7 @@ export const ProgramEditor: React.FC<ProgramEditorProps> = ({ onClose }) => {
           <div className="editor-line editing">
             <span className="line-number">{currentLineIndex + 1}:</span>
             <input
+              ref={inputRef}
               type="text"
               value={editingLine}
               onChange={(e) => setEditingLine(e.target.value)}
