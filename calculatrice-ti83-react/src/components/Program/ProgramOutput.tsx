@@ -21,6 +21,7 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
   } = useProgramStore();
 
   const outputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState<string>('');
 
   // Auto-scroll vers le bas quand de nouvelles lignes sont ajoutées
@@ -29,6 +30,13 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
   }, [executionContext?.output]);
+
+  // Forcer le focus sur le champ input quand le programme attend une entrée
+  useEffect(() => {
+    if (executionContext?.isWaitingInput && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [executionContext?.isWaitingInput]);
 
   if (!executionContext) {
     return (
@@ -135,6 +143,7 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
             <div className="input-prompt">{executionContext.inputPrompt}</div>
             <div className="input-field">
               <input
+                ref={inputRef}
                 type="number"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
