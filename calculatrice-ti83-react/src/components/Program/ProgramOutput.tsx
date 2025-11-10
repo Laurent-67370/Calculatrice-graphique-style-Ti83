@@ -72,16 +72,17 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
         <div className="output-title">
           PROGRAMME: {executionContext.programName}
           {executionContext.isPaused && ' [PAUSE]'}
+          {executionContext.isCompleted && ' [TERMINÉ]'}
           {executionContext.error && ' [ERREUR]'}
         </div>
         <div className="output-controls">
-          {executionContext.isPaused && (
+          {executionContext.isPaused && !executionContext.isCompleted && (
             <button onClick={handleContinue} className="btn-continue">
               Continuer
             </button>
           )}
           <button onClick={handleStop} className="btn-stop">
-            Arrêter
+            {executionContext.isCompleted ? 'Fermer' : 'Arrêter'}
           </button>
         </div>
       </div>

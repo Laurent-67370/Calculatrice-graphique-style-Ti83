@@ -23,6 +23,7 @@ export interface ExecutionContext {
   repeatLoops: RepeatLoopState[]; // Stack des boucles Repeat
   ifStack: IfState[];            // Stack des conditions If/Then/Else
   isPaused: boolean;             // Programme en pause
+  isCompleted: boolean;          // Programme terminé (mais toujours affiché)
   isWaitingInput: boolean;       // Attente d'input utilisateur
   inputPrompt?: string;          // Message d'input en cours
   inputVariable?: string;        // Variable à affecter après input
