@@ -122,6 +122,7 @@ export const useProgramStore = create<ProgramStore>()(
           repeatLoops: [],
           ifStack: [],
           isPaused: false,
+          isCompleted: false,
           isWaitingInput: false,
           isWaitingMenu: false,
           output: [],
@@ -147,7 +148,17 @@ export const useProgramStore = create<ProgramStore>()(
           },
           // Callback quand le programme est terminé
           () => {
-            get().stopProgram();
+            // Marquer le programme comme terminé sans le fermer
+            // L'utilisateur pourra voir l'output et fermer manuellement
+            const state = get();
+            if (state.executionContext) {
+              set({
+                executionContext: {
+                  ...state.executionContext,
+                  isCompleted: true,
+                },
+              });
+            }
           },
           // Callback en cas d'erreur
           (error: string) => {
