@@ -404,6 +404,100 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Utilisez <code>Pause</code> pour voir les résultats intermédiaires</li>
                 <li>Les menus permettent de créer des interfaces conviviales</li>
               </ul>
+
+              <h3>💾 Export/Import de Programmes - NOUVEAU v3.2.0 !</h3>
+              <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
+                Sauvegardez et partagez vos programmes TI-BASIC avec support des formats JSON et .8xp !
+              </p>
+
+              <h3>📥 Accès au menu I/O</h3>
+              <div className="help-examples">
+                <code>PRGM</code> → Onglet <strong>I/O</strong><br/>
+                Pour l'export individuel : Onglet <strong>EDIT</strong>
+              </div>
+
+              <h3>📄 Format JSON - Universel</h3>
+              <div className="help-examples">
+                <strong>Export individuel :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>EDIT</code><br/>
+                2. Cliquer sur le bouton <code>📄</code> à côté du programme<br/>
+                3. Fichier téléchargé : <code>NOMPRG.json</code><br/>
+                <br/>
+                <strong>Export global :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>I/O</code><br/>
+                2. Cliquer sur "💾 Exporter tout"<br/>
+                3. Fichier téléchargé : <code>TI83-ALL-PROGRAMS-YYYY-MM-DD.json</code><br/>
+                <br/>
+                <strong>Import JSON :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>I/O</code><br/>
+                2. Cliquer sur "📂 Choisir un fichier"<br/>
+                3. Sélectionner un fichier <code>.json</code><br/>
+                4. Programme(s) importé(s) automatiquement !<br/>
+                <br/>
+                <strong>Avantages :</strong><br/>
+                ✅ Lisible et éditable dans un éditeur de texte<br/>
+                ✅ Compatible tous navigateurs et systèmes<br/>
+                ✅ Idéal pour partage web et sauvegardes
+              </div>
+
+              <h3>💾 Format .8xp - TI-83 Plus Natif</h3>
+              <div className="help-examples">
+                <strong>Export .8xp :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>EDIT</code><br/>
+                2. Cliquer sur le bouton <code>💾</code> à côté du programme<br/>
+                3. Fichier téléchargé : <code>NOMPRG.8xp</code><br/>
+                <br/>
+                <strong>Import .8xp :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>I/O</code><br/>
+                2. Cliquer sur "📂 Choisir un fichier"<br/>
+                3. Sélectionner un fichier <code>.8xp</code><br/>
+                4. Programme importé !<br/>
+                <br/>
+                <strong>Avantages :</strong><br/>
+                ✅ Format binaire officiel TI-83 Plus<br/>
+                ✅ Compatible avec vraies calculatrices TI-83/84<br/>
+                ✅ Fonctionne avec émulateurs (TilEm, Wabbitemu)<br/>
+                ✅ Transférable via TI-Connect vers calculatrice réelle !<br/>
+                <br/>
+                <strong>Tokenisation complète :</strong><br/>
+                Les commandes TI-BASIC sont automatiquement converties<br/>
+                en tokens binaires pour compatibilité maximale
+              </div>
+
+              <h3>📤 Cas d'usage</h3>
+              <div className="help-examples">
+                <strong>💾 Sauvegarde de sécurité :</strong><br/>
+                Export global JSON → Copie de tous vos programmes<br/>
+                <br/>
+                <strong>🤝 Partage avec amis :</strong><br/>
+                Export JSON individuel → Envoi par email/message<br/>
+                <br/>
+                <strong>📱 Transfert vers calculatrice :</strong><br/>
+                1. Export .8xp depuis cette application<br/>
+                2. Ouvrir TI-Connect sur PC/Mac<br/>
+                3. Connecter calculatrice TI-83 Plus via câble USB<br/>
+                4. Envoyer le fichier .8xp vers la calculatrice<br/>
+                5. Programme disponible dans menu PRGM de la vraie calculatrice !<br/>
+                <br/>
+                <strong>🌐 Utiliser programmes communauté :</strong><br/>
+                Téléchargez des programmes .8xp depuis sites TI<br/>
+                → Importez-les dans cette application<br/>
+                → Exécutez-les immédiatement !<br/>
+                <br/>
+                <strong>🔄 Synchronisation multi-appareils :</strong><br/>
+                Export sur ordinateur → Import sur mobile<br/>
+                (via email, cloud, etc.)
+              </div>
+
+              <h3>⚠️ Notes importantes</h3>
+              <ul>
+                <li>Les programmes sont automatiquement sauvegardés dans le navigateur (localStorage)</li>
+                <li>L'export crée des copies additionnelles pour sécurité et partage</li>
+                <li>Format .8xp : Tokenisation des 39+ commandes TI-BASIC supportées</li>
+                <li>Compatibilité .8xp : 100% TI-83 Plus / 98% TI-84 Plus</li>
+                <li>Les fichiers .8xp peuvent être utilisés dans les émulateurs</li>
+                <li>Import : détection automatique du format (JSON ou .8xp)</li>
+              </ul>
             </div>
           )}
 
@@ -1417,7 +1511,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.1.0 (PWA) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
+            Version 3.2.0 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

@@ -1,20 +1,23 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.1.0 - Mode SEQUENCE + Export/Import Programmes 🎓
+## Version 3.2.0 - Mode SEQUENCE + Export/Import Programmes 🎓
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
+**Nouveautés v3.2** :
+- Export/Import de programmes en JSON et .8xp (format natif TI-83 Plus) - Partagez vos programmes ou transférez-les vers une vraie calculatrice !
+- Documentation complète dans l'aide intégrée (onglet 🎓 PRGM)
+
 **Nouveautés v3.1** :
 - Mode SEQUENCE complet pour les suites numériques (u(n), v(n), w(n)) avec expressions récursives
-- Export/Import de programmes en JSON et .8xp (format natif TI-83 Plus) - Partagez vos programmes ou transférez-les vers une vraie calculatrice !
 
 **Version v3.0** : Programmation TI-BASIC complète avec 39+ commandes, structures de contrôle, menus interactifs et compatibilité 100% TI-83 Plus !
 
 ---
 
-## ✨ Nouveautés Version 3.1.0
+## ✨ Nouveautés Version 3.2.0
 
-### 💾 **Export/Import de Programmes** (NOUVEAU v3.1!)
+### 💾 **Export/Import de Programmes** (NOUVEAU v3.2!)
 - **Formats multiples** : JSON (universel) et .8xp (TI-83 Plus natif)
 - **Export individuel** : Boutons dédiés 📄 JSON et 💾 .8xp pour chaque programme
 - **Export global** : Sauvegardez tous vos programmes en un fichier
