@@ -19,6 +19,7 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
     provideInput,
     provideMenuSelection,
     updateInputValue,
+    programInputValue,
   } = useProgramStore();
 
   const outputRef = useRef<HTMLDivElement>(null);
@@ -61,8 +62,7 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
   };
 
   const handleSubmitInput = () => {
-    const inputValue = executionContext?.inputValue || '';
-    const value = parseFloat(inputValue);
+    const value = parseFloat(programInputValue);
     if (!isNaN(value)) {
       provideInput(value);
     }
@@ -147,7 +147,7 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
                 type="number"
                 inputMode="decimal"
                 pattern="[0-9]*"
-                value={executionContext.inputValue || ''}
+                value={programInputValue}
                 onChange={(e) => updateInputValue(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 onClick={() => inputRef.current?.focus()}

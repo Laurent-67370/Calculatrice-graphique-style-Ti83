@@ -64,7 +64,7 @@ export const Calculator: React.FC = () => {
   const financeEditorRef = useRef<FinanceEditorHandle>(null);
 
   // State du programme en cours d'exécution
-  const { executingProgram, executionContext, updateInputValue, provideInput } = useProgramStore();
+  const { executingProgram, executionContext, updateInputValue, provideInput, programInputValue } = useProgramStore();
 
   const {
     currentInput,
@@ -266,7 +266,7 @@ export const Calculator: React.FC = () => {
 
       // Si un programme est en attente d'input, rediriger les touches vers le champ input
       if (executionContext?.isWaitingInput) {
-        const currentValue = executionContext.inputValue || '';
+        const currentValue = programInputValue || '';
 
         // Touches numériques
         if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(action)) {
@@ -1737,6 +1737,7 @@ export const Calculator: React.FC = () => {
       executionContext,
       updateInputValue,
       provideInput,
+      programInputValue,
     ]
   );
 

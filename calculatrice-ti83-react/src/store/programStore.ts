@@ -13,6 +13,9 @@ import type {
 import { ProgramInterpreter } from '../services/ProgramInterpreter';
 
 interface ProgramStore extends ProgramState {
+  // Valeur d'input temporaire (séparée de executionContext pour éviter les problèmes de sync)
+  programInputValue: string;
+
   // Actions pour gérer les programmes
   createProgram: (name: string) => void;
   deleteProgram: (name: string) => void;
@@ -52,6 +55,7 @@ export const useProgramStore = create<ProgramStore>()(
         currentProgram: null,
         executingProgram: null,
         executionContext: null,
+        programInputValue: '', // Stocker inputValue séparément pour éviter les problèmes de sync
 
       // Créer un nouveau programme
       createProgram: (name: string) => {
@@ -294,38 +298,20 @@ export const useProgramStore = create<ProgramStore>()(
               isWaitingInput: waiting,
               inputPrompt: prompt,
               inputVariable: variable,
-              inputValue: '', // Réinitialiser la valeur d'input
             },
+            programInputValue: '', // Réinitialiser la valeur d'input
           };
         });
       },
 
       // Mettre à jour la valeur d'input en cours
       updateInputValue: (value: string) => {
-        set((state) => {
-          if (!state.executionContext) return state;
-
-          return {
-            executionContext: {
-              ...state.executionContext,
-              inputValue: value,
-            },
-          };
-        });
+        set({ programInputValue: value });
       },
 
       // Effacer la valeur d'input
       clearInputValue: () => {
-        set((state) => {
-          if (!state.executionContext) return state;
-
-          return {
-            executionContext: {
-              ...state.executionContext,
-              inputValue: '',
-            },
-          };
-        });
+        set({ programInputValue: '' });
       },
 
       // Fournir la valeur d'input
@@ -360,9 +346,9 @@ export const useProgramStore = create<ProgramStore>()(
               variables: newVariables,
               inputVariable: nextVariable,
               inputPrompt: `${nextVariable}=?`,
-              inputValue: '', // Réinitialiser pour la prochaine saisie
               promptQueue: remainingQueue.length > 0 ? remainingQueue : undefined,
             },
+            programInputValue: '', // Réinitialiser pour la prochaine saisie
           });
 
           // Ajouter le prompt suivant à l'output
@@ -380,9 +366,9 @@ export const useProgramStore = create<ProgramStore>()(
               isWaitingInput: false,
               inputPrompt: undefined,
               inputVariable: undefined,
-              inputValue: '', // Réinitialiser
               promptQueue: undefined,
             },
+            programInputValue: '', // Réinitialiser
           });
 
           // Passer à la ligne suivante
