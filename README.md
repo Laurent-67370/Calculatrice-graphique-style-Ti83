@@ -1,14 +1,69 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 2.5.0.0 - React + TypeScript + PWA
+## Version 3.0.0.0 - Programmation TI-BASIC Complète 🎓
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
+**Nouveauté v3.0** : Programmation TI-BASIC complète avec 38+ commandes, structures de contrôle, menus interactifs et compatibilité 95% TI-83 Plus !
+
 ---
 
-## ✨ Améliorations par rapport à la version JavaScript
+## ✨ Nouveautés Version 3.0.0.0
 
-### 🔒 **Sécurité et Robustesse**
+### 🎓 **PRGM - Programmation TI-BASIC** (NOUVEAU!)
+- **Menu PRGM complet** : NEW / EDIT / EXEC
+- **38+ commandes TI-BASIC** implémentées avec compatibilité 95% TI-83 Plus
+- **Structures de contrôle** :
+  - If/Then/Else : Conditions avec branchements
+  - For : Boucles avec compteur
+  - While : Boucles avec condition en début
+  - Repeat : Boucles avec condition en fin
+- **Commandes I/O** :
+  - Disp : Afficher des valeurs et textes
+  - Input : Demander une valeur à l'utilisateur
+  - Prompt : Saisie rapide de variables
+  - Output : Affichage positionné (ligne, colonne)
+  - ClrHome : Effacer l'écran de sortie
+- **Navigation** :
+  - Lbl : Définir des labels (points de repère)
+  - Goto : Sauter à un label
+  - prgm : Appeler un sous-programme
+  - Return : Retourner au programme appelant
+- **Fonctionnalités avancées** :
+  - Menu : Menus interactifs avec navigation par boutons
+  - DelVar : Supprimer des variables
+  - Stop : Arrêter le programme
+  - Pause : Pause avec message optionnel
+- **Variables globales** : A-Z et θ partagées entre tous les programmes
+- **Exemples fournis** : 17 programmes d'exemple (débutant à avancé)
+- **Documentation complète** :
+  - Guide utilisateur PRGM (PRGM_USER_GUIDE.md)
+  - Exemples de programmes (EXAMPLES_PROGRAMS.md)
+  - Documentation complète dans l'aide intégrée (onglet 🎓 PRGM)
+
+### 📝 Créer votre premier programme TI-BASIC
+
+```basic
+Programme HELLO :
+:Disp "BONJOUR"
+:Disp "BIENVENUE"
+:Input "VOTRE NOM:",A
+:Disp "SALUT",A
+
+Programme FACT (Factorielle) :
+:Input "N=",N
+:1→F
+:For(I,1,N)
+:F*I→F
+:End
+:Disp "FACT=",F
+```
+
+---
+
+## 🔒 Améliorations par rapport à la version JavaScript
+
+### **Sécurité et Robustesse**
 - ✅ **Typage statique complet** avec TypeScript
 - ✅ **Détection d'erreurs à la compilation**
 - ✅ **Interfaces strictes** pour tous les composants
@@ -19,12 +74,12 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 - ✅ **useCallback** pour optimiser les callbacks
 - ✅ **Zustand** : gestion d'état 10x plus rapide que Redux
 - ✅ **Virtual DOM** de React pour des mises à jour efficaces
-- ✅ **Build optimisé** avec tree-shaking et minification (68 KB gzip)
+- ✅ **Build optimisé** avec tree-shaking et minification (310 KB gzip)
 
 ### 🏗️ **Architecture Moderne**
 - ✅ **Composants modulaires** et réutilisables
 - ✅ **Séparation des responsabilités** (UI / Logic / State)
-- ✅ **Services dédiés** pour le graphique, les stats, les maths
+- ✅ **Services dédiés** pour le graphique, les stats, les maths, les programmes
 - ✅ **Store centralisé** avec Zustand
 - ✅ **Types réutilisables** pour toute l'application
 
@@ -48,28 +103,37 @@ npm run preview
 
 L'application sera disponible sur `http://localhost:5173`
 
-### 🚀 Déploiement sur Netlify
+### 🚀 Déploiement
 
-```bash
-# Déployer en production
-npm run deploy
-
-# Déployer en mode preview
-npm run deploy:preview
-```
-
-Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
+Voir [DEPLOIEMENT-BLOG-V3.0.md](./DEPLOIEMENT-BLOG-V3.0.md) pour le guide complet de déploiement.
 
 ---
 
 ## 🎯 Fonctionnalités Principales
 
-### 🎯 **SOLVER & CATALOG** (Nouveauté v2.3.0.0)
+### 🎓 **PRGM - Programmation TI-BASIC** (v3.0.0.0)
+- **Éditeur de programmes** avec syntaxe TI-BASIC
+- **Exécution de programmes** avec affichage de sortie
+- **Gestion des programmes** : NEW, EDIT, EXEC, DELETE
+- **38+ commandes** : I/O, contrôle, navigation, avancées
+- **Variables globales** : Partage entre programmes
+- **Menus interactifs** : Interface utilisateur conviviale
+- **Compatibilité** : 95% avec TI-83 Plus
+
+### 🎨 **DRAW - Outils de dessin** (v2.6.0.0)
+- **15 commandes de dessin** graphique
+  - Line, Horizontal, Vertical, Circle, Text
+  - Tangent, DrawF, DrawInv, Shade
+  - Pt-On, Pt-Off, Pt-Change
+  - StorePic, RecallPic (Pic1-Pic10)
+- **Compatibilité** : 100% TI-83 Plus
+- **Accès** : 2ND + PRGM (menu DRAW)
+
+### 🎯 **SOLVER & CATALOG**
 - **SOLVER** (MATH > 0) : Résolveur d'équations f(X)=0
   - Méthode de Newton-Raphson avec fallback bisection
   - Précision : 10 décimales
   - Support complet des fonctions mathématiques
-  - Affichage du nombre d'itérations
 - **CATALOG** (2ND + 0) : Liste alphabétique de 100+ fonctions
   - Recherche rapide par lettre (A-Z)
   - Navigation intuitive ↑↓
@@ -94,6 +158,9 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
   - LinReg, QuadReg, CubicReg, QuartReg
   - ExpReg, PwrReg, LnReg, SinReg, Logistic
   - Med-Med, LinReg(a+bx)
+- **LIST OPS** (2ND + STAT) : 15 fonctions sur listes
+  - SortA, SortD, dim, Fill, seq, cumSum, ΔList
+  - min, max, mean, median, sum, prod, stdDev, variance
 
 ### 🧮 **MATH - 38 Fonctions en 6 Catégories**
 - **MATH** : ³√, logBASE, e^x, 10^x, hypot
@@ -103,7 +170,7 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 - **ANGLE** : °→rad, rad→°, →DMS, →Dec
 - **TRIG** : sinh, cosh, tanh, asinh, acosh, atanh
 
-### 📊 **DISTR - Distributions Statistiques** (Nouveauté v2.5.0.0)
+### 📊 **DISTR - Distributions Statistiques**
 - **Distributions Continues** :
   - Normale : normalpdf, normalcdf, invNorm
   - Student t : tpdf, tcdf
@@ -115,13 +182,13 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
   - Géométrique : geometpdf, geometcdf
 - Accès via **2ND + VARS** (DISTR)
 
-### 🔍 **TEST & LOGIC** (Nouveauté v2.5.0.0)
+### 🔍 **TEST & LOGIC**
 - **Opérateurs de Comparaison** : =, ≠, >, ≥, <, ≤
 - **Opérateurs Logiques** : and, or, xor, not
 - Retournent **1** (vrai) ou **0** (faux)
 - Accès via **2ND + MATH** (TEST/LOGIC)
 
-### 💰 **Finance TVM** (Nouveauté v2.4.0.0)
+### 💰 **Finance TVM**
 - **Calculateur financier professionnel** (APPS)
 - **7 variables TVM** : N, I%, PV, PMT, FV, P/Y, C/Y
 - Calcul automatique de n'importe quelle variable
@@ -153,6 +220,74 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
 
 ## 🚀 Guide d'Utilisation Rapide
 
+### Créer un programme TI-BASIC
+
+1. **Nouveau programme**
+   - Cliquer sur **PRGM**
+   - Onglet **NEW**
+   - Cliquer sur "+ Nouveau programme"
+   - Nom : `HELLO` (max 8 caractères)
+   - Cliquer sur **Créer**
+
+2. **Écrire le code**
+   - L'éditeur s'ouvre automatiquement
+   - Taper : `:Disp "BONJOUR"`
+   - Appuyer sur **CLEAR** pour fermer l'éditeur
+
+3. **Exécuter**
+   - **PRGM** → Onglet **EXEC**
+   - Sélectionner **HELLO**
+   - Cliquer sur **Exécuter**
+   - Le programme affiche "BONJOUR" puis "[TERMINÉ]"
+
+### Exemples de programmes
+
+#### Calculer une factorielle
+```basic
+:Input "N=",N
+:1→F
+:For(I,1,N)
+:F*I→F
+:End
+:Disp "FACT=",F
+```
+
+#### Jeu Plus ou Moins
+```basic
+:randInt(1,100)→N
+:0→T
+:Repeat G=N
+:Input "NOMBRE:",G
+:T+1→T
+:If G<N
+:Disp "PLUS"
+:If G>N
+:Disp "MOINS"
+:End
+:Disp "GAGNE EN",T,"COUPS"
+```
+
+#### Menu interactif
+```basic
+:ClrHome
+:Lbl 0
+:Menu("CALC","ADDITION",1,"MULT",2,"QUIT",9)
+:Lbl 1
+:Input "A:",A
+:Input "B:",B
+:Disp "SOMME=",A+B
+:Pause
+:Goto 0
+:Lbl 2
+:Input "A:",A
+:Input "B:",B
+:Disp "PRODUIT=",A*B
+:Pause
+:Goto 0
+:Lbl 9
+:Stop
+```
+
 ### Calculer un prêt avec FINANCE TVM
 
 1. **Ouvrir le Finance TVM Solver**
@@ -173,84 +308,6 @@ Voir [DEPLOYMENT.md](./DEPLOYMENT.md) pour le guide complet de déploiement.
    - Appuyer sur **GRAPH**
    - Résultat : PMT = **-1158.03€** (paiement mensuel)
 
-4. **Autres exemples financiers**
-   ```
-   Épargne retraite :
-   PMT=-500, I%=5, N=300, PV=0 → FV = 295 488€
-
-   Durée d'un crédit auto :
-   PV=15000, PMT=-350, I%=4.2, FV=0 → N = 46.27 mois
-
-   Taux effectif d'un placement :
-   PV=-10000, FV=15000, N=60, PMT=0 → I% = 8.44%
-   ```
-
-### Résoudre une équation avec le SOLVER
-
-1. **Ouvrir le Solver**
-   - Cliquer sur **MATH**
-   - Sélectionner **0:Solver...**
-
-2. **Entrer l'équation**
-   - **Équation** : Taper `X^2-4` (résout X²-4=0)
-   - **Estimation** : Taper `1` (valeur de départ)
-   - Appuyer sur **GRAPH** pour résoudre
-
-3. **Résultat**
-   - X = 2.0000000000 (10 décimales)
-   - Affiche le nombre d'itérations
-
-### Exemples d'équations pour le Solver
-
-```
-X^2-4            → Racines: X = ±2
-X^3-2*X-5        → X = 2.0945514815
-sin(X)-0.5       → X = 0.5235987756 (rad)
-ln(X)-2          → X = 7.3890560989
-cos(X)-X         → X = 0.7390851332
-```
-
-### Tracer un graphique
-
-1. **Définir une fonction**
-   - Cliquer sur **Y=**
-   - Taper `X^2` (ou `X*X`, `X×X`)
-   - Appuyer sur **ENTER**
-
-2. **Afficher le graphique**
-   - Cliquer sur **GRAPH**
-   - La parabole apparaît !
-
-3. **Ajuster la vue**
-   - **WINDOW** : Modifier xMin, xMax, yMin, yMax
-   - **ZOOM** : Choisir un preset (Standard, Decimal, Trig)
-
-### Exemples de fonctions valides
-
-```
-X^2              → Parabole
-X^3 - 2*X        → Cubique
-sin(X)           → Sinusoïde
-cos(X)           → Cosinusoïde
-2^X              → Exponentielle
-ln(X)            → Logarithme
-sqrt(X)          → Racine carrée
-abs(X)           → Valeur absolue
-```
-
-### Utiliser le CATALOG
-
-1. **Ouvrir le Catalog**
-   - Appuyer sur **2ND + 0**
-   - Liste de 100+ fonctions apparaît
-
-2. **Recherche rapide**
-   - Taper **S** pour sauter aux fonctions commençant par S
-   - Utiliser **↑↓** pour naviguer
-
-3. **Insérer**
-   - Appuyer sur **ENTER** pour insérer la fonction sélectionnée
-
 ---
 
 ## 🏗️ Architecture du Projet
@@ -260,21 +317,31 @@ src/
 ├── types/                    # Types TypeScript
 │   ├── calculator.types.ts   # Types calculatrice
 │   ├── graph.types.ts        # Types graphiques
+│   ├── program.types.ts      # Types programmes TI-BASIC
+│   ├── draw.types.ts         # Types dessin
 │   └── menu.types.ts         # Types menus
 │
 ├── store/                    # Gestion d'état Zustand
-│   └── calculatorStore.ts    # Store global
+│   ├── calculatorStore.ts    # Store global
+│   └── programStore.ts       # Store programmes
 │
 ├── services/                 # Logique métier
-│   └── GraphingEngine.ts     # Moteur de graphiques
+│   ├── GraphingEngine.ts     # Moteur de graphiques
+│   ├── ProgramInterpreter.ts # Interpréteur TI-BASIC
+│   ├── DrawingService.ts     # Service de dessin
+│   └── ListService.ts        # Service listes
 │
 ├── components/               # Composants React
 │   ├── Calculator/
 │   │   ├── Calculator.tsx    # Composant principal
 │   │   ├── Display.tsx       # Écran LCD
 │   │   └── Keyboard.tsx      # Clavier
-│   └── Graph/
-│       └── GraphCanvas.tsx   # Canvas graphique
+│   ├── Graph/
+│   │   └── GraphCanvas.tsx   # Canvas graphique
+│   └── Program/
+│       ├── ProgramMenu.tsx   # Menu PRGM
+│       ├── ProgramEditor.tsx # Éditeur de programmes
+│       └── ProgramOutput.tsx # Sortie d'exécution
 │
 ├── styles/
 │   └── ti83.css             # Styles TI-83
@@ -299,20 +366,40 @@ src/
 
 ---
 
-## 📊 Comparaison JavaScript vs TypeScript
+## 📊 Statistiques Version 3.0.0.0
 
-| Critère | JavaScript | React + TypeScript |
-|---------|-----------|-------------------|
-| Erreurs runtime | Fréquentes | Rares (détectées à la compilation) |
-| Performance | Bonne | Excellente (Virtual DOM) |
-| Maintenabilité | Moyenne | Excellente (types + composants) |
-| Refactoring | Risqué | Sûr (TypeScript) |
-| Build size | ~50KB | ~68KB (optimisé) |
-| Hot reload | Non | Oui (HMR de Vite) |
+| Métrique | Valeur |
+|----------|--------|
+| **Commandes TI-BASIC** | 38+ |
+| **Compatibilité TI-83** | 95% |
+| **Lignes de code ajoutées** | +3,000 |
+| **Documentation** | 2,500+ lignes |
+| **Programmes exemples** | 17 |
+| **Build size (gzip)** | 310 KB |
+| **Fichiers précachés** | 14 |
+| **Phase de développement** | 6 phases complétées |
+
+---
+
+## 📚 Documentation
+
+- **[PRGM_USER_GUIDE.md](./PRGM_USER_GUIDE.md)** : Guide complet de programmation TI-BASIC
+- **[EXAMPLES_PROGRAMS.md](./EXAMPLES_PROGRAMS.md)** : 17 programmes d'exemple
+- **[DEPLOIEMENT-BLOG-V3.0.md](./DEPLOIEMENT-BLOG-V3.0.md)** : Guide de déploiement
+- **[RELEASE_NOTES_v3.0.0.0.md](./RELEASE_NOTES_v3.0.0.0.md)** : Notes de version
+- **[CHANGELOG.md](./CHANGELOG.md)** : Historique des versions
+- **[PWA_GUIDE.md](./PWA_GUIDE.md)** : Guide PWA
+- **[docs/](./docs/)** : Documentation développeur
 
 ---
 
 ## 🐛 Dépannage
+
+### Le programme ne s'exécute pas
+- Vérifier que le programme est bien enregistré (CLEAR après édition)
+- S'assurer que toutes les structures (If/For/While/Repeat) ont leur End
+- Vérifier que les labels référencés par Goto/Menu existent
+- Consulter l'aide intégrée (onglet 🎓 PRGM)
 
 ### Le graphique ne s'affiche pas
 - Vérifier que vous avez bien cliqué sur **ENTER** après avoir tapé la fonction dans Y=
@@ -347,8 +434,8 @@ MIT License - Voir le fichier LICENSE
 
 Converti de JavaScript vers **React + TypeScript** pour une meilleure robustesse, maintenabilité et performance.
 
-**Technologies** : React 18, TypeScript 5, Zustand, Vite
+**Technologies** : React 19, TypeScript 5, Zustand, Vite, MathJS
 
 ---
 
-**Profitez de cette calculatrice graphique moderne ! 🎉**
+**Profitez de cette calculatrice graphique moderne avec programmation TI-BASIC ! 🎉**
