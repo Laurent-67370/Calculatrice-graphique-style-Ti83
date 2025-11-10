@@ -70,6 +70,11 @@ interface CalculatorStore extends CalculatorState {
   polarFunctions: string[];
   activePolarFunctions: boolean[];
 
+  // Fonctions de séquence (u, v, w pour n=0,1,2,...)
+  sequenceFunctions: string[]; // Un, Vn, Wn expressions
+  activeSequenceFunctions: boolean[];
+  sequenceInitValues: { [key: string]: { [n: string]: number } }; // {u: {0: val, 1: val}, v: {0: val}, w: {0: val}}
+
   // Composant en cours d'édition pour mode paramétrique ('X' ou 'Y')
   editingParametricComponent: 'X' | 'Y';
 
@@ -134,6 +139,13 @@ interface CalculatorStore extends CalculatorState {
   setPolarFunction: (index: number, expression: string) => void;
   togglePolarFunctionActive: (index: number) => void;
   clearPolarFunction: (index: number) => void;
+
+  // Actions pour les fonctions de séquence
+  setSequenceFunction: (index: number, expression: string) => void;
+  toggleSequenceFunctionActive: (index: number) => void;
+  clearSequenceFunction: (index: number) => void;
+  setSequenceInitValue: (funcName: string, n: number, value: number) => void;
+  getSequenceInitValue: (funcName: string, n: number) => number | undefined;
 
   // Actions pour la fenêtre
   setWindowSettings: (settings: Partial<WindowSettings>) => void;
@@ -244,6 +256,8 @@ const initialConfig: CalculatorConfig = {
   scientificNotation: false,
   complexMode: 'REAL',
   graphMode: 'FUNC',
+  plotMode: 'CONNECTED',
+  sequentialMode: 'SEQUENTIAL',
 };
 
 const initialState: CalculatorState = {
@@ -266,6 +280,13 @@ const initialParametricFunctionsY = ['', '', '', '', '', ''];
 const initialPolarFunctions = ['', '', '', '', '', ''];
 const initialActiveParametricFunctions = [false, false, false, false, false, false];
 const initialActivePolarFunctions = [false, false, false, false, false, false];
+const initialSequenceFunctions = ['', '', '']; // u(n), v(n), w(n)
+const initialActiveSequenceFunctions = [false, false, false];
+const initialSequenceInitValues = {
+  u: { 0: 0, 1: 0 },
+  v: { 0: 0, 1: 0 },
+  w: { 0: 0, 1: 0 },
+};
 
 // Créer une matrice vide
 const createEmptyMatrix = (): Matrix => ({
@@ -319,6 +340,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
       activeParametricFunctions: initialActiveParametricFunctions,
       polarFunctions: initialPolarFunctions,
       activePolarFunctions: initialActivePolarFunctions,
+      sequenceFunctions: initialSequenceFunctions,
+      activeSequenceFunctions: initialActiveSequenceFunctions,
+      sequenceInitValues: initialSequenceInitValues,
       editingParametricComponent: 'X',
 
       // État initial DRAW
@@ -602,6 +626,53 @@ export const useCalculatorStore = create<CalculatorStore>()(
           };
         }, false, 'clearPolarFunction'),
 
+      // Actions pour les fonctions de séquence
+      setSequenceFunction: (index: number, expression: string) =>
+        set((state) => {
+          const newFunctions = [...state.sequenceFunctions];
+          const newActive = [...state.activeSequenceFunctions];
+          newFunctions[index] = expression;
+          newActive[index] = expression.trim() !== '';
+          return {
+            sequenceFunctions: newFunctions,
+            activeSequenceFunctions: newActive,
+          };
+        }, false, 'setSequenceFunction'),
+
+      toggleSequenceFunctionActive: (index: number) =>
+        set((state) => {
+          const newActive = [...state.activeSequenceFunctions];
+          newActive[index] = !newActive[index];
+          return { activeSequenceFunctions: newActive };
+        }, false, 'toggleSequenceFunctionActive'),
+
+      clearSequenceFunction: (index: number) =>
+        set((state) => {
+          const newFunctions = [...state.sequenceFunctions];
+          const newActive = [...state.activeSequenceFunctions];
+          newFunctions[index] = '';
+          newActive[index] = false;
+          return {
+            sequenceFunctions: newFunctions,
+            activeSequenceFunctions: newActive,
+          };
+        }, false, 'clearSequenceFunction'),
+
+      setSequenceInitValue: (funcName: string, n: number, value: number) =>
+        set((state) => {
+          const newInitValues = { ...state.sequenceInitValues };
+          if (!newInitValues[funcName]) {
+            newInitValues[funcName] = {};
+          }
+          newInitValues[funcName][n] = value;
+          return { sequenceInitValues: newInitValues };
+        }, false, 'setSequenceInitValue'),
+
+      getSequenceInitValue: (funcName: string, n: number) => {
+        const state = get();
+        return state.sequenceInitValues[funcName]?.[n];
+      },
+
       // Actions pour la fenêtre
       setWindowSettings: (settings: Partial<WindowSettings>) =>
         set((state) => ({
@@ -732,6 +803,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
               activeParametricFunctions: [...state.activeParametricFunctions],
               polarFunctions: [...state.polarFunctions],
               activePolarFunctions: [...state.activePolarFunctions],
+              sequenceFunctions: [...state.sequenceFunctions],
+              activeSequenceFunctions: [...state.activeSequenceFunctions],
+              sequenceInitValues: { ...state.sequenceInitValues },
             },
           },
         }), false, 'storeGDB'),
@@ -753,6 +827,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
               activeParametricFunctions: [...gdb.activeParametricFunctions],
               polarFunctions: [...gdb.polarFunctions],
               activePolarFunctions: [...gdb.activePolarFunctions],
+              sequenceFunctions: gdb.sequenceFunctions ? [...gdb.sequenceFunctions] : initialSequenceFunctions,
+              activeSequenceFunctions: gdb.activeSequenceFunctions ? [...gdb.activeSequenceFunctions] : initialActiveSequenceFunctions,
+              sequenceInitValues: gdb.sequenceInitValues ? { ...gdb.sequenceInitValues } : initialSequenceInitValues,
             };
           }
           return state;
@@ -783,6 +860,9 @@ export const useCalculatorStore = create<CalculatorStore>()(
           activeParametricFunctions: initialActiveParametricFunctions,
           polarFunctions: initialPolarFunctions,
           activePolarFunctions: initialActivePolarFunctions,
+          sequenceFunctions: initialSequenceFunctions,
+          activeSequenceFunctions: initialActiveSequenceFunctions,
+          sequenceInitValues: initialSequenceInitValues,
           editingParametricComponent: 'X',
           drawElements: [],
           pictures: {},

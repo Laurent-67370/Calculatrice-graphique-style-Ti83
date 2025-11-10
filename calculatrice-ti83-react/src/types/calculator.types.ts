@@ -137,6 +137,9 @@ export interface GraphDatabase {
   activeParametricFunctions: boolean[];
   polarFunctions: string[];
   activePolarFunctions: boolean[];
+  sequenceFunctions?: string[];
+  activeSequenceFunctions?: boolean[];
+  sequenceInitValues?: { [key: string]: { [n: string]: number } };
 }
 
 // Options de zoom
@@ -160,6 +163,8 @@ export interface CalculatorConfig {
   scientificNotation: boolean;
   complexMode: 'REAL' | 'RECTANGULAR' | 'POLAR';
   graphMode: GraphMode;
+  plotMode: 'CONNECTED' | 'DOT'; // Mode de tracé
+  sequentialMode: 'SEQUENTIAL' | 'SIMUL'; // Mode de tracé simultané ou séquentiel
 }
 
 // Résultat d'évaluation
