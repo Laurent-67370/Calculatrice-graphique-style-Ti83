@@ -17,7 +17,7 @@ const PROGRAM_TYPE_ID = 0x05; // Type ID pour programme
 
 // Constantes pour le format .83p TI-83 (originale)
 const TI83_ORIGINAL_SIGNATURE = '**TI83F*';
-const TI83_ORIGINAL_FURTHER_SECTION = [0x1A, 0x0A, 0x00];
+// const TI83_ORIGINAL_FURTHER_SECTION = [0x1A, 0x0A, 0x00]; // Non utilisée pour l'import uniquement
 
 /**
  * Exporte un programme au format JSON
