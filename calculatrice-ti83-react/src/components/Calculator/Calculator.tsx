@@ -2076,12 +2076,14 @@ export const Calculator: React.FC = () => {
           {renderScreen()}
         </div>
 
-        {/* Clavier */}
-        <Keyboard
-          onKeyPress={handleKeyPressWithAutoDeactivate}
-          isSecondActive={isSecondFunction}
-          isAlphaActive={isAlphaMode}
-        />
+        {/* Clavier - Masqué pendant l'exécution d'un programme */}
+        {!executingProgram && (
+          <Keyboard
+            onKeyPress={handleKeyPressWithAutoDeactivate}
+            isSecondActive={isSecondFunction}
+            isAlphaActive={isAlphaMode}
+          />
+        )}
       </div>
 
       {/* Modal d'aide */}
