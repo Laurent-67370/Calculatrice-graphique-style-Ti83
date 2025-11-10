@@ -310,7 +310,19 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <br/>
                 <strong>Pause - Pause avec message :</strong><br/>
                 <code>:Pause</code> (pause simple)<br/>
-                <code>:Pause "CONTINUER?"</code> (avec message)
+                <code>:Pause "CONTINUER?"</code> (avec message)<br/>
+                <br/>
+                <strong>getKey - Lire l'entrée clavier :</strong><br/>
+                <code>:getKey→K</code><br/>
+                → Stocke le code de la touche pressée dans K<br/>
+                → Retourne 0 si aucune touche pressée<br/>
+                <br/>
+                <strong>Exemple - Boucle d'attente :</strong><br/>
+                <code>:0→K</code><br/>
+                <code>:While K=0</code><br/>
+                <code>:getKey→K</code><br/>
+                <code>:End</code><br/>
+                → Attend qu'une touche soit pressée
               </div>
 
               <h3>💾 Variables globales</h3>
@@ -369,16 +381,17 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 N=6 → FACT=720
               </div>
 
-              <h3>🎯 Récapitulatif - 38+ commandes</h3>
+              <h3>🎯 Récapitulatif - 39+ commandes</h3>
               <div className="help-examples">
-                <strong>✅ Compatibilité TI-83 Plus : 95%</strong><br/>
+                <strong>✅ Compatibilité TI-83 Plus : 97%</strong><br/>
                 <br/>
                 <strong>I/O :</strong> Disp, Input, Prompt, Output, ClrHome<br/>
                 <strong>Contrôle :</strong> If, Then, Else, End, For, While, Repeat<br/>
                 <strong>Navigation :</strong> Lbl, Goto, prgm, Return<br/>
-                <strong>Avancé :</strong> Menu, DelVar, Stop, Pause<br/>
+                <strong>Avancé :</strong> Menu, DelVar, Stop, Pause, getKey<br/>
                 <strong>Variables :</strong> A-Z, θ (globales)<br/>
                 <strong>Opérateurs :</strong> +, -, *, /, ^, &gt;, &lt;, =, ≥, ≤, ≠<br/>
+                <strong>Sauvegarde :</strong> Persistance localStorage + Export/Import JSON<br/>
               </div>
 
               <h3>💡 Conseils de programmation</h3>
@@ -655,7 +668,39 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <strong>Capacité :</strong> 10 images (Pic1 à Pic10)
               </div>
 
-              <h3>🎯 Récapitulatif des 15 commandes DRAW</h3>
+              <h3>🗄️ StoreGDB / RecallGDB - Sauvegarder paramètres graphiques</h3>
+              <div className="help-examples">
+                <strong>StoreGDB n :</strong> Sauvegarde tous les paramètres graphiques dans GDB1-GDB10<br/>
+                <code>StoreGDB 1</code> → Sauvegarde configuration complète<br/>
+                <br/>
+                <strong>RecallGDB n :</strong> Rappelle une configuration sauvegardée<br/>
+                <code>RecallGDB 1</code> → Restaure la configuration<br/>
+                <br/>
+                <strong>Ce qui est sauvegardé :</strong><br/>
+                • Fenêtre WINDOW (xMin, xMax, yMin, yMax)<br/>
+                • Mode graphique (FUNC/PAR/POL)<br/>
+                • Fonctions Y1-Y6 (ou X1T,Y1T / r1-r6)<br/>
+                • État activé/désactivé de chaque fonction<br/>
+                <br/>
+                <strong>Exemple - Basculer entre configurations :</strong><br/>
+                1. Configuration graphique pour paraboles :<br/>
+                   <code>WINDOW</code> → Ajuster pour y=x²<br/>
+                   <code>Y1=X^2</code><br/>
+                   <code>StoreGDB 1</code> → Sauvegarde config parabole<br/>
+                <br/>
+                2. Configuration pour trigonométrie :<br/>
+                   <code>ZOOM</code> → <code>ZTrig</code><br/>
+                   <code>Y1=sin(X)</code><br/>
+                   <code>StoreGDB 2</code> → Sauvegarde config trigo<br/>
+                <br/>
+                3. Plus tard, basculer :<br/>
+                   <code>RecallGDB 1</code> → Retour aux paraboles<br/>
+                   <code>RecallGDB 2</code> → Retour à la trigo<br/>
+                <br/>
+                <strong>Capacité :</strong> 10 configurations (GDB1 à GDB10)
+              </div>
+
+              <h3>🎯 Récapitulatif des 17 commandes DRAW</h3>
               <div className="help-examples">
                 <strong>✅ 100% Compatibilité TI-83 Plus</strong><br/>
                 <br/>
@@ -672,8 +717,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 11. <code>Pt-On(x,y)</code> - Activer un point<br/>
                 12. <code>Pt-Off(x,y)</code> - Désactiver un point<br/>
                 13. <code>Pt-Change(x,y)</code> - Basculer un point<br/>
-                14. <code>StorePic n</code> - Sauvegarder (1-10)<br/>
-                15. <code>RecallPic n</code> - Rappeler (1-10)<br/>
+                14. <code>StorePic n</code> - Sauvegarder image (1-10)<br/>
+                15. <code>RecallPic n</code> - Rappeler image (1-10)<br/>
+                16. <code>StoreGDB n</code> - Sauvegarder config graphique (1-10)<br/>
+                17. <code>RecallGDB n</code> - Rappeler config graphique (1-10)<br/>
               </div>
 
               <h3>💡 Conseils DRAW</h3>
@@ -684,6 +731,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Pour voir vos dessins, le graphique doit être affiché (<code>GRAPH</code>)</li>
                 <li>Combinez DRAW avec TRACE pour des annotations précises</li>
                 <li>Utilisez StorePic/RecallPic pour sauvegarder vos créations</li>
+                <li>Utilisez StoreGDB/RecallGDB pour basculer entre différentes configurations</li>
               </ul>
             </div>
           )}
@@ -1312,7 +1360,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h3>📊 Informations techniques</h3>
               <ul>
-                <li><strong>Taille</strong> : 362 KB (308 KB compressé)</li>
+                <li><strong>Taille</strong> : 368 KB (312 KB compressé)</li>
                 <li><strong>Compatibilité</strong> : Chrome 80+, Safari 14+, Samsung Internet 12+</li>
                 <li><strong>Cache</strong> : 14 fichiers en cache local</li>
                 <li><strong>Mises à jour</strong> : Automatiques en arrière-plan</li>
@@ -1331,7 +1379,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.0.0.0 (PWA) • 🎓 PRGM TI-BASIC (38+ cmd) • 🎨 DRAW 100% (15/15) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
+            Version 3.0.0.0 (PWA) • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
