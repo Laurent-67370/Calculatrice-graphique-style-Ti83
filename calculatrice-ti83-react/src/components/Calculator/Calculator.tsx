@@ -1771,12 +1771,6 @@ export const Calculator: React.FC = () => {
    * Gère les raccourcis clavier
    */
   useEffect(() => {
-    // Ne pas écouter les événements clavier si un programme est en cours d'exécution
-    // Le programme gère ses propres entrées via ProgramOutput
-    if (executingProgram) {
-      return;
-    }
-
     // Ne pas écouter les événements clavier si un éditeur spécial est ouvert
     // Ces éditeurs gèrent leurs propres événements clavier
     // WINDOW et MODE sont gérés via ref donc on ne les inclut pas ici
@@ -1820,7 +1814,7 @@ export const Calculator: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPressWithAutoDeactivate, currentMode, executingProgram]);
+  }, [handleKeyPressWithAutoDeactivate, currentMode]);
 
   // Préparer les fonctions pour le graphique selon le mode
   const graphFunctionsData: GraphFunction[] = useMemo(() => {
