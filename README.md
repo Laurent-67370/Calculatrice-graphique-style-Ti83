@@ -1,15 +1,27 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.1.0 - Mode SEQUENCE + Programmation TI-BASIC 🎓
+## Version 3.1.0 - Mode SEQUENCE + Export/Import Programmes 🎓
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
-**Nouveauté v3.1** : Mode SEQUENCE complet pour les suites numériques (u(n), v(n), w(n)) avec support des expressions récursives !
+**Nouveautés v3.1** :
+- Mode SEQUENCE complet pour les suites numériques (u(n), v(n), w(n)) avec expressions récursives
+- Export/Import de programmes en JSON et .8xp (format natif TI-83 Plus) - Partagez vos programmes ou transférez-les vers une vraie calculatrice !
+
 **Version v3.0** : Programmation TI-BASIC complète avec 39+ commandes, structures de contrôle, menus interactifs et compatibilité 100% TI-83 Plus !
 
 ---
 
 ## ✨ Nouveautés Version 3.1.0
+
+### 💾 **Export/Import de Programmes** (NOUVEAU v3.1!)
+- **Formats multiples** : JSON (universel) et .8xp (TI-83 Plus natif)
+- **Export individuel** : Boutons dédiés 📄 JSON et 💾 .8xp pour chaque programme
+- **Export global** : Sauvegardez tous vos programmes en un fichier
+- **Import flexible** : Déposez vos fichiers .8xp ou JSON et ils seront importés automatiquement
+- **Tokenisation complète** : Format .8xp 100% compatible avec vraies calculatrices TI-83 Plus
+- **Partage facilité** : Partagez vos créations ou utilisez des programmes existants de la communauté
+- **Transfert vers calculatrice réelle** : Les .8xp peuvent être envoyés via TI-Connect
 
 ### 🔢 **MODE SEQUENCE - Suites Numériques** (NOUVEAU v3.1!)
 - **3 fonctions de séquence** : u(n), v(n), w(n) - Comme sur la vraie TI-83 Plus !
@@ -98,6 +110,26 @@ Programme FACT (Factorielle) :
 :End
 :Disp "FACT=",F
 ```
+
+### 💾 Export/Import de Programmes (NOUVEAU v3.1!)
+
+Sauvegardez et partagez vos programmes TI-BASIC avec support complet des formats JSON et .8xp !
+
+**Formats supportés :**
+- **📄 JSON** : Format universel, lisible et éditable - Idéal pour sauvegardes et partage web
+- **💾 .8xp** : Format natif TI-83 Plus - Compatible avec vraies calculatrices et émulateurs (TilEm, Wabbitemu)
+
+**Fonctionnalités :**
+- **Export individuel** : Boutons 📄 (JSON) et 💾 (.8xp) dans l'onglet EDIT
+- **Export global** : Sauvegarder tous vos programmes en un fichier JSON (onglet I/O)
+- **Import flexible** : Importer des programmes depuis JSON ou .8xp (onglet I/O)
+- **Tokenisation .8xp** : Conversion automatique en format binaire TI-83 Plus
+- **Sauvegarde automatique** : localStorage du navigateur (pas besoin d'exporter systématiquement)
+
+**Utilisation :**
+1. **Menu PRGM > I/O** pour import/export global
+2. **Menu PRGM > EDIT** pour export individuel (boutons 📄 et 💾 sur chaque programme)
+3. Les fichiers .8xp peuvent être transférés vers une vraie TI-83 Plus via TI-Connect !
 
 ---
 

@@ -5,6 +5,18 @@
 
 import React, { useState, useRef } from 'react';
 import { useProgramStore } from '../../store/programStore';
+import {
+  exportProgramAsJSON,
+  exportAllProgramsAsJSON,
+  exportProgramAs8xp,
+  importProgramFromJSON,
+  importProgramFrom8xp,
+  downloadFile,
+  readFile,
+  detectFileFormat,
+  generateExportFilename,
+} from '../../utils/programExportImport';
+import type { Program } from '../../utils/programExportImport';
 import './ProgramMenu.css';
 
 interface ProgramMenuProps {
@@ -19,18 +31,33 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
     programs,
     createProgram,
     deleteProgram,
+    saveProgram,
     setCurrentProgram,
     runProgram,
-    exportPrograms,
-    importPrograms,
   } = useProgramStore();
 
   const [activeTab, setActiveTab] = useState<MenuTab>('EXEC');
   const [newProgramName, setNewProgramName] = useState<string>('');
   const [showNewInput, setShowNewInput] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const programList = Object.keys(programs).sort();
+
+  // Fonction helper pour convertir un programme du store au format d'export
+  const convertProgramForExport = (name: string): Program => {
+    const prog = programs[name];
+    return {
+      name: prog.name,
+      code: prog.lines.join('\n'),
+    };
+  };
+
+  // Afficher un toast notification
+  const displayToast = (type: 'success' | 'error', message: string) => {
+    setShowToast({ type, message });
+    setTimeout(() => setShowToast(null), 3000);
+  };
 
   // Créer un nouveau programme
   const handleCreateProgram = () => {
@@ -66,51 +93,100 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
     onClose();
   };
 
-  // Exporter les programmes vers un fichier JSON
-  const handleExportPrograms = () => {
+  // Exporter un programme individuel
+  const handleExportSingleProgram = (name: string, format: 'json' | '8xp') => {
     try {
-      const jsonData = exportPrograms();
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `ti83-programs-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      alert('Programmes exportés avec succès!');
+      const program = convertProgramForExport(name);
+      const blob = format === 'json'
+        ? exportProgramAsJSON(program)
+        : exportProgramAs8xp(program);
+
+      const filename = generateExportFilename(name, format);
+      downloadFile(blob, filename);
+      displayToast('success', `${name} exporté en ${format.toUpperCase()}`);
     } catch (error) {
-      alert('Erreur lors de l\'export');
-      console.error(error);
+      console.error('Erreur export:', error);
+      displayToast('error', 'Erreur lors de l\'export');
     }
   };
 
-  // Importer des programmes depuis un fichier JSON
-  const handleImportPrograms = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Exporter tous les programmes
+  const handleExportAllPrograms = () => {
+    try {
+      if (programList.length === 0) {
+        displayToast('error', 'Aucun programme à exporter');
+        return;
+      }
+
+      const programsToExport = programList.map(name => convertProgramForExport(name));
+      const blob = exportAllProgramsAsJSON(programsToExport);
+      const filename = `TI83-ALL-PROGRAMS-${new Date().toISOString().split('T')[0]}.json`;
+      downloadFile(blob, filename);
+      displayToast('success', `${programList.length} programme(s) exporté(s)`);
+    } catch (error) {
+      console.error('Erreur export:', error);
+      displayToast('error', 'Erreur lors de l\'export');
+    }
+  };
+
+  // Importer des programmes depuis un fichier
+  const handleImportPrograms = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const content = e.target?.result as string;
-        const success = importPrograms(content);
-        if (success) {
-          alert('Programmes importés avec succès!');
-        } else {
-          alert('Erreur: format de fichier invalide');
-        }
-      } catch (error) {
-        alert('Erreur lors de l\'import');
-        console.error(error);
-      }
-    };
-    reader.readAsText(file);
+    try {
+      const format = detectFileFormat(file.name, '');
 
-    // Réinitialiser l'input pour permettre de réimporter le même fichier
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      if (format === '8xp') {
+        // Import .8xp (binaire)
+        const arrayBuffer = await file.arrayBuffer();
+        const result = importProgramFrom8xp(arrayBuffer);
+
+        if (result) {
+          // Créer le programme dans le store
+          createProgram(result.name);
+          saveProgram(result.name, result.code.split('\n'));
+          displayToast('success', `Programme ${result.name} importé depuis .8xp`);
+        } else {
+          displayToast('error', 'Format .8xp invalide');
+        }
+      } else if (format === 'json') {
+        // Import JSON
+        const content = await readFile(file);
+        const result = importProgramFromJSON(content);
+
+        if (!result) {
+          displayToast('error', 'Format JSON invalide');
+          return;
+        }
+
+        // Vérifier si c'est un seul programme ou une collection
+        if (Array.isArray(result)) {
+          // Collection de programmes
+          let imported = 0;
+          for (const prog of result) {
+            createProgram(prog.name);
+            saveProgram(prog.name, prog.code.split('\n'));
+            imported++;
+          }
+          displayToast('success', `${imported} programme(s) importé(s)`);
+        } else {
+          // Un seul programme
+          createProgram(result.name);
+          saveProgram(result.name, result.code.split('\n'));
+          displayToast('success', `Programme ${result.name} importé`);
+        }
+      } else {
+        displayToast('error', 'Format de fichier non reconnu');
+      }
+    } catch (error) {
+      console.error('Erreur import:', error);
+      displayToast('error', 'Erreur lors de l\'import');
+    } finally {
+      // Réinitialiser l'input pour permettre de réimporter le même fichier
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -233,14 +309,30 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
                         <button
                           onClick={() => handleEditProgram(name)}
                           className="btn-action btn-edit"
+                          title="Éditer le programme"
                         >
-                          Éditer
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => handleExportSingleProgram(name, 'json')}
+                          className="btn-action btn-export-json"
+                          title="Exporter en JSON"
+                        >
+                          📄
+                        </button>
+                        <button
+                          onClick={() => handleExportSingleProgram(name, '8xp')}
+                          className="btn-action btn-export-8xp"
+                          title="Exporter en .8xp (TI-83)"
+                        >
+                          💾
                         </button>
                         <button
                           onClick={() => handleDeleteProgram(name)}
                           className="btn-action btn-delete"
+                          title="Supprimer"
                         >
-                          Suppr.
+                          🗑️
                         </button>
                       </div>
                     </div>
@@ -294,24 +386,27 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
 
               <div className="io-section">
                 <div className="io-card">
-                  <h4>💾 Exporter</h4>
-                  <p>Sauvegardez tous vos programmes dans un fichier JSON</p>
+                  <h4>📥 Exporter tous les programmes</h4>
+                  <p>Sauvegardez tous vos programmes dans un fichier JSON de collection</p>
                   <button
-                    onClick={handleExportPrograms}
-                    className="btn-io btn-export"
+                    onClick={handleExportAllPrograms}
+                    className="btn-io btn-export-all"
                     disabled={programList.length === 0}
                   >
-                    📥 Exporter ({programList.length} programme{programList.length !== 1 ? 's' : ''})
+                    💾 Exporter tout ({programList.length} programme{programList.length !== 1 ? 's' : ''})
                   </button>
+                  <div className="format-note">
+                    Format JSON compatible avec tous les navigateurs
+                  </div>
                 </div>
 
                 <div className="io-card">
-                  <h4>📂 Importer</h4>
-                  <p>Chargez des programmes depuis un fichier JSON</p>
+                  <h4>📤 Importer des programmes</h4>
+                  <p>Chargez des programmes depuis JSON ou .8xp (TI-83 Plus)</p>
                   <input
                     type="file"
                     ref={fileInputRef}
-                    accept=".json"
+                    accept=".json,.8xp"
                     onChange={handleImportPrograms}
                     style={{ display: 'none' }}
                   />
@@ -319,21 +414,43 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
                     onClick={() => fileInputRef.current?.click()}
                     className="btn-io btn-import"
                   >
-                    📤 Importer depuis un fichier
+                    📂 Choisir un fichier
                   </button>
+                  <div className="format-note">
+                    <strong>Formats supportés:</strong>
+                    <ul>
+                      <li><strong>.json</strong> - Un ou plusieurs programmes</li>
+                      <li><strong>.8xp</strong> - Programme TI-83 Plus natif</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
               <div className="io-info">
                 <p>
-                  <strong>💡 Note:</strong> Les programmes sont automatiquement
-                  sauvegardés dans le navigateur (localStorage).
-                  Utilisez l'export pour créer une copie de sauvegarde.
+                  <strong>💡 Export individuel:</strong> Utilisez les boutons 📄 (JSON) et 💾 (.8xp)
+                  dans l'onglet EDIT pour exporter un programme spécifique.
+                </p>
+                <p>
+                  <strong>💾 Format .8xp:</strong> Compatible avec les vraies calculatrices TI-83 Plus
+                  et émulateurs (TilEm, Wabbitemu).
+                </p>
+                <p>
+                  <strong>🔒 Sauvegarde automatique:</strong> Vos programmes sont automatiquement
+                  sauvegardés dans le navigateur (localStorage). L'export permet de créer des copies
+                  de sauvegarde ou de partager vos programmes.
                 </p>
               </div>
             </div>
           )}
         </div>
+
+        {/* Toast notification */}
+        {showToast && (
+          <div className={`toast-notification toast-${showToast.type}`}>
+            {showToast.type === 'success' ? '✓' : '⚠️'} {showToast.message}
+          </div>
+        )}
       </div>
     </div>
   );
