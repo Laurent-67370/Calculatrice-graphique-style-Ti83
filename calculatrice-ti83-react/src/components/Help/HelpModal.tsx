@@ -900,6 +900,44 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 r1 = <code>1 + cos(θ)</code><br/>
               </div>
 
+              <h4>🔢 Mode SEQUENCE (suites numériques) ⭐ NOUVEAU v3.1</h4>
+              <div className="help-examples">
+                <strong>Configuration :</strong><br/>
+                1. <code>MODE</code> → Sélectionner <code>Seq</code><br/>
+                2. <code>MODE</code> → Plot: <code>DOT</code> (recommandé)<br/>
+                3. <code>Y=</code> → Entrer u(n)=<br/>
+                4. Définir valeurs initiales (u(0), u(1)...)<br/>
+                5. <code>WINDOW</code> → nMin, nMax, PlotStart, PlotStep<br/>
+                6. <code>GRAPH</code><br/>
+                <br/>
+                <strong>3 séquences disponibles :</strong><br/>
+                u(n), v(n), w(n) - Comme sur la vraie TI-83 Plus !<br/>
+                <br/>
+                <strong>Exemple 1 - Suite arithmétique :</strong><br/>
+                u(n) = <code>u(n-1) + 3</code><br/>
+                u(0) = <code>2</code><br/>
+                → Résultat : 2, 5, 8, 11, 14, 17, 20...<br/>
+                <br/>
+                <strong>Exemple 2 - Suite géométrique :</strong><br/>
+                u(n) = <code>2*u(n-1)</code><br/>
+                u(0) = <code>1</code><br/>
+                → Résultat : 1, 2, 4, 8, 16, 32, 64...<br/>
+                <br/>
+                <strong>Exemple 3 - Suite de Fibonacci :</strong><br/>
+                u(n) = <code>u(n-1) + u(n-2)</code><br/>
+                u(0) = <code>0</code>, u(1) = <code>1</code><br/>
+                → Résultat : 0, 1, 1, 2, 3, 5, 8, 13, 21, 34...<br/>
+                <br/>
+                <strong>Paramètres WINDOW pour séquences :</strong><br/>
+                • nMin = 0 (premier terme)<br/>
+                • nMax = 10 (dernier terme)<br/>
+                • PlotStart = 0 (début du tracé)<br/>
+                • PlotStep = 1 (incrément)<br/>
+                • Xmin, Xmax, Ymin, Ymax (comme d'habitude)<br/>
+                <br/>
+                <strong>💡 Astuce :</strong> Utilisez Plot: DOT pour mieux voir les points discrets !
+              </div>
+
               <h3>💡 Astuces graphiques</h3>
               <ul>
                 <li>Vous pouvez tracer jusqu'à 6 fonctions simultanément (Y1-Y6)</li>
@@ -1360,11 +1398,11 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h3>📊 Informations techniques</h3>
               <ul>
-                <li><strong>Taille</strong> : 368 KB (312 KB compressé)</li>
+                <li><strong>Taille</strong> : 368 KB (314 KB compressé)</li>
                 <li><strong>Compatibilité</strong> : Chrome 80+, Safari 14+, Samsung Internet 12+</li>
                 <li><strong>Cache</strong> : 14 fichiers en cache local</li>
                 <li><strong>Mises à jour</strong> : Automatiques en arrière-plan</li>
-                <li><strong>Version</strong> : 3.0.0.0</li>
+                <li><strong>Version</strong> : 3.1.0</li>
               </ul>
 
               <h3>💡 Astuce pour les étudiants</h3>
@@ -1379,7 +1417,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.0.0.0 (PWA) • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
+            Version 3.1.0 (PWA) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
