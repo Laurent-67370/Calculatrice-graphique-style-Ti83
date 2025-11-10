@@ -3,7 +3,7 @@
  * Compatible TI-83 Plus
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useProgramStore } from '../../store/programStore';
 import './ProgramOutput.css';
 
@@ -18,11 +18,11 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
     resumeProgram,
     provideInput,
     provideMenuSelection,
+    updateInputValue,
   } = useProgramStore();
 
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useState<string>('');
 
   // Auto-scroll vers le bas quand de nouvelles lignes sont ajoutées
   useEffect(() => {
@@ -61,10 +61,10 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
   };
 
   const handleSubmitInput = () => {
+    const inputValue = executionContext?.inputValue || '';
     const value = parseFloat(inputValue);
     if (!isNaN(value)) {
       provideInput(value);
-      setInputValue('');
     }
   };
 
@@ -145,8 +145,8 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
               <input
                 ref={inputRef}
                 type="number"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                value={executionContext.inputValue || ''}
+                onChange={(e) => updateInputValue(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder="Entrez un nombre..."
                 autoFocus

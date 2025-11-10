@@ -64,7 +64,7 @@ export const Calculator: React.FC = () => {
   const financeEditorRef = useRef<FinanceEditorHandle>(null);
 
   // State du programme en cours d'exécution
-  const { executingProgram } = useProgramStore();
+  const { executingProgram, executionContext, updateInputValue, provideInput } = useProgramStore();
 
   const {
     currentInput,
@@ -263,6 +263,47 @@ export const Calculator: React.FC = () => {
    */
   const handleKeyPress = useCallback(
     (action: KeyAction) => {
+
+      // Si un programme est en attente d'input, rediriger les touches vers le champ input
+      if (executionContext?.isWaitingInput) {
+        const currentValue = executionContext.inputValue || '';
+
+        // Touches numériques
+        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(action)) {
+          updateInputValue(currentValue + action);
+          return;
+        }
+
+        // Point décimal
+        if (action === 'dot' && !currentValue.includes('.')) {
+          updateInputValue(currentValue + '.');
+          return;
+        }
+
+        // Signe négatif (au début uniquement)
+        if (action === 'negative' && currentValue.length === 0) {
+          updateInputValue('-');
+          return;
+        }
+
+        // Backspace/Delete
+        if (action === 'del' && currentValue.length > 0) {
+          updateInputValue(currentValue.slice(0, -1));
+          return;
+        }
+
+        // Enter pour valider
+        if (action === 'enter') {
+          const value = parseFloat(currentValue);
+          if (!isNaN(value)) {
+            provideInput(value);
+          }
+          return;
+        }
+
+        // Ignorer les autres touches pendant l'input
+        return;
+      }
 
       // Si un menu est ouvert, gérer la navigation
       if (currentMenu) {
@@ -1693,6 +1734,9 @@ export const Calculator: React.FC = () => {
       calcHandlers,
       isSecondFunction,
       isAlphaMode,
+      executionContext,
+      updateInputValue,
+      provideInput,
     ]
   );
 
@@ -2076,14 +2120,12 @@ export const Calculator: React.FC = () => {
           {renderScreen()}
         </div>
 
-        {/* Clavier - Masqué pendant l'exécution d'un programme */}
-        {!executingProgram && (
-          <Keyboard
-            onKeyPress={handleKeyPressWithAutoDeactivate}
-            isSecondActive={isSecondFunction}
-            isAlphaActive={isAlphaMode}
-          />
-        )}
+        {/* Clavier */}
+        <Keyboard
+          onKeyPress={handleKeyPressWithAutoDeactivate}
+          isSecondActive={isSecondFunction}
+          isAlphaActive={isAlphaMode}
+        />
       </div>
 
       {/* Modal d'aide */}
