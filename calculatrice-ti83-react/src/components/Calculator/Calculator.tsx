@@ -1244,7 +1244,7 @@ export const Calculator: React.FC = () => {
         // Opérateurs arithmétiques qui continuent le calcul avec le résultat
         const arithmeticOperators: Record<string, string> = {
           'add': '+',
-          'subtract': '−',
+          'subtract': '-',  // Utiliser le tiret ASCII, pas Unicode
           'multiply': '×',
           'divide': '÷',
           'pow': '^',
