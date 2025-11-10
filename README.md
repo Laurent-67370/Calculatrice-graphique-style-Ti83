@@ -1,16 +1,56 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.0.0.0 - Programmation TI-BASIC Complète 🎓
+## Version 3.1.0 - Mode SEQUENCE + Programmation TI-BASIC 🎓
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
-**Nouveauté v3.0** : Programmation TI-BASIC complète avec 38+ commandes, structures de contrôle, menus interactifs et compatibilité 95% TI-83 Plus !
+**Nouveauté v3.1** : Mode SEQUENCE complet pour les suites numériques (u(n), v(n), w(n)) avec support des expressions récursives !
+**Version v3.0** : Programmation TI-BASIC complète avec 39+ commandes, structures de contrôle, menus interactifs et compatibilité 100% TI-83 Plus !
 
 ---
 
-## ✨ Nouveautés Version 3.0.0.0
+## ✨ Nouveautés Version 3.1.0
 
-### 🎓 **PRGM - Programmation TI-BASIC** (NOUVEAU!)
+### 🔢 **MODE SEQUENCE - Suites Numériques** (NOUVEAU v3.1!)
+- **3 fonctions de séquence** : u(n), v(n), w(n) - Comme sur la vraie TI-83 Plus !
+- **Expressions récursives** : Support complet de u(n-1), u(n-2), v(n-1), w(n-1), etc.
+- **Valeurs initiales** : Configuration de u(0), u(1), v(0), v(1), w(0), w(1)
+- **Paramètres de fenêtre** : nMin, nMax, PlotStart, PlotStep pour contrôle précis
+- **Modes de tracé** : DOT (points discrets) ou CONNECTED (lignes continues)
+- **Options MODE complètes** :
+  - Graph : FUNC / PAR / POL / **SEQ** ⭐
+  - Plot : CONNECTED / **DOT** ⭐
+  - Sequential : SEQUENTIAL / SIMUL ⭐
+- **Exemples prêts à l'emploi** :
+  - Suite arithmétique : u(n) = u(n-1) + 3
+  - Suite géométrique : u(n) = 2*u(n-1)
+  - Suite de Fibonacci : u(n) = u(n-1) + u(n-2)
+- **Compatibilité** : 100% TI-83 Plus pour les séquences !
+
+### Exemples de suites
+
+```basic
+Suite arithmétique (raison 3):
+u(n) = u(n-1) + 3
+u(0) = 2
+→ 2, 5, 8, 11, 14, 17, 20...
+
+Suite géométrique (raison 2):
+u(n) = 2*u(n-1)
+u(0) = 1
+→ 1, 2, 4, 8, 16, 32, 64...
+
+Suite de Fibonacci:
+u(n) = u(n-1) + u(n-2)
+u(0) = 0, u(1) = 1
+→ 0, 1, 1, 2, 3, 5, 8, 13, 21, 34...
+```
+
+---
+
+## ✨ Fonctionnalités Version 3.0
+
+### 🎓 **PRGM - Programmation TI-BASIC**
 - **Menu PRGM complet** : NEW / EDIT / EXEC
 - **38+ commandes TI-BASIC** implémentées avec compatibilité 95% TI-83 Plus
 - **Structures de contrôle** :
@@ -141,7 +181,8 @@ Voir [DEPLOIEMENT-BLOG-V3.0.md](./DEPLOIEMENT-BLOG-V3.0.md) pour le guide comple
 
 ### 📊 **Graphiques**
 - Tracer jusqu'à 6 fonctions simultanément (Y1 à Y6)
-- **Modes graphiques** : Function, Parametric, Polar
+- **Modes graphiques** : Function, Parametric, Polar, **Sequence** ⭐
+- **MODE SEQUENCE** (v3.1) : Suites u(n), v(n), w(n) avec expressions récursives
 - Zoom In/Out, presets (Standard, Decimal, Trig, Square)
 - Mode Trace pour suivre les courbes
 - Calculs sur courbe (zéros, min, max, intégrale, dérivée)
@@ -366,30 +407,32 @@ src/
 
 ---
 
-## 📊 Statistiques Version 3.0.0.0
+## 📊 Statistiques Version 3.1.0
 
 | Métrique | Valeur |
 |----------|--------|
-| **Commandes TI-BASIC** | 38+ |
-| **Compatibilité TI-83** | 95% |
-| **Lignes de code ajoutées** | +3,000 |
-| **Documentation** | 2,500+ lignes |
+| **Commandes TI-BASIC** | 39+ |
+| **Modes graphiques** | 4 (FUNC, PAR, POL, SEQ) |
+| **Compatibilité TI-83 Plus** | 100% |
+| **Lignes de code totales** | +3,500 |
+| **Documentation** | 3,000+ lignes |
 | **Programmes exemples** | 17 |
-| **Build size (gzip)** | 310 KB |
+| **Build size (gzip)** | 314 KB |
 | **Fichiers précachés** | 14 |
-| **Phase de développement** | 6 phases complétées |
+| **Archives de déploiement** | 369 KB |
 
 ---
 
 ## 📚 Documentation
 
+- **[calculatrice-ti83-react/RELEASE_NOTES_v3.1.md](./calculatrice-ti83-react/RELEASE_NOTES_v3.1.md)** : Notes de version 3.1.0
+- **[calculatrice-ti83-react/DOWNLOAD_v3.1.md](./calculatrice-ti83-react/DOWNLOAD_v3.1.md)** : Guide de téléchargement et déploiement
 - **[PRGM_USER_GUIDE.md](./PRGM_USER_GUIDE.md)** : Guide complet de programmation TI-BASIC
 - **[EXAMPLES_PROGRAMS.md](./EXAMPLES_PROGRAMS.md)** : 17 programmes d'exemple
-- **[DEPLOIEMENT-BLOG-V3.0.md](./DEPLOIEMENT-BLOG-V3.0.md)** : Guide de déploiement
-- **[RELEASE_NOTES_v3.0.0.0.md](./RELEASE_NOTES_v3.0.0.0.md)** : Notes de version
-- **[CHANGELOG.md](./CHANGELOG.md)** : Historique des versions
-- **[PWA_GUIDE.md](./PWA_GUIDE.md)** : Guide PWA
-- **[docs/](./docs/)** : Documentation développeur
+- **[DEPLOIEMENT-BLOG-V3.0.md](./DEPLOIEMENT-BLOG-V3.0.md)** : Guide de déploiement sur blog
+- **[CHANGELOG.md](./CHANGELOG.md)** : Historique complet des versions
+- **[PWA_GUIDE.md](./PWA_GUIDE.md)** : Guide PWA (Progressive Web App)
+- **[docs/](./docs/)** : Documentation développeur complète
 
 ---
 
