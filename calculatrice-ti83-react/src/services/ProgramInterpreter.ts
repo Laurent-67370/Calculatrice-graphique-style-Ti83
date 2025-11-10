@@ -233,6 +233,14 @@ export class ProgramInterpreter {
       };
     }
 
+    // getKey (retourne le code de la touche pressée)
+    if (trimmedLine.match(/^getKey$/i)) {
+      return {
+        type: 'GETKEY',
+        params: {},
+      };
+    }
+
     // ClrList L1,L2,...
     const clrListMatch = trimmedLine.match(/^ClrList\s+(.+)$/i);
     if (clrListMatch) {
@@ -593,6 +601,15 @@ export class ProgramInterpreter {
         const variable = command.params.variable as string;
         // Supprimer la variable du contexte
         delete context.variables[variable];
+        break;
+      }
+
+      case 'GETKEY': {
+        // getKey retourne le code de la dernière touche pressée
+        // Pour l'instant, retourne toujours 0 (pas de touche pressée)
+        // TODO: Implémenter la capture des événements clavier dans ProgramOutput
+        // getKey est utilisé avec → (ex: getKey→K)
+        // Cette commande sera gérée par l'affectation de variable
         break;
       }
 
