@@ -3,7 +3,7 @@
  * Compatible TI-83 Plus
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useProgramStore } from '../../store/programStore';
 import './ProgramMenu.css';
 
@@ -12,7 +12,7 @@ interface ProgramMenuProps {
   onEdit?: () => void; // Callback quand l'utilisateur veut éditer
 }
 
-type MenuTab = 'NEW' | 'EDIT' | 'EXEC';
+type MenuTab = 'NEW' | 'EDIT' | 'EXEC' | 'IO';
 
 export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => {
   const {
@@ -21,11 +21,14 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
     deleteProgram,
     setCurrentProgram,
     runProgram,
+    exportPrograms,
+    importPrograms,
   } = useProgramStore();
 
   const [activeTab, setActiveTab] = useState<MenuTab>('EXEC');
   const [newProgramName, setNewProgramName] = useState<string>('');
   const [showNewInput, setShowNewInput] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const programList = Object.keys(programs).sort();
 
@@ -63,6 +66,54 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
     onClose();
   };
 
+  // Exporter les programmes vers un fichier JSON
+  const handleExportPrograms = () => {
+    try {
+      const jsonData = exportPrograms();
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ti83-programs-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert('Programmes exportés avec succès!');
+    } catch (error) {
+      alert('Erreur lors de l\'export');
+      console.error(error);
+    }
+  };
+
+  // Importer des programmes depuis un fichier JSON
+  const handleImportPrograms = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const success = importPrograms(content);
+        if (success) {
+          alert('Programmes importés avec succès!');
+        } else {
+          alert('Erreur: format de fichier invalide');
+        }
+      } catch (error) {
+        alert('Erreur lors de l\'import');
+        console.error(error);
+      }
+    };
+    reader.readAsText(file);
+
+    // Réinitialiser l'input pour permettre de réimporter le même fichier
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="program-menu-overlay" onClick={onClose}>
       <div className="program-menu" onClick={(e) => e.stopPropagation()}>
@@ -89,6 +140,12 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
             onClick={() => setActiveTab('EXEC')}
           >
             EXEC
+          </button>
+          <button
+            className={`tab ${activeTab === 'IO' ? 'active' : ''}`}
+            onClick={() => setActiveTab('IO')}
+          >
+            I/O
           </button>
         </div>
 
@@ -226,6 +283,54 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'IO' && (
+            <div className="tab-content">
+              <div className="tab-header">
+                <h3>Import/Export de programmes</h3>
+              </div>
+
+              <div className="io-section">
+                <div className="io-card">
+                  <h4>💾 Exporter</h4>
+                  <p>Sauvegardez tous vos programmes dans un fichier JSON</p>
+                  <button
+                    onClick={handleExportPrograms}
+                    className="btn-io btn-export"
+                    disabled={programList.length === 0}
+                  >
+                    📥 Exporter ({programList.length} programme{programList.length !== 1 ? 's' : ''})
+                  </button>
+                </div>
+
+                <div className="io-card">
+                  <h4>📂 Importer</h4>
+                  <p>Chargez des programmes depuis un fichier JSON</p>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept=".json"
+                    onChange={handleImportPrograms}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="btn-io btn-import"
+                  >
+                    📤 Importer depuis un fichier
+                  </button>
+                </div>
+              </div>
+
+              <div className="io-info">
+                <p>
+                  <strong>💡 Note:</strong> Les programmes sont automatiquement
+                  sauvegardés dans le navigateur (localStorage).
+                  Utilisez l'export pour créer une copie de sauvegarde.
+                </p>
+              </div>
             </div>
           )}
         </div>

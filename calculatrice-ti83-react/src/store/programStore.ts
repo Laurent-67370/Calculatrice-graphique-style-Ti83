@@ -4,7 +4,7 @@
  */
 
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 import type {
   ProgramState,
   ExecutionContext,
@@ -35,16 +35,21 @@ interface ProgramStore extends ProgramState {
   provideMenuSelection: (optionIndex: number) => void;
   updateVariable: (name: string, value: number) => void;
   clearHomeScreen: () => void;
+
+  // Actions pour import/export de fichiers
+  exportPrograms: () => string;
+  importPrograms: (jsonData: string) => boolean;
 }
 
 export const useProgramStore = create<ProgramStore>()(
-  devtools(
-    (set, get) => ({
-      // État initial
-      programs: {},
-      currentProgram: null,
-      executingProgram: null,
-      executionContext: null,
+  persist(
+    devtools(
+      (set, get) => ({
+        // État initial
+        programs: {},
+        currentProgram: null,
+        executingProgram: null,
+        executionContext: null,
 
       // Créer un nouveau programme
       createProgram: (name: string) => {
@@ -466,7 +471,53 @@ export const useProgramStore = create<ProgramStore>()(
           };
         });
       },
-    }),
-    { name: 'ProgramStore' }
+
+      // Exporter les programmes vers JSON
+      exportPrograms: () => {
+        const state = get();
+        const exportData = {
+          version: '3.0.0.0',
+          exportDate: new Date().toISOString(),
+          programs: state.programs,
+        };
+        return JSON.stringify(exportData, null, 2);
+      },
+
+      // Importer des programmes depuis JSON
+      importPrograms: (jsonData: string): boolean => {
+        try {
+          const importData = JSON.parse(jsonData);
+
+          // Valider la structure
+          if (!importData.programs || typeof importData.programs !== 'object') {
+            console.error('Format de données invalide');
+            return false;
+          }
+
+          // Merger les programmes importés avec les existants
+          set((state) => ({
+            programs: {
+              ...state.programs,
+              ...importData.programs,
+            },
+          }));
+
+          return true;
+        } catch (error) {
+          console.error('Erreur lors de l\'import:', error);
+          return false;
+        }
+      },
+      }),
+      { name: 'ProgramStore' }
+    ),
+    {
+      name: 'ti83-programs-storage',
+      // Ne persister que les programmes, pas le contexte d'exécution
+      partialize: (state) => ({
+        programs: state.programs,
+        currentProgram: state.currentProgram,
+      }),
+    }
   )
 );
