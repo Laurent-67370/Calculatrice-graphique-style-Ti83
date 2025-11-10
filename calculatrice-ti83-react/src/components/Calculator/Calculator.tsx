@@ -1269,7 +1269,7 @@ export const Calculator: React.FC = () => {
         const operatorMap: Record<string, string> = {
           // Opérateurs arithmétiques
           'add': '+',
-          'subtract': '−',
+          'subtract': '-',  // Utiliser ASCII au lieu d'Unicode pour compatibilité mathjs
           'multiply': '×',
           'divide': '÷',
           // Parenthèses et crochets
