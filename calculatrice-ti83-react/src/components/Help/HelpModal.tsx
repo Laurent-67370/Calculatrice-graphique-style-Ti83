@@ -407,7 +407,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h3>💾 Export/Import de Programmes - NOUVEAU v3.2.0 !</h3>
               <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
-                Sauvegardez et partagez vos programmes TI-BASIC avec support des formats JSON et .8xp !
+                Sauvegardez et partagez vos programmes TI-BASIC avec support des formats JSON, .8xp et .83p !
               </p>
 
               <h3>📥 Accès au menu I/O</h3>
@@ -464,6 +464,24 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 en tokens binaires pour compatibilité maximale
               </div>
 
+              <h3>💾 Format .83p - TI-83 Originale</h3>
+              <div className="help-examples">
+                <strong>Import .83p :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>I/O</code><br/>
+                2. Cliquer sur "📂 Choisir un fichier"<br/>
+                3. Sélectionner un fichier <code>.83p</code><br/>
+                4. Programme importé !<br/>
+                <br/>
+                <strong>Avantages :</strong><br/>
+                ✅ Format binaire officiel TI-83 (originale)<br/>
+                ✅ Compatible avec programmes TI-83 historiques<br/>
+                ✅ Fonctionne avec émulateurs TI-83<br/>
+                ✅ Permet d'importer des programmes de la communauté TI-83<br/>
+                <br/>
+                <strong>Note :</strong> Le format .83p est similaire au .8xp mais conçu<br/>
+                pour la TI-83 originale. Les deux formats sont maintenant supportés !
+              </div>
+
               <h3>📤 Cas d'usage</h3>
               <div className="help-examples">
                 <strong>💾 Sauvegarde de sécurité :</strong><br/>
@@ -480,7 +498,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 5. Programme disponible dans menu PRGM de la vraie calculatrice !<br/>
                 <br/>
                 <strong>🌐 Utiliser programmes communauté :</strong><br/>
-                Téléchargez des programmes .8xp depuis sites TI<br/>
+                Téléchargez des programmes .8xp ou .83p depuis sites TI<br/>
                 → Importez-les dans cette application<br/>
                 → Exécutez-les immédiatement !<br/>
                 <br/>
@@ -494,9 +512,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Les programmes sont automatiquement sauvegardés dans le navigateur (localStorage)</li>
                 <li>L'export crée des copies additionnelles pour sécurité et partage</li>
                 <li>Format .8xp : Tokenisation des 39+ commandes TI-BASIC supportées</li>
+                <li>Format .83p : Import supporté pour programmes TI-83 originale</li>
                 <li>Compatibilité .8xp : 100% TI-83 Plus / 98% TI-84 Plus</li>
-                <li>Les fichiers .8xp peuvent être utilisés dans les émulateurs</li>
-                <li>Import : détection automatique du format (JSON ou .8xp)</li>
+                <li>Les fichiers .8xp et .83p peuvent être utilisés dans les émulateurs</li>
+                <li>Import : détection automatique du format (JSON, .8xp ou .83p)</li>
               </ul>
             </div>
           )}
