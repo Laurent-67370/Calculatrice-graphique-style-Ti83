@@ -105,7 +105,9 @@ export const Display: React.FC<DisplayProps> = ({
       <div className="history-area">
         {history.slice(-3).map((entry, index) => {
           const { expression, result } = parseHistoryEntry(entry);
-          const globalIndex = history.length - 3 + index;
+          // Calculer l'index global en tenant compte du fait que slice(-3) peut retourner moins de 3 éléments
+          const startIndex = Math.max(0, history.length - 3);
+          const globalIndex = startIndex + index;
 
           return (
             <div key={index} className="history-entry">
