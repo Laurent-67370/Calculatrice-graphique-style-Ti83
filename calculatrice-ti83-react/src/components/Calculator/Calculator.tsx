@@ -262,6 +262,19 @@ export const Calculator: React.FC = () => {
   );
 
   /**
+   * Gère le clic sur un élément de l'historique pour le réutiliser
+   */
+  const handleHistoryClick = useCallback(
+    (result: string) => {
+      if (currentMode === 'NORMAL') {
+        // Insérer le résultat dans l'input à la position du curseur
+        appendInput(result);
+      }
+    },
+    [currentMode, appendInput]
+  );
+
+  /**
    * Gère les actions des touches
    */
   const handleKeyPress = useCallback(
@@ -1805,6 +1818,72 @@ export const Calculator: React.FC = () => {
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Raccourcis avec modificateurs (Ctrl, Alt, etc.)
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key.toLowerCase()) {
+          case 'c':
+            // Ctrl+C : Copier le résultat ou l'input
+            e.preventDefault();
+            const textToCopy = isInputResult && lastAnswer !== undefined
+              ? String(lastAnswer)
+              : currentInput;
+            if (textToCopy) {
+              navigator.clipboard.writeText(textToCopy).catch(err =>
+                console.error('Erreur copie:', err)
+              );
+            }
+            return;
+
+          case 'v':
+            // Ctrl+V : Coller du texte
+            e.preventDefault();
+            navigator.clipboard.readText().then(text => {
+              if (text && currentMode === 'NORMAL') {
+                appendInput(text);
+              }
+            }).catch(err => console.error('Erreur collage:', err));
+            return;
+
+          case 'z':
+            // Ctrl+Z : Effacer l'input (Undo basique)
+            e.preventDefault();
+            clearInput();
+            return;
+
+          default:
+            return;
+        }
+      }
+
+      // Touches de fonction
+      if (e.key === 'F1') {
+        // F1 : Ouvrir l'aide
+        e.preventDefault();
+        setIsHelpOpen(true);
+        return;
+      }
+
+      if (e.key === 'F5') {
+        // F5 : Rafraîchir le graphique
+        e.preventDefault();
+        if (isGraphMode) {
+          setGraphMode(false);
+          setTimeout(() => setGraphMode(true), 50);
+        }
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        // Tab : Basculer entre modes (FUNC/PAR/POL/SEQ)
+        e.preventDefault();
+        const modes: ('FUNC' | 'PAR' | 'POL' | 'SEQ')[] = ['FUNC', 'PAR', 'POL', 'SEQ'];
+        const currentIndex = modes.indexOf(config.graphMode);
+        const nextIndex = (currentIndex + 1) % modes.length;
+        setConfig({ ...config, graphMode: modes[nextIndex] });
+        return;
+      }
+
+      // Mapping des touches standards
       const keyMap: Record<string, KeyAction> = {
         'Enter': 'enter',
         'Escape': 'clear',
@@ -1839,7 +1918,7 @@ export const Calculator: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPressWithAutoDeactivate, currentMode]);
+  }, [handleKeyPressWithAutoDeactivate, currentMode, isInputResult, lastAnswer, currentInput, appendInput, clearInput, isGraphMode, setGraphMode, config, setConfig]);
 
   // Préparer les fonctions pour le graphique selon le mode
   const graphFunctionsData: GraphFunction[] = useMemo(() => {
@@ -2140,6 +2219,7 @@ export const Calculator: React.FC = () => {
         alphaActive={isAlphaMode}
         cursorPosition={cursorPosition}
         graphMode={config.graphMode}
+        onHistoryClick={handleHistoryClick}
       />
     );
   };
