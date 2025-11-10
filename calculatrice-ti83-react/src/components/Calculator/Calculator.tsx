@@ -1736,7 +1736,7 @@ export const Calculator: React.FC = () => {
     // Ne pas écouter les événements clavier si un éditeur spécial est ouvert
     // Ces éditeurs gèrent leurs propres événements clavier
     // WINDOW et MODE sont gérés via ref donc on ne les inclut pas ici
-    const editorModes = ['STAT_EDIT'];
+    const editorModes = ['STAT_EDIT', 'PRGM_EDIT'];
     if (editorModes.includes(currentMode)) {
       return;
     }
