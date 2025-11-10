@@ -10,7 +10,7 @@ interface HelpModalProps {
 }
 
 export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'quick' | 'draw' | 'graph' | 'stats' | 'advanced' | 'pwa'>('quick');
+  const [activeTab, setActiveTab] = useState<'quick' | 'prgm' | 'draw' | 'graph' | 'stats' | 'advanced' | 'pwa'>('quick');
 
   if (!isOpen) return null;
 
@@ -28,6 +28,12 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             onClick={() => setActiveTab('quick')}
           >
             🚀 Démarrage
+          </button>
+          <button
+            className={`help-tab ${activeTab === 'prgm' ? 'active' : ''}`}
+            onClick={() => setActiveTab('prgm')}
+          >
+            🎓 PRGM
           </button>
           <button
             className={`help-tab ${activeTab === 'draw' ? 'active' : ''}`}
@@ -176,6 +182,214 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Utilisez <code>2ND + ENTER</code> pour rappeler le dernier calcul</li>
                 <li>La virgule <code>,</code> sépare les arguments : <code>max(5,3)</code> → tapez <code>2ND + 7</code></li>
                 <li>Appuyez sur <code>CLEAR</code> pour fermer les menus et éditeurs</li>
+              </ul>
+            </div>
+          )}
+
+          {activeTab === 'prgm' && (
+            <div className="help-section">
+              <h3>🎓 PRGM - Programmation TI-BASIC</h3>
+              <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
+                Créez vos propres programmes avec le langage TI-BASIC ! 38+ commandes implémentées.
+              </p>
+
+              <h3>🚀 Accès au menu PRGM</h3>
+              <div className="help-examples">
+                Appuyez sur : <code>PRGM</code><br/>
+                3 onglets : <strong>NEW</strong>, <strong>EDIT</strong>, <strong>EXEC</strong>
+              </div>
+
+              <h3>📝 Créer votre premier programme</h3>
+              <div className="help-examples">
+                <strong>Étape 1 - Nouveau programme :</strong><br/>
+                1. <code>PRGM</code> → Onglet <code>NEW</code><br/>
+                2. Cliquer sur "+ Nouveau programme"<br/>
+                3. Nom : <code>HELLO</code> (max 8 caractères)<br/>
+                4. <code>Créer</code><br/>
+                <br/>
+                <strong>Étape 2 - Écrire le code :</strong><br/>
+                L'éditeur s'ouvre automatiquement<br/>
+                Taper : <code>:Disp "BONJOUR"</code><br/>
+                <code>CLEAR</code> pour fermer l'éditeur<br/>
+                <br/>
+                <strong>Étape 3 - Exécuter :</strong><br/>
+                <code>PRGM</code> → Onglet <code>EXEC</code><br/>
+                Sélectionner <code>HELLO</code><br/>
+                <code>Exécuter</code><br/>
+                → Affiche "BONJOUR" !
+              </div>
+
+              <h3>📋 Commandes I/O - Affichage et saisie</h3>
+              <div className="help-examples">
+                <strong>Disp - Afficher des valeurs :</strong><br/>
+                <code>:Disp "RESULTAT"</code><br/>
+                <code>:Disp 42</code><br/>
+                <code>:Disp A,B,C</code> (plusieurs valeurs)<br/>
+                <br/>
+                <strong>Input - Demander une valeur :</strong><br/>
+                <code>:Input "NOMBRE:",N</code><br/>
+                → Demande un nombre et le stocke dans N<br/>
+                <br/>
+                <strong>Prompt - Saisie rapide :</strong><br/>
+                <code>:Prompt A</code> → Demande "A=?"<br/>
+                <code>:Prompt A,B,C</code> → Demande A, B et C<br/>
+                <br/>
+                <strong>Output - Affichage positionné :</strong><br/>
+                <code>:Output(1,1,"TITRE")</code><br/>
+                → Affiche "TITRE" en ligne 1, colonne 1<br/>
+                <br/>
+                <strong>ClrHome - Effacer l'écran :</strong><br/>
+                <code>:ClrHome</code><br/>
+              </div>
+
+              <h3>🔁 Structures de contrôle</h3>
+              <div className="help-examples">
+                <strong>If/Then/Else - Conditions :</strong><br/>
+                <code>:If A&gt;10</code><br/>
+                <code>:Then</code><br/>
+                <code>:Disp "GRAND"</code><br/>
+                <code>:Else</code><br/>
+                <code>:Disp "PETIT"</code><br/>
+                <code>:End</code><br/>
+                <br/>
+                <strong>For - Boucle For :</strong><br/>
+                <code>:For(I,1,10)</code><br/>
+                <code>:Disp I</code><br/>
+                <code>:End</code><br/>
+                → Affiche les nombres de 1 à 10<br/>
+                <br/>
+                <strong>While - Boucle While :</strong><br/>
+                <code>:1→N</code><br/>
+                <code>:While N&lt;100</code><br/>
+                <code>:N*2→N</code><br/>
+                <code>:End</code><br/>
+                <code>:Disp N</code><br/>
+                → N double jusqu'à dépasser 100<br/>
+                <br/>
+                <strong>Repeat - Boucle Repeat :</strong><br/>
+                <code>:0→N</code><br/>
+                <code>:Repeat N&gt;10</code><br/>
+                <code>:N+1→N</code><br/>
+                <code>:End</code><br/>
+                → Exécute jusqu'à ce que N&gt;10
+              </div>
+
+              <h3>🔀 Navigation dans les programmes</h3>
+              <div className="help-examples">
+                <strong>Lbl - Définir un label :</strong><br/>
+                <code>:Lbl A</code><br/>
+                <code>:Disp "SECTION A"</code><br/>
+                <br/>
+                <strong>Goto - Aller à un label :</strong><br/>
+                <code>:Goto A</code><br/>
+                → Saute au label A<br/>
+                <br/>
+                <strong>prgm - Appeler un sous-programme :</strong><br/>
+                <code>:prgm CALCUL</code><br/>
+                → Exécute le programme CALCUL<br/>
+                <br/>
+                <strong>Return - Retourner au programme appelant :</strong><br/>
+                <code>:Return</code><br/>
+                → Retourne au programme qui a appelé prgm
+              </div>
+
+              <h3>⚡ Fonctionnalités avancées</h3>
+              <div className="help-examples">
+                <strong>Menu - Menu interactif :</strong><br/>
+                <code>:Menu("CHOIX","OPT1",A,"OPT2",B)</code><br/>
+                → Affiche un menu avec 2 options<br/>
+                → Option 1 saute au label A<br/>
+                → Option 2 saute au label B<br/>
+                <br/>
+                <strong>DelVar - Supprimer une variable :</strong><br/>
+                <code>:DelVar A</code><br/>
+                → Supprime la variable A<br/>
+                <br/>
+                <strong>Stop - Arrêter le programme :</strong><br/>
+                <code>:Stop</code><br/>
+                <br/>
+                <strong>Pause - Pause avec message :</strong><br/>
+                <code>:Pause</code> (pause simple)<br/>
+                <code>:Pause "CONTINUER?"</code> (avec message)
+              </div>
+
+              <h3>💾 Variables globales</h3>
+              <div className="help-examples">
+                <strong>Variables disponibles :</strong><br/>
+                A-Z et θ (26 variables + thêta)<br/>
+                <br/>
+                <strong>Affectation :</strong><br/>
+                <code>:42→A</code> (stocker 42 dans A)<br/>
+                <code>:A+10→B</code> (B = A + 10)<br/>
+                <br/>
+                <strong>Variables partagées :</strong><br/>
+                Les variables sont <strong>globales</strong> entre tous les programmes<br/>
+                Un programme peut modifier les variables d'un autre !
+              </div>
+
+              <h3>📚 Exemple complet - Calculatrice</h3>
+              <div className="help-examples">
+                <strong>Programme CALC :</strong><br/>
+                <code>:ClrHome</code><br/>
+                <code>:Lbl 0</code><br/>
+                <code>:Menu("CALC","ADDITION",1,"MULT",2,"QUITTER",9)</code><br/>
+                <code>:</code><br/>
+                <code>:Lbl 1</code><br/>
+                <code>:Input "A:",A</code><br/>
+                <code>:Input "B:",B</code><br/>
+                <code>:A+B→C</code><br/>
+                <code>:Disp "SOMME=",C</code><br/>
+                <code>:Pause</code><br/>
+                <code>:Goto 0</code><br/>
+                <code>:</code><br/>
+                <code>:Lbl 2</code><br/>
+                <code>:Input "A:",A</code><br/>
+                <code>:Input "B:",B</code><br/>
+                <code>:A*B→C</code><br/>
+                <code>:Disp "PRODUIT=",C</code><br/>
+                <code>:Pause</code><br/>
+                <code>:Goto 0</code><br/>
+                <code>:</code><br/>
+                <code>:Lbl 9</code><br/>
+                <code>:Stop</code>
+              </div>
+
+              <h3>🎯 Exemple complet - Factorielle</h3>
+              <div className="help-examples">
+                <strong>Programme FACT :</strong><br/>
+                <code>:Input "N=",N</code><br/>
+                <code>:1→F</code><br/>
+                <code>:For(I,1,N)</code><br/>
+                <code>:F*I→F</code><br/>
+                <code>:End</code><br/>
+                <code>:Disp "FACT=",F</code><br/>
+                <br/>
+                <strong>Test :</strong><br/>
+                N=5 → FACT=120<br/>
+                N=6 → FACT=720
+              </div>
+
+              <h3>🎯 Récapitulatif - 38+ commandes</h3>
+              <div className="help-examples">
+                <strong>✅ Compatibilité TI-83 Plus : 95%</strong><br/>
+                <br/>
+                <strong>I/O :</strong> Disp, Input, Prompt, Output, ClrHome<br/>
+                <strong>Contrôle :</strong> If, Then, Else, End, For, While, Repeat<br/>
+                <strong>Navigation :</strong> Lbl, Goto, prgm, Return<br/>
+                <strong>Avancé :</strong> Menu, DelVar, Stop, Pause<br/>
+                <strong>Variables :</strong> A-Z, θ (globales)<br/>
+                <strong>Opérateurs :</strong> +, -, *, /, ^, &gt;, &lt;, =, ≥, ≤, ≠<br/>
+              </div>
+
+              <h3>💡 Conseils de programmation</h3>
+              <ul>
+                <li>Les lignes commencent par <code>:</code> (deux-points)</li>
+                <li>Utilisez des noms de programmes courts (max 8 caractères)</li>
+                <li>Les labels peuvent être des lettres A-Z ou des nombres 0-9</li>
+                <li>Les variables sont partagées entre tous les programmes</li>
+                <li>Testez vos programmes avec des valeurs simples d'abord</li>
+                <li>Utilisez <code>Pause</code> pour voir les résultats intermédiaires</li>
+                <li>Les menus permettent de créer des interfaces conviviales</li>
               </ul>
             </div>
           )}
@@ -1098,11 +1312,11 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h3>📊 Informations techniques</h3>
               <ul>
-                <li><strong>Taille</strong> : 355 KB (299 KB compressé)</li>
+                <li><strong>Taille</strong> : 362 KB (308 KB compressé)</li>
                 <li><strong>Compatibilité</strong> : Chrome 80+, Safari 14+, Samsung Internet 12+</li>
-                <li><strong>Cache</strong> : 13 fichiers en cache local</li>
+                <li><strong>Cache</strong> : 14 fichiers en cache local</li>
                 <li><strong>Mises à jour</strong> : Automatiques en arrière-plan</li>
-                <li><strong>Version</strong> : 2.7.0.0</li>
+                <li><strong>Version</strong> : 3.0.0.0</li>
               </ul>
 
               <h3>💡 Astuce pour les étudiants</h3>
@@ -1117,7 +1331,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 2.7.0.0 (PWA) • 🎨 DRAW 100% (15/15) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
+            Version 3.0.0.0 (PWA) • 🎓 PRGM TI-BASIC (38+ cmd) • 🎨 DRAW 100% (15/15) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
