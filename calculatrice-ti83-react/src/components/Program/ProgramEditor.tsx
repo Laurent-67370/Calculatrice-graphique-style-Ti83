@@ -26,9 +26,16 @@ export const ProgramEditor: React.FC<ProgramEditorProps> = ({ onClose }) => {
   // Charger les lignes du programme courant
   useEffect(() => {
     if (currentProgram && programs[currentProgram]) {
-      setLines(programs[currentProgram].lines);
-      setCurrentLineIndex(0);
-      setIsEditing(false);
+      const programLines = programs[currentProgram].lines;
+      setLines(programLines);
+      // Ne réinitialiser currentLineIndex que si on change de programme
+      // ou si l'index actuel dépasse la longueur du programme
+      setCurrentLineIndex((prev) => {
+        if (prev > programLines.length) {
+          return programLines.length;
+        }
+        return prev;
+      });
     } else {
       setLines([]);
       setCurrentLineIndex(0);
@@ -45,6 +52,7 @@ export const ProgramEditor: React.FC<ProgramEditorProps> = ({ onClose }) => {
 
   // Ajouter une nouvelle ligne
   const handleAddLine = () => {
+    setCurrentLineIndex(lines.length); // Positionner à la fin pour ajouter
     setIsEditing(true);
     setEditingLine('');
   };
