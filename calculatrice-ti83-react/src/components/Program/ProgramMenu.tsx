@@ -11,6 +11,7 @@ import {
   exportProgramAs8xp,
   importProgramFromJSON,
   importProgramFrom8xp,
+  importProgramFrom83p,
   downloadFile,
   readFile,
   detectFileFormat,
@@ -149,6 +150,19 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
           displayToast('success', `Programme ${result.name} importé depuis .8xp`);
         } else {
           displayToast('error', 'Format .8xp invalide');
+        }
+      } else if (format === '83p') {
+        // Import .83p (binaire TI-83 originale)
+        const arrayBuffer = await file.arrayBuffer();
+        const result = importProgramFrom83p(arrayBuffer);
+
+        if (result) {
+          // Créer le programme dans le store
+          createProgram(result.name);
+          saveProgram(result.name, result.code.split('\n'));
+          displayToast('success', `Programme ${result.name} importé depuis .83p`);
+        } else {
+          displayToast('error', 'Format .83p invalide');
         }
       } else if (format === 'json') {
         // Import JSON
@@ -402,11 +416,11 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
 
                 <div className="io-card">
                   <h4>📤 Importer des programmes</h4>
-                  <p>Chargez des programmes depuis JSON ou .8xp (TI-83 Plus)</p>
+                  <p>Chargez des programmes depuis JSON, .8xp ou .83p</p>
                   <input
                     type="file"
                     ref={fileInputRef}
-                    accept=".json,.8xp"
+                    accept=".json,.8xp,.83p"
                     onChange={handleImportPrograms}
                     style={{ display: 'none' }}
                   />
@@ -421,6 +435,7 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
                     <ul>
                       <li><strong>.json</strong> - Un ou plusieurs programmes</li>
                       <li><strong>.8xp</strong> - Programme TI-83 Plus natif</li>
+                      <li><strong>.83p</strong> - Programme TI-83 (originale) natif</li>
                     </ul>
                   </div>
                 </div>
@@ -432,8 +447,8 @@ export const ProgramMenu: React.FC<ProgramMenuProps> = ({ onClose, onEdit }) => 
                   dans l'onglet EDIT pour exporter un programme spécifique.
                 </p>
                 <p>
-                  <strong>💾 Format .8xp:</strong> Compatible avec les vraies calculatrices TI-83 Plus
-                  et émulateurs (TilEm, Wabbitemu).
+                  <strong>💾 Formats natifs:</strong> Compatible avec les vraies calculatrices TI-83/TI-83 Plus
+                  et émulateurs (TilEm, Wabbitemu). Import supporté pour .8xp et .83p.
                 </p>
                 <p>
                   <strong>🔒 Sauvegarde automatique:</strong> Vos programmes sont automatiquement
