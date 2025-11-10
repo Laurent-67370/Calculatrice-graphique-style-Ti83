@@ -27,6 +27,7 @@ export interface ExecutionContext {
   isWaitingInput: boolean;       // Attente d'input utilisateur
   inputPrompt?: string;          // Message d'input en cours
   inputVariable?: string;        // Variable à affecter après input
+  inputValue?: string;           // Valeur en cours de saisie
   promptQueue?: string[];        // Queue de variables pour Prompt
   isWaitingMenu: boolean;        // Attente de sélection menu
   menuTitle?: string;            // Titre du menu

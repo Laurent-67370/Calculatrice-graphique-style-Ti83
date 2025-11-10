@@ -31,6 +31,8 @@ interface ProgramStore extends ProgramState {
   clearOutput: () => void;
   setError: (error: string | undefined) => void;
   setWaitingInput: (waiting: boolean, prompt?: string, variable?: string) => void;
+  updateInputValue: (value: string) => void;
+  clearInputValue: () => void;
   provideInput: (value: number) => void;
   provideMenuSelection: (optionIndex: number) => void;
   updateVariable: (name: string, value: number) => void;
@@ -292,6 +294,35 @@ export const useProgramStore = create<ProgramStore>()(
               isWaitingInput: waiting,
               inputPrompt: prompt,
               inputVariable: variable,
+              inputValue: '', // Réinitialiser la valeur d'input
+            },
+          };
+        });
+      },
+
+      // Mettre à jour la valeur d'input en cours
+      updateInputValue: (value: string) => {
+        set((state) => {
+          if (!state.executionContext) return state;
+
+          return {
+            executionContext: {
+              ...state.executionContext,
+              inputValue: value,
+            },
+          };
+        });
+      },
+
+      // Effacer la valeur d'input
+      clearInputValue: () => {
+        set((state) => {
+          if (!state.executionContext) return state;
+
+          return {
+            executionContext: {
+              ...state.executionContext,
+              inputValue: '',
             },
           };
         });
@@ -329,6 +360,7 @@ export const useProgramStore = create<ProgramStore>()(
               variables: newVariables,
               inputVariable: nextVariable,
               inputPrompt: `${nextVariable}=?`,
+              inputValue: '', // Réinitialiser pour la prochaine saisie
               promptQueue: remainingQueue.length > 0 ? remainingQueue : undefined,
             },
           });
@@ -348,6 +380,7 @@ export const useProgramStore = create<ProgramStore>()(
               isWaitingInput: false,
               inputPrompt: undefined,
               inputVariable: undefined,
+              inputValue: '', // Réinitialiser
               promptQueue: undefined,
             },
           });
