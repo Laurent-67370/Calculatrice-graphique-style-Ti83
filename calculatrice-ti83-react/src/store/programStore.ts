@@ -320,6 +320,9 @@ export const useProgramStore = create<ProgramStore>()(
           const nextVariable = promptQueue[0];
           const remainingQueue = promptQueue.slice(1);
 
+          // Afficher la valeur entrée dans l'output (comme sur TI-83)
+          get().addOutput({ type: 'text', content: String(value) });
+
           set({
             executionContext: {
               ...state.executionContext,
@@ -330,10 +333,14 @@ export const useProgramStore = create<ProgramStore>()(
             },
           });
 
-          // Ajouter le prompt à l'output
+          // Ajouter le prompt suivant à l'output
           get().addOutput({ type: 'text', content: `${nextVariable}=?` });
         } else {
           // Plus de variables à demander, reprendre l'exécution
+
+          // Afficher la valeur entrée dans l'output (comme sur TI-83)
+          get().addOutput({ type: 'text', content: String(value) });
+
           set({
             executionContext: {
               ...state.executionContext,
