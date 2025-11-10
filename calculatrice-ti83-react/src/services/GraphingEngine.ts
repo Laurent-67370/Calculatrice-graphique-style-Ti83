@@ -546,6 +546,146 @@ export class GraphingEngine {
   }
 
   /**
+   * Trace une fonction de séquence u(n)
+   * @param func Expression de la séquence (peut référencer n et u(n-1), u(n-2), etc.)
+   * @param window Paramètres de fenêtre
+   * @param transform Transformation de coordonnées
+   * @param color Couleur de tracé
+   * @param initValues Valeurs initiales {0: val0, 1: val1, ...}
+   * @param plotMode Mode de tracé (DOT ou CONNECTED)
+   */
+  private plotSequence(
+    func: string,
+    window: WindowSettings,
+    transform: CoordinateTransform,
+    color: string,
+    initValues: { [n: string]: number },
+    plotMode: 'DOT' | 'CONNECTED' = 'CONNECTED'
+  ): void {
+    if (!this.ctx || !this.canvas) return;
+
+    const ctx = this.ctx;
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 1.5;
+
+    // Calculer les valeurs de la séquence
+    const values: { [n: number]: number } = {};
+
+    // Initialiser avec les valeurs initiales
+    Object.keys(initValues).forEach(key => {
+      values[parseInt(key)] = initValues[key];
+    });
+
+    // Calculer les valeurs de la séquence de nMin à nMax
+    for (let n = window.nMin; n <= window.nMax; n++) {
+      if (values[n] !== undefined) continue; // Déjà initialisé
+
+      try {
+        // Remplacer n et les références aux valeurs précédentes dans l'expression
+        let expr = func.replace(/n/g, `(${n})`);
+
+        // Remplacer u(n-1), u(n-2), etc. par leurs valeurs calculées
+        // Rechercher tous les u(n-k) dans l'expression
+        const matches = expr.match(/u\(n-(\d+)\)/g);
+        if (matches) {
+          matches.forEach(match => {
+            const offsetMatch = match.match(/u\(n-(\d+)\)/);
+            if (offsetMatch) {
+              const offset = parseInt(offsetMatch[1]);
+              const prevN = n - offset;
+              if (values[prevN] !== undefined) {
+                expr = expr.replace(match, `(${values[prevN]})`);
+              } else {
+                throw new Error(`Valeur u(${prevN}) non définie`);
+              }
+            }
+          });
+        }
+
+        // Également supporter u(n-1) écrit simplement comme u
+        expr = expr.replace(/\bu\b/g, values[n-1] !== undefined ? `(${values[n-1]})` : '0');
+
+        // Évaluer l'expression
+        const value = this.evaluateSequenceExpression(expr);
+        values[n] = value;
+      } catch (error) {
+        // Si erreur, arrêter le calcul de la séquence
+        break;
+      }
+    }
+
+    // Tracer les points selon plotStart et plotStep
+    const points: Point[] = [];
+    for (let n = window.plotStart; n <= window.nMax; n += window.plotStep) {
+      if (values[n] !== undefined) {
+        points.push({ x: n, y: values[n] });
+      }
+    }
+
+    // Dessiner selon le mode
+    if (plotMode === 'DOT') {
+      // Mode DOT : dessiner uniquement les points
+      points.forEach(point => {
+        const screenPoint = transform.graphToScreen(point.x, point.y);
+        ctx.beginPath();
+        ctx.arc(screenPoint.x, screenPoint.y, 2, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+    } else {
+      // Mode CONNECTED : dessiner des lignes entre les points
+      ctx.beginPath();
+      let firstPoint = true;
+      points.forEach(point => {
+        const screenPoint = transform.graphToScreen(point.x, point.y);
+        if (firstPoint) {
+          ctx.moveTo(screenPoint.x, screenPoint.y);
+          firstPoint = false;
+        } else {
+          ctx.lineTo(screenPoint.x, screenPoint.y);
+        }
+      });
+      ctx.stroke();
+    }
+  }
+
+  /**
+   * Évalue une expression de séquence (version simplifiée pour les séquences)
+   */
+  private evaluateSequenceExpression(expression: string): number {
+    try {
+      // Remplacer les symboles mathématiques
+      let expr = expression
+        .replace(/×/g, '*')
+        .replace(/÷/g, '/')
+        .replace(/π/g, Math.PI.toString())
+        .replace(/\^/g, '**');
+
+      // Gérer les fonctions mathématiques courantes
+      expr = expr
+        .replace(/sqrt\(/g, 'Math.sqrt(')
+        .replace(/abs\(/g, 'Math.abs(')
+        .replace(/ln\(/g, 'Math.log(')
+        .replace(/log\(/g, 'Math.log10(')
+        .replace(/exp\(/g, 'Math.exp(')
+        .replace(/sin\(/g, 'Math.sin(')
+        .replace(/cos\(/g, 'Math.cos(')
+        .replace(/tan\(/g, 'Math.tan(');
+
+      // Évaluer
+      const result = Function('"use strict"; return (' + expr + ')')();
+
+      if (typeof result !== 'number' || !isFinite(result)) {
+        throw new Error('Résultat invalide');
+      }
+
+      return result;
+    } catch (error) {
+      throw new Error(`Erreur d'évaluation de séquence: ${error}`);
+    }
+  }
+
+  /**
    * Dessine le graphique complet
    */
   drawGraph(
@@ -555,7 +695,9 @@ export class GraphingEngine {
     statPlots?: [StatPlot, StatPlot, StatPlot],
     lists?: Record<string, number[]>,
     graphMode: 'FUNC' | 'PAR' | 'POL' | 'SEQ' = 'FUNC',
-    parametricFunctions?: { x: string[], y: string[] }
+    parametricFunctions?: { x: string[], y: string[] },
+    sequenceFunctions?: { functions: string[], initValues: { [key: string]: { [n: string]: number } } },
+    plotMode: 'CONNECTED' | 'DOT' = 'CONNECTED'
   ): void {
     if (!this.ctx || !this.canvas) {
       console.warn('Canvas non initialisé');
@@ -627,6 +769,23 @@ export class GraphingEngine {
           this.plotPolar(func.expression, window, transform, func.color || this.colors[func.index], angleMode);
         }
       });
+    } else if (graphMode === 'SEQ' && sequenceFunctions) {
+      // Mode séquence u(n), v(n), w(n)
+      const seqNames = ['u', 'v', 'w'];
+      for (let i = 0; i < 3; i++) {
+        if (functions[i]?.active && sequenceFunctions.functions[i]) {
+          const seqName = seqNames[i];
+          const initValues = sequenceFunctions.initValues[seqName] || { 0: 0, 1: 0 };
+          this.plotSequence(
+            sequenceFunctions.functions[i],
+            window,
+            transform,
+            this.colors[i],
+            initValues,
+            plotMode
+          );
+        }
+      }
     }
   }
 

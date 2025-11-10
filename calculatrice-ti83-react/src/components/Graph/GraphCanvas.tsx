@@ -17,13 +17,15 @@ interface GraphCanvasProps {
   statPlots?: [StatPlot, StatPlot, StatPlot];
   lists?: Record<string, number[]>;
   parametricFunctions?: { x: string[], y: string[] };
+  sequenceFunctions?: { functions: string[], initValues: { [key: string]: { [n: string]: number } } };
+  plotMode?: 'CONNECTED' | 'DOT';
   drawElements?: DrawElement[];
   width?: number;
   height?: number;
 }
 
 export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
-  ({ functions, window, angleMode, graphMode = 'FUNC', statPlots, lists, parametricFunctions, drawElements = [], width = 384, height = 256 }) => {
+  ({ functions, window, angleMode, graphMode = 'FUNC', statPlots, lists, parametricFunctions, sequenceFunctions, plotMode = 'CONNECTED', drawElements = [], width = 384, height = 256 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Initialiser le canvas dans le moteur graphique
@@ -40,12 +42,14 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
           functions: functions.map(f => ({ index: f.index, expr: f.expression, active: f.active })),
           graphMode,
           parametricFunctions,
+          sequenceFunctions,
+          plotMode,
           statPlots,
           window,
           angleMode,
           drawElements: drawElements.length
         });
-        graphingEngine.drawGraph(functions, window, angleMode, statPlots, lists, graphMode, parametricFunctions);
+        graphingEngine.drawGraph(functions, window, angleMode, statPlots, lists, graphMode, parametricFunctions, sequenceFunctions, plotMode);
 
         // Dessiner les éléments DRAW par-dessus
         if (drawElements.length > 0) {
@@ -55,7 +59,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = React.memo(
           }
         }
       }
-    }, [functions, window, angleMode, graphMode, statPlots, lists, parametricFunctions, drawElements, width, height]);
+    }, [functions, window, angleMode, graphMode, statPlots, lists, parametricFunctions, sequenceFunctions, plotMode, drawElements, width, height]);
 
     return (
       <canvas

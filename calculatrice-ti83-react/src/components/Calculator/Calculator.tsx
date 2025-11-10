@@ -83,6 +83,9 @@ export const Calculator: React.FC = () => {
     activeParametricFunctions,
     polarFunctions,
     activePolarFunctions,
+    sequenceFunctions,
+    activeSequenceFunctions,
+    sequenceInitValues,
     editingParametricComponent,
     windowSettings,
     tableSettings,
@@ -518,6 +521,11 @@ export const Calculator: React.FC = () => {
         } else if (config.graphMode === 'POL') {
           // En mode polaire
           setInput(`r${currentFunction + 1}=${polarFunctions[currentFunction]}`);
+        } else if (config.graphMode === 'SEQ') {
+          // En mode séquence (u, v, w seulement - 3 fonctions au lieu de 6)
+          const seqNames = ['u', 'v', 'w'];
+          const funcIndex = Math.min(currentFunction, 2); // Max 3 fonctions en mode SEQ
+          setInput(`${seqNames[funcIndex]}(n)=${sequenceFunctions[funcIndex]}`);
         } else {
           // Mode FUNC par défaut
           setInput(`Y${currentFunction + 1}=${graphFunctions[currentFunction]}`);
@@ -1101,6 +1109,18 @@ export const Calculator: React.FC = () => {
               addToHistory(`r${funcIndex + 1}=${expression}`);
               addToHistory('Appuyez GRAPH pour tracer');
             }
+          } else if (config.graphMode === 'SEQ') {
+            // Mode séquence: u(n)=, v(n)=, w(n)=
+            const match = currentInput.match(/([uvw])\(n\)=(.+)/);
+            if (match) {
+              const seqNames = ['u', 'v', 'w'];
+              const funcIndex = seqNames.indexOf(match[1]);
+              const expression = match[2];
+              const { setSequenceFunction } = useCalculatorStore.getState();
+              setSequenceFunction(funcIndex, expression);
+              addToHistory(`${match[1]}(n)=${expression}`);
+              addToHistory('Appuyez GRAPH pour tracer');
+            }
           } else {
             // Mode FUNC: Y1=
             const match = currentInput.match(/Y(\d+)=(.+)/);
@@ -1118,9 +1138,10 @@ export const Calculator: React.FC = () => {
         }
 
         if (action === 'up' || action === 'down') {
+          const maxFunctions = config.graphMode === 'SEQ' ? 3 : 6;
           const newIndex = action === 'up'
-            ? (currentFunction + 5) % 6
-            : (currentFunction + 1) % 6;
+            ? (currentFunction + maxFunctions - 1) % maxFunctions
+            : (currentFunction + 1) % maxFunctions;
           setCurrentFunction(newIndex);
 
           // Afficher le bon format selon le mode graphique
@@ -1132,6 +1153,9 @@ export const Calculator: React.FC = () => {
             }
           } else if (config.graphMode === 'POL') {
             setInput(`r${newIndex + 1}=${polarFunctions[newIndex]}`);
+          } else if (config.graphMode === 'SEQ') {
+            const seqNames = ['u', 'v', 'w'];
+            setInput(`${seqNames[newIndex]}(n)=${sequenceFunctions[newIndex]}`);
           } else {
             setInput(`Y${newIndex + 1}=${graphFunctions[newIndex]}`);
           }
@@ -1833,6 +1857,13 @@ export const Calculator: React.FC = () => {
         expression: expr,
         active: activePolarFunctions[index],
       }));
+    } else if (config.graphMode === 'SEQ') {
+      // En mode séquence, utiliser les fonctions de séquence (u, v, w)
+      return sequenceFunctions.map((expr, index) => ({
+        index,
+        expression: expr,
+        active: activeSequenceFunctions[index],
+      }));
     } else {
       // Mode FUNC par défaut
       return graphFunctions.map((expr, index) => ({
@@ -1841,7 +1872,7 @@ export const Calculator: React.FC = () => {
         active: activeFunctions[index],
       }));
     }
-  }, [config.graphMode, graphFunctions, activeFunctions, parametricFunctionsX, activeParametricFunctions, polarFunctions, activePolarFunctions]);
+  }, [config.graphMode, graphFunctions, activeFunctions, parametricFunctionsX, activeParametricFunctions, polarFunctions, activePolarFunctions, sequenceFunctions, activeSequenceFunctions]);
 
   // Préparer les fonctions paramétriques
   const parametricFunctionsData = useMemo(() => {
@@ -1853,6 +1884,17 @@ export const Calculator: React.FC = () => {
     }
     return undefined;
   }, [config.graphMode, parametricFunctionsX, parametricFunctionsY]);
+
+  // Préparer les fonctions de séquence
+  const sequenceFunctionsData = useMemo(() => {
+    if (config.graphMode === 'SEQ') {
+      return {
+        functions: sequenceFunctions,
+        initValues: sequenceInitValues
+      };
+    }
+    return undefined;
+  }, [config.graphMode, sequenceFunctions, sequenceInitValues]);
 
   // Préparer les listes pour les stat plots
   const listsData = useMemo(() => {
@@ -1989,6 +2031,8 @@ export const Calculator: React.FC = () => {
           floatMode={config.floatMode}
           fixedDecimals={config.fixedDecimals}
           graphMode={config.graphMode}
+          plotMode={config.plotMode}
+          sequentialMode={config.sequentialMode}
           onSave={(modeConfig) => {
             setConfig(modeConfig);
             setMode('NORMAL');
@@ -2079,6 +2123,8 @@ export const Calculator: React.FC = () => {
           statPlots={statPlots}
           lists={listsData}
           parametricFunctions={parametricFunctionsData}
+          sequenceFunctions={sequenceFunctionsData}
+          plotMode={config.plotMode}
           drawElements={drawElements}
         />
       );

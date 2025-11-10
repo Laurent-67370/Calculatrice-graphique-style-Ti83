@@ -10,6 +10,8 @@ interface ModeEditorProps {
   floatMode: 'FLOAT' | 'FIXED';
   fixedDecimals: number;
   graphMode: GraphMode;
+  plotMode: 'CONNECTED' | 'DOT';
+  sequentialMode: 'SEQUENTIAL' | 'SIMUL';
   onSave: (config: ModeConfig) => void;
   onClose: () => void;
 }
@@ -19,6 +21,8 @@ export interface ModeConfig {
   floatMode: 'FLOAT' | 'FIXED';
   fixedDecimals: number;
   graphMode: GraphMode;
+  plotMode: 'CONNECTED' | 'DOT';
+  sequentialMode: 'SEQUENTIAL' | 'SIMUL';
 }
 
 export interface ModeEditorHandle {
@@ -32,12 +36,16 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
   floatMode,
   fixedDecimals,
   graphMode,
+  plotMode,
+  sequentialMode,
   onSave,
   onClose,
 }, ref) => {
   const [localAngleMode, setLocalAngleMode] = useState<'DEGREE' | 'RADIAN'>(angleMode);
   const [localFloatMode, setLocalFloatMode] = useState<'FLOAT' | 'FIXED'>(floatMode);
   const [localGraphMode, setLocalGraphMode] = useState<GraphMode>(graphMode);
+  const [localPlotMode, setLocalPlotMode] = useState<'CONNECTED' | 'DOT'>(plotMode);
+  const [localSequentialMode, setLocalSequentialMode] = useState<'SEQUENTIAL' | 'SIMUL'>(sequentialMode);
   const [localFixedDecimals] = useState(fixedDecimals);
   const [selectedOption, setSelectedOption] = useState(0);
 
@@ -55,12 +63,24 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
       setter: (value: string) => setLocalAngleMode(value as 'DEGREE' | 'RADIAN'),
     },
     {
+      name: 'Plot',
+      choices: ['CONNECTED', 'DOT'],
+      current: localPlotMode,
+      setter: (value: string) => setLocalPlotMode(value as 'CONNECTED' | 'DOT'),
+    },
+    {
+      name: 'Sequential',
+      choices: ['SEQUENTIAL', 'SIMUL'],
+      current: localSequentialMode,
+      setter: (value: string) => setLocalSequentialMode(value as 'SEQUENTIAL' | 'SIMUL'),
+    },
+    {
       name: 'Float',
       choices: ['FLOAT', 'FIXED'],
       current: localFloatMode,
       setter: (value: string) => setLocalFloatMode(value as 'FLOAT' | 'FIXED'),
     },
-  ], [localGraphMode, localAngleMode, localFloatMode]);
+  ], [localGraphMode, localAngleMode, localPlotMode, localSequentialMode, localFloatMode]);
 
   // Exposer les méthodes au parent via ref
   useImperativeHandle(ref, () => ({
@@ -81,11 +101,13 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
       onSave({
         graphMode: localGraphMode,
         angleMode: localAngleMode,
+        plotMode: localPlotMode,
+        sequentialMode: localSequentialMode,
         floatMode: localFloatMode,
         fixedDecimals: localFixedDecimals,
       });
     },
-  }), [selectedOption, options, localGraphMode, localAngleMode, localFloatMode, localFixedDecimals, onSave]);
+  }), [selectedOption, options, localGraphMode, localAngleMode, localPlotMode, localSequentialMode, localFloatMode, localFixedDecimals, onSave]);
 
   // Gérer les touches du clavier
   useEffect(() => {
@@ -119,6 +141,8 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
           onSave({
             graphMode: localGraphMode,
             angleMode: localAngleMode,
+            plotMode: localPlotMode,
+            sequentialMode: localSequentialMode,
             floatMode: localFloatMode,
             fixedDecimals: localFixedDecimals,
           });
@@ -131,7 +155,7 @@ export const ModeEditor = forwardRef<ModeEditorHandle, ModeEditorProps>(({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedOption, localGraphMode, localAngleMode, localFloatMode, localFixedDecimals, options, onSave, onClose]);
+  }, [selectedOption, localGraphMode, localAngleMode, localPlotMode, localSequentialMode, localFloatMode, localFixedDecimals, options, onSave, onClose]);
 
   return (
     <div className="mode-editor">
