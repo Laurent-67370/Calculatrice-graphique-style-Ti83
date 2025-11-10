@@ -37,6 +37,7 @@ export interface ExecutionContext {
   allPrograms?: Record<string, Program>; // Tous les programmes disponibles (pour prgm)
   programLines?: Record<string, string[]>; // Lignes de tous les programmes (cache)
   callProgram?: string;          // Nom du programme à appeler (pour prgm)
+  lastKeyPressed?: number;       // Code de la dernière touche pressée (pour Getkey)
 }
 
 // Frame de la pile d'appels
@@ -124,6 +125,7 @@ export type CommandType =
   | 'PAUSE'
   | 'STOP'
   | 'DELVAR'
+  | 'GETKEY'
   | 'CLRHOME'
   | 'CLRLIST'
   // Graphiques

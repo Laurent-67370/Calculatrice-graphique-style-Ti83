@@ -9,6 +9,7 @@ import type {
   CalculatorMode,
   CalculatorConfig,
   WindowSettings,
+  GraphDatabase,
 } from '../types';
 import type { DrawElement } from '../types/draw.types';
 
@@ -75,6 +76,7 @@ interface CalculatorStore extends CalculatorState {
   // État DRAW (2ND + PRGM)
   drawElements: DrawElement[];
   pictures: { [key: string]: DrawElement[] }; // Pic1-Pic10
+  graphDatabases: { [key: string]: GraphDatabase }; // GDB1-GDB10
 
   // État de l'input
   isInputResult: boolean; // Indique si l'input actuel est un résultat de calcul
@@ -170,6 +172,8 @@ interface CalculatorStore extends CalculatorState {
   clearDraw: () => void;
   storePicture: (name: string) => void;
   recallPicture: (name: string) => void;
+  storeGDB: (name: string) => void;
+  recallGDB: (name: string) => void;
 
   // Reset complet
   reset: () => void;
@@ -320,6 +324,7 @@ export const useCalculatorStore = create<CalculatorStore>()(
       // État initial DRAW
       drawElements: [],
       pictures: {},
+      graphDatabases: {},
 
       // État initial de l'input
       isInputResult: false,
@@ -711,6 +716,48 @@ export const useCalculatorStore = create<CalculatorStore>()(
           return state;
         }, false, 'recallPicture'),
 
+      storeGDB: (name: string) =>
+        set((state) => ({
+          graphDatabases: {
+            ...state.graphDatabases,
+            [name]: {
+              windowSettings: { ...state.windowSettings },
+              graphMode: state.config.graphMode,
+              graphFunctions: [...state.graphFunctions],
+              activeFunctions: [...state.activeFunctions],
+              parametricFunctions: state.parametricFunctionsX.map((x, i) => ({
+                x,
+                y: state.parametricFunctionsY[i],
+              })),
+              activeParametricFunctions: [...state.activeParametricFunctions],
+              polarFunctions: [...state.polarFunctions],
+              activePolarFunctions: [...state.activePolarFunctions],
+            },
+          },
+        }), false, 'storeGDB'),
+
+      recallGDB: (name: string) =>
+        set((state) => {
+          const gdb = state.graphDatabases[name];
+          if (gdb) {
+            return {
+              windowSettings: { ...gdb.windowSettings },
+              config: {
+                ...state.config,
+                graphMode: gdb.graphMode,
+              },
+              graphFunctions: [...gdb.graphFunctions],
+              activeFunctions: [...gdb.activeFunctions],
+              parametricFunctionsX: gdb.parametricFunctions.map(f => f.x),
+              parametricFunctionsY: gdb.parametricFunctions.map(f => f.y),
+              activeParametricFunctions: [...gdb.activeParametricFunctions],
+              polarFunctions: [...gdb.polarFunctions],
+              activePolarFunctions: [...gdb.activePolarFunctions],
+            };
+          }
+          return state;
+        }, false, 'recallGDB'),
+
       // Reset mémoire seulement (variables + matrices)
       resetMemory: () =>
         set({
@@ -719,6 +766,7 @@ export const useCalculatorStore = create<CalculatorStore>()(
           history: [],
           drawElements: [],
           pictures: {},
+          graphDatabases: {},
         }, false, 'resetMemory'),
 
       // Reset complet
@@ -738,6 +786,7 @@ export const useCalculatorStore = create<CalculatorStore>()(
           editingParametricComponent: 'X',
           drawElements: [],
           pictures: {},
+          graphDatabases: {},
         }, false, 'reset'),
     }),
     { name: 'TI-83 Calculator' }

@@ -127,6 +127,18 @@ export interface WindowSettings {
   plotStep: number;
 }
 
+// Graph Database (GDB) - Sauvegarde des paramètres graphiques
+export interface GraphDatabase {
+  windowSettings: WindowSettings;
+  graphMode: GraphMode;
+  graphFunctions: string[];
+  activeFunctions: boolean[];
+  parametricFunctions: Array<{ x: string; y: string }>;
+  activeParametricFunctions: boolean[];
+  polarFunctions: string[];
+  activePolarFunctions: boolean[];
+}
+
 // Options de zoom
 export interface ZoomOption {
   name: string;

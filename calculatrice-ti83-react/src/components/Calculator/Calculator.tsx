@@ -133,6 +133,8 @@ export const Calculator: React.FC = () => {
     clearDraw,
     storePicture,
     recallPicture,
+    storeGDB,
+    recallGDB,
   } = useCalculatorStore();
 
   // Supprimer warnings pour services importés
@@ -1493,6 +1495,32 @@ export const Calculator: React.FC = () => {
                 addToHistory(input);
                 setInput('Done');
                 setGraphMode(true);
+                return;
+              }
+            }
+
+            // StoreGDB n : Sauvegarder les paramètres graphiques dans GDB1-GDB10
+            const storeGDBMatch = input.match(/^StoreGDB\s+(\d+)$/);
+            if (storeGDBMatch) {
+              const [, n] = storeGDBMatch;
+              const gdbNum = parseInt(n);
+              if (gdbNum >= 1 && gdbNum <= 10) {
+                storeGDB(`GDB${gdbNum}`);
+                addToHistory(input);
+                setInput('Done');
+                return;
+              }
+            }
+
+            // RecallGDB n : Rappeler les paramètres graphiques sauvegardés
+            const recallGDBMatch = input.match(/^RecallGDB\s+(\d+)$/);
+            if (recallGDBMatch) {
+              const [, n] = recallGDBMatch;
+              const gdbNum = parseInt(n);
+              if (gdbNum >= 1 && gdbNum <= 10) {
+                recallGDB(`GDB${gdbNum}`);
+                addToHistory(input);
+                setInput('Done');
                 return;
               }
             }
