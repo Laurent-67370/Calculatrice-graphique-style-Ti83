@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { create, all } from 'mathjs';
 import { useCalculatorStore } from '../../store/calculatorStore';
 import { Display } from './Display';
+import { HistoryModal } from './HistoryModal';
 import { Keyboard } from './Keyboard';
 import { GraphCanvas } from '../Graph/GraphCanvas';
 import { TraceCanvas } from '../Graph/TraceCanvas';
@@ -42,6 +43,9 @@ const math = create(all);
 export const Calculator: React.FC = () => {
   // State pour le modal d'aide
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  // State pour le modal d'historique complet
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   // State pour le menu PRGM
   const [showProgramMenu, setShowProgramMenu] = useState(false);
@@ -104,6 +108,7 @@ export const Calculator: React.FC = () => {
     deleteLastChar,
     clearInput,
     addToHistory,
+    clearHistory,
     setLastAnswer,
     setMode,
     setConfig,
@@ -2220,6 +2225,7 @@ export const Calculator: React.FC = () => {
         cursorPosition={cursorPosition}
         graphMode={config.graphMode}
         onHistoryClick={handleHistoryClick}
+        onShowFullHistory={() => setIsHistoryModalOpen(true)}
       />
     );
   };
@@ -2253,6 +2259,15 @@ export const Calculator: React.FC = () => {
       <HelpModal
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
+      />
+
+      {/* Modal d'historique complet */}
+      <HistoryModal
+        isOpen={isHistoryModalOpen}
+        onClose={() => setIsHistoryModalOpen(false)}
+        history={history}
+        onUseEntry={handleHistoryClick}
+        onClearHistory={clearHistory}
       />
 
       {/* Menu PRGM */}
