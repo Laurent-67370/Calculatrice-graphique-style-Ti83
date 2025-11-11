@@ -1657,16 +1657,19 @@ export const Calculator: React.FC = () => {
 
             // Ajouter les matrices au scope avec un préfixe pour éviter conflits
             // Sur TI-83, les variables A-Z et les matrices [A]-[J] sont complètement séparées
+            const definedMatrices: string[] = [];
             matrixNames.forEach(name => {
               if (matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
                 // Si la matrice est définie (même vide), l'ajouter au scope
                 // pour que [A] fonctionne correctement
                 scope[`MAT_${name}`] = math.matrix(matrices[name].data);
+                definedMatrices.push(name);
               }
             });
 
-            // Remplacer [NomMatrice] par MAT_NomMatrice dans l'expression
-            matrixNames.forEach(name => {
+            // Remplacer [NomMatrice] par MAT_NomMatrice UNIQUEMENT pour les matrices définies
+            // Cela permet d'avoir A (variable) et [A] (matrice) séparés
+            definedMatrices.forEach(name => {
               const regex = new RegExp(`\\[${name}\\]`, 'g');
               expr = expr.replace(regex, `MAT_${name}`);
             });
