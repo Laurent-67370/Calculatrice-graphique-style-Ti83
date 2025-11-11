@@ -1655,30 +1655,29 @@ export const Calculator: React.FC = () => {
             scope.Ymax = windowSettings.yMax;
             scope.Yscl = windowSettings.yScale;
 
-            // Ajouter les matrices au scope SEULEMENT si la variable n'existe pas
-            // Sur TI-83, les variables A-Z et les matrices [A]-[J] sont séparées
+            // Ajouter les matrices au scope avec un préfixe pour éviter conflits
+            // Sur TI-83, les variables A-Z et les matrices [A]-[J] sont complètement séparées
             matrixNames.forEach(name => {
-              // Ne pas écraser les variables utilisateur avec les matrices
-              if (!variables[name] && matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
+              if (matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
                 // Vérifier si la matrice a des valeurs
                 const hasValues = matrices[name].data.some(row => row.some(val => val !== 0));
                 if (hasValues || matrices[name].data.length > 0) {
-                  // Créer une matrice mathjs à partir des données
-                  scope[name] = math.matrix(matrices[name].data);
+                  // Utiliser un nom unique pour les matrices : MAT_A, MAT_B, etc.
+                  scope[`MAT_${name}`] = math.matrix(matrices[name].data);
                 }
               }
             });
 
-            // Remplacer [NomMatrice] par NomMatrice dans l'expression
+            // Remplacer [NomMatrice] par MAT_NomMatrice dans l'expression
             matrixNames.forEach(name => {
               const regex = new RegExp(`\\[${name}\\]`, 'g');
-              expr = expr.replace(regex, name);
+              expr = expr.replace(regex, `MAT_${name}`);
             });
 
-            // Gérer la transposée: remplacer NomMatrice^T par transpose(NomMatrice)
+            // Gérer la transposée: remplacer MAT_NomMatrice^T par transpose(MAT_NomMatrice)
             matrixNames.forEach(name => {
-              const transposeRegex = new RegExp(`${name}\\^T`, 'g');
-              expr = expr.replace(transposeRegex, `transpose(${name})`);
+              const transposeRegex = new RegExp(`MAT_${name}\\^T`, 'g');
+              expr = expr.replace(transposeRegex, `transpose(MAT_${name})`);
             });
 
             // Évaluer l'expression avec mathjs
