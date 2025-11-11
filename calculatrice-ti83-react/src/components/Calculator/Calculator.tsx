@@ -1655,9 +1655,11 @@ export const Calculator: React.FC = () => {
             scope.Ymax = windowSettings.yMax;
             scope.Yscl = windowSettings.yScale;
 
-            // Ajouter les matrices au scope
+            // Ajouter les matrices au scope SEULEMENT si la variable n'existe pas
+            // Sur TI-83, les variables A-Z et les matrices [A]-[J] sont séparées
             matrixNames.forEach(name => {
-              if (matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
+              // Ne pas écraser les variables utilisateur avec les matrices
+              if (!variables[name] && matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
                 // Vérifier si la matrice a des valeurs
                 const hasValues = matrices[name].data.some(row => row.some(val => val !== 0));
                 if (hasValues || matrices[name].data.length > 0) {
