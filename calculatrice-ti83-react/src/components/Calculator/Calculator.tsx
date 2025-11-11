@@ -1659,12 +1659,9 @@ export const Calculator: React.FC = () => {
             // Sur TI-83, les variables A-Z et les matrices [A]-[J] sont complètement séparées
             matrixNames.forEach(name => {
               if (matrices[name] && matrices[name].rows > 0 && matrices[name].cols > 0) {
-                // Vérifier si la matrice a des valeurs
-                const hasValues = matrices[name].data.some(row => row.some(val => val !== 0));
-                if (hasValues || matrices[name].data.length > 0) {
-                  // Utiliser un nom unique pour les matrices : MAT_A, MAT_B, etc.
-                  scope[`MAT_${name}`] = math.matrix(matrices[name].data);
-                }
+                // Si la matrice est définie (même vide), l'ajouter au scope
+                // pour que [A] fonctionne correctement
+                scope[`MAT_${name}`] = math.matrix(matrices[name].data);
               }
             });
 
