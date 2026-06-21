@@ -1,6 +1,8 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.2.0 - Mode SEQUENCE + Export/Import Programmes 🎓
+## Version 3.2.1 - Correctifs mathématiques, finance & graphique 🐛
+
+> Patch de maintenance basé sur la v3.2.0 (Mode SEQUENCE + Export/Import Programmes). Voir la section **🔧 Correctifs v3.2.1** ci-dessous.
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
@@ -12,6 +14,39 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 - Mode SEQUENCE complet pour les suites numériques (u(n), v(n), w(n)) avec expressions récursives
 
 **Version v3.0** : Programmation TI-BASIC complète avec 39+ commandes, structures de contrôle, menus interactifs et compatibilité 100% TI-83 Plus !
+
+**Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.2.1
+
+Version de maintenance corrigeant **6 bugs logiques** dans les services mathématiques, financiers et graphiques. Chaque correctif a été vérifié par reproduction (cas de test indépendants) et le build reste vert (`tsc -b` + `vite build`).
+
+| # | Bug | Service | Impact |
+|---|---|---|:---:|
+| 1 | `ln(X)` cassé en mode graphique (regex `log`/`ln` réordonnées) | GraphingEngine | 🔴 Haute |
+| 2 | `QuadReg` renvoyait des coefficients faux (→ Gauss 3×3) | StatisticsService | 🔴 Haute |
+| 3 | Séquences récursives `u(n-1)` / `u(n-2)` crashaient | GraphingEngine | 🔴 Haute |
+| 4 | `solveN` (TVM) : « Pas de solution » sur prêt standard | FinanceService | 🔴 Haute |
+| 5 | `solveI` (TVM) : dérivée de mauvais signe (Newton divergeait) | FinanceService | 🔴 Haute |
+| 6 | `DrawInv` : pas d'échantillonnage Y corrigé (`canvasHeight`) | DrawingService | 🟡 Basse |
+
+### Détails
+
+- **`ln(X)` en mode graphique** : le remplacement `ln(` → `Math.log(` s'exécutait *avant* `log(` → `Math.log10(`, ce qui produisait `Math.Math.log10(...)` (`undefined`). Toute fonction utilisant `ln` échouait silencieusement en tracé/calcul. Désormais `log(` est remplacé en premier.
+
+- **QuadReg** : la formule de Cramer manuelle positionnait mal les facteurs `sumY` / `sumXY` / `sumX2Y` et renvoyait p.ex. `a≈237.86` au lieu de `2` pour `y = 2x² + 3x + 1`. Remplacée par le solveur `gaussianElimination` 3×3 déjà utilisé par `CubicReg` / `QuartReg`.
+
+- **Séquences récursives** : `u(n-1)` était transformé en `u((5)-1)` par la substitution de `n` *avant* la résolution des références `u(n-k)`, faisant crasher le tracé. Désormais `u(n-k)` est substitué en premier.
+
+- **TVM `solveN`** : le ratio était l'inverse négatif du ratio correct, renvoyant « Pas de solution » pour un prêt standard. Formule corrigée : `N = -log((PV·i + pmt) / (pmt − FV·i)) / log(1+i)`.
+
+- **TVM `solveI`** : la dérivée de Newton-Raphson avait son signe inversé (divergence ou blocage « Dérivée nulle »). Dérivée corrigée avec le facteur `/(1+i)` manquant.
+
+- **`DrawInv`** : le pas d'échantillonnage sur l'axe Y divisait par `canvasWidth` au lieu de `canvasHeight`, distordant la courbe inverse sur les canvas non carrés.
+
+> 🔗 Détails techniques : PR [#119](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/pull/119)
 
 ---
 
