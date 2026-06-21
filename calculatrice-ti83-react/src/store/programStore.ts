@@ -252,7 +252,15 @@ export const useProgramStore = create<ProgramStore>()(
             get().clearOutput();
           },
           () => {
-            get().stopProgram();
+            const s = get();
+            if (s.executionContext) {
+              set({
+                executionContext: {
+                  ...s.executionContext,
+                  isCompleted: true,
+                },
+              });
+            }
           },
           (error: string) => {
             get().setError(error);
@@ -432,7 +440,15 @@ export const useProgramStore = create<ProgramStore>()(
                   get().clearOutput();
                 },
                 () => {
-                  get().stopProgram();
+                  const s = get();
+                  if (s.executionContext) {
+                    set({
+                      executionContext: {
+                        ...s.executionContext,
+                        isCompleted: true,
+                      },
+                    });
+                  }
                 },
                 (error) => {
                   get().setError(error);
@@ -535,7 +551,15 @@ export const useProgramStore = create<ProgramStore>()(
                 get().clearOutput();
               },
               () => {
-                get().stopProgram();
+                const s = get();
+                if (s.executionContext) {
+                  set({
+                    executionContext: {
+                      ...s.executionContext,
+                      isCompleted: true,
+                    },
+                  });
+                }
               },
               (error) => {
                 get().setError(error);
