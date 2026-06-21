@@ -6,6 +6,15 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.3.0] - 2026-06-21
+
+### ✨ Ajouté - Module PRGM : `getKey` & support des jeux
+- **`getKey`** : lecture de l'entrée clavier dans les programmes TI-BASIC. Renvoie le code de la dernière touche pressée (0 si aucune), puis remet le tampon à 0 (la lecture consomme, comme une vraie TI-83). Permet d'écrire des jeux et programmes interactifs.
+- **Codes officiels TI-BASIC** (`ligne×10+colonne`) : table `GETKEY_CODES` dans `Calculator.tsx` — flèches gauche 24 / haut 25 / droite 26 / bas 34, CLEAR 45, ENTER 105, chiffres 1-9 (92-100) et 0 (102).
+- **Routage des touches** : hors des modes `Input`/`Menu`/`Prompt`, les touches alimentent `pushKey()` au lieu de déclencher la calculatrice.
+- **Tampon vidé** au lancement de chaque programme (`programStore.ts`) ; `getKey` seul sur une ligne vide le tampon (idiome de reset).
+- Testé 5/5, banc 22/22, syntaxe validée.
+
 ## [3.2.3] - 2026-06-21
 
 ### 🐛 Corrigé - Module PRGM (saisie Input/Prompt & affichage)

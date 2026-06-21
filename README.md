@@ -1,10 +1,13 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.2.3 - Correctifs Input/Prompt module PRGM (TI-BASIC) 🐛
+## Version 3.3.0 - getKey & Support des Jeux 🎮
 
-> Patch de maintenance du module PRGM (saisie `Input`/`Prompt` et affichage des résultats), basé sur la v3.2.2. Voir la section **🔧 Correctifs v3.2.3** ci-dessous.
+> Nouvelle fonctionnalité du module PRGM : `getKey` lit l'entrée clavier (codes officiels TI-BASIC) avec un tampon consommable à la lecture — comportement identique à une vraie TI-83. Écrivez des jeux et programmes interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
+
+**Nouveautés v3.3.0** 🎮 :
+- `getKey` — lecture de l'entrée clavier dans les programmes TI-BASIC (codes officiels TI-BASIC `ligne×10+colonne`), avec tampon consommable à la lecture (comme une vraie TI-83). Les touches fléchées et le pavé numérique alimentent le programme hors des modes `Input`/`Menu`. Écrivez des jeux interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
 
 **Nouveautés v3.2** :
 - Export/Import de programmes en JSON et .8xp (format natif TI-83 Plus) - Partagez vos programmes ou transférez-les vers une vraie calculatrice !
@@ -20,6 +23,47 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## ✨ Nouveautés Version 3.3.0
+
+### 🎮 `getKey` — Lecture du clavier dans les programmes
+
+La commande TI-BASIC `getKey` est désormais **pleinement fonctionnelle**. Elle renvoie le code de la dernière touche pressée (0 si aucune), puis **remet le tampon à 0** — la lecture consomme, exactement comme sur une vraie TI-83 Plus. Cela permet d'écrire des jeux et des programmes interactifs réagissant aux touches.
+
+**Comportement** :
+- Hors des modes `Input`/`Menu`/`Prompt`, les touches du clavier alimentent le tampon `getKey` au lieu de déclencher la calculatrice.
+- Le tampon est vidé au lancement de chaque programme (pas de touche parasite d'un run précédent).
+- `getKey` seul sur une ligne vide le tampon (idiome de reset avant une boucle).
+
+**Table des codes officiels TI-BASIC** (format `ligne×10 + colonne`) :
+
+| Touche | Code | Touche | Code |
+|---|:---:|---|:---:|
+| Flèche gauche ◀ | 24 | Flèche haut ▲ | 25 |
+| Flèche droite ▶ | 26 | Flèche bas ▼ | 34 |
+| CLEAR | 45 | ENTER | 105 |
+| 1 | 92 | 6 | 97 |
+| 2 | 93 | 7 | 98 |
+| 3 | 94 | 8 | 99 |
+| 4 | 95 | 9 | 100 |
+| 5 | 96 | 0 | 102 |
+
+### 🕹️ Exemple - Curseur qui se déplace aux flèches
+
+```basic
+:0→X
+:Lbl 0
+:getKey→K
+:If K=26:X+1→X    // flèche droite
+:If K=24:X-1→X    // flèche gauche
+:If K=45:Stop     // CLEAR pour quitter
+:Disp "POS=",X
+:Goto 0
+```
+
+> 🔗 Détails techniques : commit `badb2af` sur la branche par défaut. Implémentation : tampon statique `lastKeyCode` + `pushKey()`/`resetKeyBuffer()` dans `ProgramInterpreter.ts`, table `GETKEY_CODES` dans `Calculator.tsx`, vidage du tampon au lancement dans `programStore.ts`.
 
 ---
 

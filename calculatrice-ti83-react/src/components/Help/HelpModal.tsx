@@ -324,13 +324,28 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <code>:getKey→K</code><br/>
                 → Stocke le code de la touche pressée dans K<br/>
                 → Retourne 0 si aucune touche pressée<br/>
+                → La lecture <strong>consomme</strong> le tampon (comportement vraie TI-83)<br/>
+                <br/>
+                <strong>Codes courants</strong> (ligne×10+colonne) :<br/>
+                Flèches : gauche 24, haut 25, droite 26, bas 34<br/>
+                CLEAR 45 · ENTER 105 · Chiffres 1=92 … 9=100 · 0=102<br/>
                 <br/>
                 <strong>Exemple - Boucle d'attente :</strong><br/>
                 <code>:0→K</code><br/>
                 <code>:While K=0</code><br/>
                 <code>:getKey→K</code><br/>
                 <code>:End</code><br/>
-                → Attend qu'une touche soit pressée
+                → Attend qu'une touche soit pressée<br/>
+                <br/>
+                <strong>Exemple - Curseur déplaçable 🎮 :</strong><br/>
+                <code>:0→X</code><br/>
+                <code>:Lbl 0</code><br/>
+                <code>:getKey→K</code><br/>
+                <code>:If K=26:X+1→X</code> (droite)<br/>
+                <code>:If K=24:X-1→X</code> (gauche)<br/>
+                <code>:If K=45:Stop</code> (CLEAR quitte)<br/>
+                <code>:Disp "POS=",X</code><br/>
+                <code>:Goto 0</code>
               </div>
 
               <h3>💾 Variables globales</h3>
@@ -1538,7 +1553,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.2.3 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
+            Version 3.3.0 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>
