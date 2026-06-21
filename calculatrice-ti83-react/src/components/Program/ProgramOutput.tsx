@@ -122,64 +122,65 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
             return null;
           })}
         </div>
-
-        {/* Affichage de l'erreur */}
-        {executionContext.error && executionContext.error !== 'STOP' && (
-          <div className="output-error">
-            {executionContext.error}
-          </div>
-        )}
-
-        {/* Message de pause */}
-        {executionContext.isPaused && !executionContext.error && !executionContext.isWaitingInput && (
-          <div className="output-pause">
-            Appuyez sur Continuer pour reprendre
-          </div>
-        )}
-
-        {/* Input utilisateur */}
-        {executionContext.isWaitingInput && (
-          <div className="output-input">
-            <div className="input-prompt">{executionContext.inputPrompt}</div>
-            <div className="input-field">
-              <input
-                ref={inputRef}
-                type="text"
-                inputMode="none"
-                readOnly
-                value={programInputValue}
-                onChange={(e) => updateInputValue(e.target.value)}
-                onKeyDown={handleInputKeyDown}
-                onClick={() => inputRef.current?.focus()}
-                placeholder="Entrez un nombre..."
-                className="input-value"
-                style={{ fontSize: '16px' }} // Évite le zoom sur iOS
-              />
-              <button onClick={handleSubmitInput} className="btn-submit-input">
-                OK
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Menu interactif */}
-        {executionContext.isWaitingMenu && executionContext.menuOptions && (
-          <div className="output-menu">
-            <div className="menu-prompt">Sélectionnez une option :</div>
-            <div className="menu-options">
-              {executionContext.menuOptions.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => provideMenuSelection(index)}
-                  className="btn-menu-option"
-                >
-                  {index + 1}: {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Zone interactive (hors zone défilante pour rester toujours visible) */}
+      {/* Affichage de l'erreur */}
+      {executionContext.error && executionContext.error !== 'STOP' && (
+        <div className="output-error">
+          {executionContext.error}
+        </div>
+      )}
+
+      {/* Message de pause */}
+      {executionContext.isPaused && !executionContext.error && !executionContext.isWaitingInput && (
+        <div className="output-pause">
+          Appuyez sur Continuer pour reprendre
+        </div>
+      )}
+
+      {/* Input utilisateur */}
+      {executionContext.isWaitingInput && (
+        <div className="output-input">
+          <div className="input-prompt">{executionContext.inputPrompt}</div>
+          <div className="input-field">
+            <input
+              ref={inputRef}
+              type="text"
+              inputMode="none"
+              readOnly
+              value={programInputValue}
+              onChange={(e) => updateInputValue(e.target.value)}
+              onKeyDown={handleInputKeyDown}
+              onClick={() => inputRef.current?.focus()}
+              placeholder="Entrez un nombre..."
+              className="input-value"
+              style={{ fontSize: '16px' }} // Évite le zoom sur iOS
+            />
+            <button onClick={handleSubmitInput} className="btn-submit-input">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Menu interactif */}
+      {executionContext.isWaitingMenu && executionContext.menuOptions && (
+        <div className="output-menu">
+          <div className="menu-prompt">Sélectionnez une option :</div>
+          <div className="menu-options">
+            {executionContext.menuOptions.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => provideMenuSelection(index)}
+                className="btn-menu-option"
+              >
+                {index + 1}: {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="output-footer">
         <div className="output-info">
