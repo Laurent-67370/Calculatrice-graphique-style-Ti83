@@ -18,6 +18,29 @@ const math = create(all);
  */
 export class ProgramInterpreter {
   /**
+   * Tampon clavier non bloquant pour getKey.
+   * Contient le code (style TI-BASIC, ligne×10+colonne) de la dernière
+   * touche pressée, ou 0 si aucune. La lecture par getKey le remet à 0.
+   */
+  static lastKeyCode = 0;
+
+  /**
+   * Enregistre une touche pressée pendant l'exécution d'un programme.
+   * Appelé par le clavier de la calculatrice (Calculator.tsx) lorsqu'un
+   * programme tourne et n'attend ni Input ni Menu.
+   */
+  static pushKey(code: number): void {
+    this.lastKeyCode = code;
+  }
+
+  /**
+   * Vide le tampon clavier (au démarrage d'un programme).
+   */
+  static resetKeyBuffer(): void {
+    this.lastKeyCode = 0;
+  }
+
+  /**
    * Parser une ligne de code TI-BASIC
    */
   static parseLine(line: string): ParsedCommand | null {
@@ -352,6 +375,16 @@ export class ProgramInterpreter {
         return stringMatch[1]; // Retourner la chaîne sans guillemets
       }
 
+      // getKey : renvoie le code (TI-BASIC) de la dernière touche pressée,
+      // 0 si aucune, puis remet le tampon à zéro (la lecture consomme).
+      // À traiter AVANT la substitution des variables (sinon le 'K' de
+      // "getKey" serait vu comme une variable).
+      if (/getKey/i.test(expr)) {
+        const code = ProgramInterpreter.lastKeyCode;
+        ProgramInterpreter.lastKeyCode = 0;
+        expr = expr.replace(/getKey/gi, String(code));
+      }
+
       // Remplacer les variables par leurs valeurs (expressions numériques uniquement)
       let processedExpr = expr;
 
@@ -394,6 +427,14 @@ export class ProgramInterpreter {
     try {
       // Remplacer les variables par leurs valeurs
       let processedCondition = condition;
+
+      // getKey dans une condition (ex. Repeat getKey) : code de la dernière
+      // touche, puis reset. À faire avant la substitution des variables.
+      if (/getKey/i.test(processedCondition)) {
+        const code = ProgramInterpreter.lastKeyCode;
+        ProgramInterpreter.lastKeyCode = 0;
+        processedCondition = processedCondition.replace(/getKey/gi, String(code));
+      }
 
       // Remplacer les variables A-Z et θ
       const varMatches = condition.match(/[A-Zθ]/g);
@@ -635,11 +676,10 @@ export class ProgramInterpreter {
       }
 
       case 'GETKEY': {
-        // getKey retourne le code de la dernière touche pressée
-        // Pour l'instant, retourne toujours 0 (pas de touche pressée)
-        // TODO: Implémenter la capture des événements clavier dans ProgramOutput
-        // getKey est utilisé avec → (ex: getKey→K)
-        // Cette commande sera gérée par l'affectation de variable
+        // getKey utilisé seul sur une ligne : idiome TI-BASIC pour vider
+        // le tampon clavier (ex. avant une boucle d'attente). La forme
+        // usuelle « getKey→K » passe, elle, par evaluateExpression (ASSIGN).
+        ProgramInterpreter.lastKeyCode = 0;
         break;
       }
 
@@ -1066,8 +1106,8 @@ export class ProgramInterpreter {
         await new Promise(resolve => setTimeout(resolve, 10));
       }
 
-      // Programme terminé seulement si on n'attend pas une pause, un input ou un menu
-      if (!context.isPaused && !context.isWaitingInput && !context.isWaitingMenu) {
+      // Programme terminé
+      if (!context.isPaused) {
         onComplete();
       }
     } catch (error) {
