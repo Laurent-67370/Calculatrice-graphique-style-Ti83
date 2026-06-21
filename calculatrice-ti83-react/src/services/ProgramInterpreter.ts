@@ -1066,8 +1066,8 @@ export class ProgramInterpreter {
         await new Promise(resolve => setTimeout(resolve, 10));
       }
 
-      // Programme terminé
-      if (!context.isPaused) {
+      // Programme terminé seulement si on n'attend pas une pause, un input ou un menu
+      if (!context.isPaused && !context.isWaitingInput && !context.isWaitingMenu) {
         onComplete();
       }
     } catch (error) {
