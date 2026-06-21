@@ -1,10 +1,14 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.3.0 - getKey & Support des Jeux 🎮
+## Version 3.3.1 - Correctifs mapping ALPHA (clavier) 🎹
 
-> Nouvelle fonctionnalité du module PRGM : `getKey` lit l'entrée clavier (codes officiels TI-BASIC) avec un tampon consommable à la lecture — comportement identique à une vraie TI-83. Écrivez des jeux et programmes interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
+> Correctif du mapping ALPHA du clavier : le rang du haut (MATH=CLEAR) produit désormais les bonnes lettres A-E, et le doublon `X` est éliminé. Basé sur la v3.3.0 (qui a ajouté `getKey` & le support des jeux). Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
+
+> 🎮 **v3.3.0** : `getKey` lit l'entrée clavier (codes officiels TI-BASIC) avec un tampon consommable à la lecture — comportement identique à une vraie TI-83. Écrivez des jeux et programmes interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
+
+**Correctifs v3.3.1** 🎹 : mapping ALPHA du clavier partiellement corrigé — rang haut MATH/APPS/PRGM/VARS/CLEAR = A/B/C/D/E (confirmé guidebook TI officiel), doublon `X` sur `÷` supprimé, mauvaises lettres A-E retirées des touches numériques 7/8/9/4/5. Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
 
 **Nouveautés v3.3.0** 🎮 :
 - `getKey` — lecture de l'entrée clavier dans les programmes TI-BASIC (codes officiels TI-BASIC `ligne×10+colonne`), avec tampon consommable à la lecture (comme une vraie TI-83). Les touches fléchées et le pavé numérique alimentent le programme hors des modes `Input`/`Menu`. Écrivez des jeux interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
@@ -23,6 +27,31 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.3.1
+
+Correctif partiel du **mapping ALPHA** du clavier (`Keyboard.tsx`). Seules les touches confirmées à 100 % par le guidebook TI officiel (lettres vertes imprimées sur les touches) ont été corrigées ; le reste attend la table autoritaire complète.
+
+### ✅ Corrigé (sans doute)
+
+| Touche | Avant | Après |
+|---|---|---|
+| MATH / APPS / PRGM / VARS / CLEAR | (aucune lettre) | **A / B / C / D / E** |
+| ÷ | `X` (doublon) | (supprimé — `X,T,θ,n` est la vraie touche X) |
+| 7 / 8 / 9 | A / B / C (doublons) | (supprimé — A-C sont sur le rang haut) |
+| 4 / 5 | D / E (doublons) | (supprimé — D-E sont sur le rang haut) |
+
+- **Rang du haut A-E** : confirmé par le guidebook TI (« ƒ [A] above MATH », « ƒ [B] above APPS »). `ALPHA + MATH` tape désormais « A », comme sur une vraie TI-83.
+- **Doublon `X`** : la touche `÷` produisait à tort `X` (doublon avec `X,T,θ,n`). Supprimé.
+- **Doublons A-E** : les touches numériques 7/8/9/4/5 portaient les mauvaises lettres A/B/C/D/E ; retirées pour éviter les doublons avec le rang haut désormais correct.
+
+### ⚠️ Reste à corriger (doute → table autoritaire)
+
+Les lettres F-M et N-Z sur les touches scientifiques/numériques (`X⁻¹`, `SIN`, `COS`, `TAN`, `^`, `LOG`, `LN`, `X²`, `,`, `(`, `×`, `−`, `STO→`, `1`, `2`, `3`, `6`, `(−)`) ainsi que les caractères spéciaux (`0`=espace, `.`=:, `)`=θ, `+`=") et le bug `LN='n'` minuscule ne sont pas encore alignés sur la vraie TI-83 : les sources web consultées se contredisent. Ils seront corrigés avec le diagramme officiel du **TI-83 Plus Guidebook** (lettres vertes imprimées sur les touches).
+
+> 🔗 Détails techniques : commit `74eceff` sur la branche par défaut. Modification dans `calculatrice-ti83-react/src/components/Calculator/Keyboard.tsx`.
 
 ---
 

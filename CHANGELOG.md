@@ -6,6 +6,15 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.3.1] - 2026-06-21
+
+### 🐛 Corrigé - Mapping ALPHA du clavier (partiel)
+Correctif partiel du mapping ALPHA dans `Keyboard.tsx` — seules les touches confirmées à 100 % par le guidebook TI officiel sont corrigées ; le reste attend la table autoritaire complète.
+- **Rang du haut** : MATH/APPS/PRGM/VARS/CLEAR = alpha A/B/C/D/E (avant : aucune lettre — confirmé guidebook « ƒ [A] above MATH », « ƒ [B] above APPS »). `ALPHA + MATH` tape désormais « A ».
+- **Doublon `X`** : la touche `÷` produisait à tort `X` (doublon avec `X,T,θ,n`, la vraie touche X). Supprimé.
+- **Doublons A-E** : les touches numériques 7/8/9/4/5 portaient les mauvaises lettres A/B/C/D/E ; retirées pour éviter les doublons avec le rang haut désormais correct.
+- **⚠️ Non corrigé (doute)** : F-M et N-Z sur les touches scientifiques/numériques, caractères spéciaux (`0`/`.`/`)`/`+`), et `LN='n'` minuscule — sources web contradictoires, à aligner avec le diagramme officiel du guidebook TI.
+
 ## [3.3.0] - 2026-06-21
 
 ### ✨ Ajouté - Module PRGM : `getKey` & support des jeux
