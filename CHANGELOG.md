@@ -6,6 +6,24 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.2.2] - 2026-06-21
+
+### 🐛 Corrigé - Module PRGM (interpréteur TI-BASIC)
+- **Opérateurs de comparaison `=` `≠` `≥` `≤` dans les conditions** : ces opérateurs (insérés par le menu TEST) faisaient planter l'évaluation — `=` était traité comme une assignation par mathjs, et `≠`/`≥`/`≤` (Unicode) n'étaient pas reconnus. `If X=3`, `While X≠0`, `Repeat X≥5`, `If X≤3` fonctionnent désormais (conversion TI-BASIC → mathjs dans `evaluateCondition`).
+- **Substitution de variables dans les littéraux chaîne** : `Disp "ENTREZ N"` avec `N=5` n'affiche plus `ENTREZ 5` — les chaînes entre guillemets sont retournées telles quelles, sans interpolation.
+- **`If` mono-ligne `If cond:commande`** : le séparateur `:` est désormais géré (la commande inline est exécutée si la condition est vraie).
+- **`findThen`** : ne plante plus quand `If` est sur la dernière ligne d'un programme.
+
+## [3.2.1] - 2026-06-21
+
+### 🐛 Corrigé - Mathématiques, Finance & Graphique
+- **`ln(X)` en mode graphique** : les remplacements `log`/`ln` s'effectuaient dans le mauvais ordre (`Math.Math.log10` indéfini) ; `ln` se trace désormais correctement.
+- **`QuadReg`** : coefficients erronés (formule de Cramer manuelle) → remplacée par élimination de Gauss 3×3 (cohérent avec `CubicReg`/`QuartReg`).
+- **Séquences récursives `u(n-1)`/`u(n-2)`** : la substitution de `n` se faisait avant celle de `u(n-k)`, faisant crasher le tracé ; ordre corrigé.
+- **TVM `solveN`** : renvoyait « Pas de solution » pour un prêt standard (ratio inversé) ; formule corrigée.
+- **TVM `solveI`** : la dérivée de Newton-Raphson avait son signe inversé (divergence) ; dérivée corrigée.
+- **`DrawInv`** : le pas d'échantillonnage Y divisait par `canvasWidth` au lieu de `canvasHeight` ; corrigé.
+
 ## [3.0.0.0] - 2025-11-10
 
 ### 🎓 Ajouté - Programmation TI-BASIC Complète
