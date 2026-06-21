@@ -175,7 +175,29 @@ export const useProgramStore = create<ProgramStore>()(
           (error: string) => {
             get().setError(error);
           }
-        );
+        ).then(() => {
+          // Resynchroniser les drapeaux d'état (primitifs) mutés par
+          // l'interpréteur vers le store. addOutput() ayant figé une copie
+          // du contexte, ces primitifs (isWaitingInput, etc.) ne s'y
+          // propagent pas autrement — l'UI ne verrait pas l'attente d'input.
+          const current = get().executionContext;
+          if (current) {
+            set({
+              executionContext: {
+                ...current,
+                isWaitingInput: context.isWaitingInput,
+                isWaitingMenu: context.isWaitingMenu,
+                isPaused: context.isPaused,
+                inputPrompt: context.inputPrompt,
+                inputVariable: context.inputVariable,
+                promptQueue: context.promptQueue,
+                menuOptions: context.menuOptions,
+                menuTitle: context.menuTitle,
+                currentLine: context.currentLine,
+              },
+            });
+          }
+        });
       },
 
       // Arrêter l'exécution
@@ -235,7 +257,25 @@ export const useProgramStore = create<ProgramStore>()(
           (error: string) => {
             get().setError(error);
           }
-        );
+        ).then(() => {
+          const current = get().executionContext;
+          if (current) {
+            set({
+              executionContext: {
+                ...current,
+                isWaitingInput: context.isWaitingInput,
+                isWaitingMenu: context.isWaitingMenu,
+                isPaused: context.isPaused,
+                inputPrompt: context.inputPrompt,
+                inputVariable: context.inputVariable,
+                promptQueue: context.promptQueue,
+                menuOptions: context.menuOptions,
+                menuTitle: context.menuTitle,
+                currentLine: context.currentLine,
+              },
+            });
+          }
+        });
       },
 
       // Exécuter une ligne (pour debug pas à pas)
@@ -397,7 +437,25 @@ export const useProgramStore = create<ProgramStore>()(
                 (error) => {
                   get().setError(error);
                 }
-              );
+              ).then(() => {
+                const current = get().executionContext;
+                if (current) {
+                  set({
+                    executionContext: {
+                      ...current,
+                      isWaitingInput: context.isWaitingInput,
+                      isWaitingMenu: context.isWaitingMenu,
+                      isPaused: context.isPaused,
+                      inputPrompt: context.inputPrompt,
+                      inputVariable: context.inputVariable,
+                      promptQueue: context.promptQueue,
+                      menuOptions: context.menuOptions,
+                      menuTitle: context.menuTitle,
+                      currentLine: context.currentLine,
+                    },
+                  });
+                }
+              });
             }
           }
         }
@@ -482,7 +540,25 @@ export const useProgramStore = create<ProgramStore>()(
               (error) => {
                 get().setError(error);
               }
-            );
+            ).then(() => {
+              const current = get().executionContext;
+              if (current) {
+                set({
+                  executionContext: {
+                    ...current,
+                    isWaitingInput: context.isWaitingInput,
+                    isWaitingMenu: context.isWaitingMenu,
+                    isPaused: context.isPaused,
+                    inputPrompt: context.inputPrompt,
+                    inputVariable: context.inputVariable,
+                    promptQueue: context.promptQueue,
+                    menuOptions: context.menuOptions,
+                    menuTitle: context.menuTitle,
+                    currentLine: context.currentLine,
+                  },
+                });
+              }
+            });
           }
         }
       },
