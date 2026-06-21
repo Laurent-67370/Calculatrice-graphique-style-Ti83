@@ -26,10 +26,11 @@ import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
 import { mathFunctionsService } from '../../services/MathFunctionsService';
-import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems, distrMenuItems, testMenuItems, logicMenuItems, listMenuItems, drawMenuItems } from '../../data/menus';
-import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers, createDistrHandlers, createTestHandlers, createLogicHandlers } from '../../utils/menuHandlers';
+import { statMenuItems, mathMenuItems, zoomMenuItems, calcMenuItems, varsMenuItems, distrMenuItems, testMenuItems, logicMenuItems, listMenuItems, drawMenuItems, matrixMenuItems } from '../../data/menus';
+import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcHandlers, createDistrHandlers, createTestHandlers, createLogicHandlers, createMatrixHandlers } from '../../utils/menuHandlers';
 import { listHandlers } from '../../utils/listHandlers';
 import { createDrawHandlers } from '../../utils/drawHandlers';
+import { MatrixService } from '../../services/MatrixService';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import { ProgramMenu } from '../Program/ProgramMenu';
 import { ProgramEditor } from '../Program/ProgramEditor';
@@ -236,6 +237,7 @@ export const Calculator: React.FC = () => {
     if (currentMenu === 'LOGIC') return logicMenuItems;
     if (currentMenu === 'LIST') return listMenuItems;
     if (currentMenu === 'DRAW') return drawMenuItems;
+    if (currentMenu === 'MATRIX') return matrixMenuItems;
     return [];
   }, [currentMenu, menuStack, varsMenuItemsDynamic]);
 
@@ -285,6 +287,11 @@ export const Calculator: React.FC = () => {
   const drawHandlers = useMemo(() =>
     createDrawHandlers(appendInput, setCurrentMenu),
     [appendInput, setCurrentMenu]
+  );
+
+  const matrixHandlers = useMemo(() =>
+    createMatrixHandlers(appendInput, setCurrentMenu, setMode as (mode: string) => void),
+    [appendInput, setCurrentMenu, setMode]
   );
 
   /**
@@ -411,6 +418,8 @@ export const Calculator: React.FC = () => {
               handler = (listHandlers as any)[currentItem.id];
             } else if (currentMenu === 'DRAW') {
               handler = (drawHandlers as any)[currentItem.id];
+            } else if (currentMenu === 'MATRIX') {
+              handler = (matrixHandlers as any)[currentItem.id];
             } else if (currentMenu === 'RCL') {
               // Menu RCL : insérer la variable sélectionnée dans l'input
               const varName = currentItem.label;
@@ -712,9 +721,9 @@ export const Calculator: React.FC = () => {
         return;
       }
 
-      // Gérer MATRIX (2ND + X⁻¹)
+      // Gérer MATRIX (2ND + X⁻¹) → ouvrir le menu MATRX (NAMES/MATH/OPS + Edit)
       if (action === 'matrix') {
-        setMode('MATRIX');
+        setCurrentMenu('MATRIX');
         setGraphMode(false);
         // Note: Le mode alpha est désactivé automatiquement par handleKeyPressWithAutoDeactivate
         return;
@@ -1714,6 +1723,32 @@ export const Calculator: React.FC = () => {
               const transposeRegex = new RegExp(`MAT_${name}\\^T`, 'g');
               expr = expr.replace(transposeRegex, `transpose(MAT_${name})`);
             });
+
+            // Rewrites des tokens matriciels TI (noms avec opérateurs/caractères non-identifiants)
+            // NB: *row+ et *row- doivent être réécrits AVANT *row
+            expr = expr.replace(/Matr►list\(/g, 'matrToList(');
+            expr = expr.replace(/List►matr\(/g, 'listToMatr(');
+            expr = expr.replace(/\*row\+\(/g, 'rowPlus(');
+            expr = expr.replace(/\*row-\(/g, 'rowMinus(');
+            expr = expr.replace(/\*row\(/g, 'row(');
+
+            // Enregistrer les fonctions matricielles TI dans le scope.
+            // mathjs (create, all) gère déjà en built-in: det, identity, transpose, inv, + arithmétique.
+            scope.randM = MatrixService.randM;
+            scope.ref = MatrixService.ref;
+            scope.rref = MatrixService.rref;
+            scope.rowSwap = MatrixService.rowSwap;
+            scope.row = MatrixService.row;
+            scope.rowPlus = MatrixService.rowPlus;
+            scope.rowMinus = MatrixService.rowMinus;
+            scope.matrToList = MatrixService.matrToList;
+            scope.listToMatr = MatrixService.listToMatr;
+            scope.augment = MatrixService.augment;
+            scope.cumSum = MatrixService.cumSum;
+            scope.dim = MatrixService.dim;
+            scope.Fill = MatrixService.fill;
+            scope.SortA = MatrixService.sortA;
+            scope.SortD = MatrixService.sortD;
 
             // Évaluer l'expression avec mathjs
             const result = math.evaluate(expr, scope);

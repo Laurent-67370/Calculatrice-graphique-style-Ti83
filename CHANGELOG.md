@@ -6,6 +6,17 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.4.0] - 2026-06-21
+
+### ✨ Ajouté - Opérations matricielles (MATRX MATH/OPS)
+Menu **MATRX** complet (`2ND + X⁻¹`) avec onglets NAMES / MATH / OPS + Edit. Toutes les opérations matricielles standard TI-83 Plus.
+- **MATH** : `det(`, `ᵀ` (transposée), `dim(`, `Fill(`, `identity(`, `randM(`, `augment(`, `Matr►list(`, `List►matr(`, `cumSum(`, `ref(`, `rref(`, `rowSwap(`, `*row(`, `*row+(`, `*row-(`.
+- **Arithmétique** : `[A]*[B]`, `[A]+[B]`, `[A]^n`, `[A]⁻¹` (inverse), `[A]ᵀ` (transposée).
+- **Nouveau service** `src/services/MatrixService.ts` : Gauss/Gauss-Jordan (`ref`/`rref` avec pivot partiel), opérations sur lignes, conversions liste↔matrice, `randM`, `augment`, `dim`/`cumSum`/`Fill`/`SortA`/`SortD` unifiés (gèrent listes et matrices).
+- **Intégration** : fonctions enregistrées dans le scope d'évaluation + rewrites de tokens TI (`Matr►list`→`matrToList`, `*row+`→`rowPlus`…) dans `Calculator.tsx`. `2ND + X⁻¹` ouvre désormais le menu MATRX (l'éditeur reste accessible via l'item Edit).
+- Testé : 18/18 cas fonctionnels (det, produit, transposée, inverse, identity, randM, augment, rref, ref, rowSwap, *row, *row+, Matr►list, List►matr, dim, cumSum, Fill, SortA) + cas d'erreur (bornes lignes).
+- ⚠️ **Limitations v1** : `Fill`/`SortA`/`SortD` retournent une valeur (pas de mutation en place) ; stockage d'un résultat matriciel vers une variable matrice (`rref([A])→[B]`) non géré ; messages d'erreur sur matrices singulières génériques (pas les libellés TI exacts).
+
 ## [3.3.1] - 2026-06-21
 
 ### 🐛 Corrigé - Mapping ALPHA du clavier (partiel)

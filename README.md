@@ -1,12 +1,16 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.3.1 - Correctifs mapping ALPHA (clavier) 🎹
+## Version 3.4.0 - Opérations matricielles (MATRX MATH/OPS) 🔢
 
-> Correctif du mapping ALPHA du clavier : le rang du haut (MATH=CLEAR) produit désormais les bonnes lettres A-E, et le doublon `X` est éliminé. Basé sur la v3.3.0 (qui a ajouté `getKey` & le support des jeux). Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
+> Nouvelle fonctionnalité : opérations matricielles complètes via le menu MATRX (`2ND + X⁻¹`) — onglets NAMES / MATH / OPS + Edit. `det`, `rref`, `ref`, `identity`, `randM`, `augment`, `Matr►list`, `List►matr`, opérations sur lignes (`rowSwap`, `*row`, `*row+`, `*row-`), transposée, inverse, `dim`, `cumSum`. Basé sur la v3.3.1. Voir la section **✨ Nouveautés v3.4.0** ci-dessous.
+
+> 🎹 **v3.3.1** : correctifs mapping ALPHA (rang haut A-E, doublon X éliminé). Voir **🔧 Correctifs v3.3.1**.
 
 > 🎮 **v3.3.0** : `getKey` lit l'entrée clavier (codes officiels TI-BASIC) avec un tampon consommable à la lecture — comportement identique à une vraie TI-83. Écrivez des jeux et programmes interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
+
+**Nouveautés v3.4.0** 🔢 : opérations matricielles — menu MATRX (`2ND + X⁻¹`) avec onglets NAMES/MATH/OPS + Edit. `det(`, `rref(`, `ref(`, `identity(`, `randM(`, `augment(`, `Matr►list(`, `List►matr(`, `cumSum(`, `dim(`, opérations sur lignes (`rowSwap(`, `*row(`, `*row+(`, `*row-(`), transposée (`ᵀ`), inverse, arithmétique (`[A]*[B]`, `[A]+[B]`). Voir la section **✨ Nouveautés v3.4.0** ci-dessous.
 
 **Correctifs v3.3.1** 🎹 : mapping ALPHA du clavier partiellement corrigé — rang haut MATH/APPS/PRGM/VARS/CLEAR = A/B/C/D/E (confirmé guidebook TI officiel), doublon `X` sur `÷` supprimé, mauvaises lettres A-E retirées des touches numériques 7/8/9/4/5. Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
 
@@ -27,6 +31,46 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## ✨ Nouveautés Version 3.4.0
+
+### 🔢 Opérations matricielles (MATRX MATH/OPS)
+
+Le menu **MATRX** (accessible via `2ND + X⁻¹`) est désormais complet, avec les onglets **NAMES / MATH / OPS** (+ **Edit** pour l'éditeur de matrices). Toutes les opérations matricielles standard de la TI-83 Plus sont disponibles :
+
+**Onglet MATH** :
+| Commande | Effet |
+|---|---|
+| `det(` | déterminant |
+| `ᵀ` | transposée (postfixe : `[A]ᵀ`) |
+| `dim(` | dimensions `[lignes, colonnes]` |
+| `Fill(` | matrice remplie d'une valeur |
+| `identity(` | matrice identité n×n |
+| `randM(` | matrice aléatoire `lignes×colonnes` |
+| `augment(` | concaténation horizontale |
+| `Matr►list(` | colonne d'une matrice → liste |
+| `List►matr(` | listes → colonnes d'une matrice |
+| `cumSum(` | sommes cumulées |
+| `ref(` / `rref(` | formes échelonnée / échelonnée réduite |
+| `rowSwap(`, `*row(`, `*row+(`, `*row-(` | opérations élémentaires sur lignes |
+
+**Arithmétique** : `[A]*[B]` (produit), `[A]+[B]`, `[A]-[B]`, `[A]^n`, `[A]⁻¹` (inverse), `[A]ᵀ` (transposée).
+
+**Exemple** — résoudre un système 2×2 :
+```basic
+[A] = [[1,2,5],[3,4,7]]   →  rref([A])  =  [[1,0,-3],[0,1,4]]
+```
+soit x = -3, y = 4.
+
+### ⚠️ Limitations v1
+
+- `Fill(` et `SortA(`/`SortD(` renvoient une **valeur** (ne mutent pas la variable en place comme sur la TI-83).
+- Le stockage d'un résultat matriciel vers une variable matrice (`rref([A])→[B]`) n'est pas encore géré — le résultat s'affiche à l'écran.
+- Messages d'erreur sur matrices singulières : génériques (pas encore les libellés TI exacts `ERR:SINGULAR MAT`).
+
+> 🔗 Détails techniques : nouveau service `src/services/MatrixService.ts` (Gauss/Gauss-Jordan pour `ref`/`rref`, opérations sur lignes, conversions liste↔matrice) ; fonctions enregistrées dans le scope d'évaluation + rewrites de tokens TI dans `Calculator.tsx` ; menu `matrixMenuItems` dans `src/data/menus.ts` + `createMatrixHandlers` dans `src/utils/menuHandlers.ts`.
 
 ---
 
@@ -316,7 +360,7 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 | **STAT TESTS** (tests d'hypothèse + intervalles) | ❌ | **~0 %** — `Z-Test`, `T-Test`, `2-Samp`, `1-PropZ`, `χ²-Test`, `ANOVA`, `LinRegTTest`… manquants |
 | DISTR (15 lois) | ✅ | ~100 % — `normalpdf/cdf`, `invNorm`, `t`, `χ²`, `F`, `binom`, `poisson`, `geomet` |
 | LIST OPS | ✅ | ~95 % — `SortA/D`, `dim`, `Fill`, `seq`, `cumSum`, `ΔList`, `mean`, `stdDev`… |
-| MATRX (éditeur + MATH/OPS) | ⚠️ | ~40 % — éditeur `[A]`-`[J]` ✅, mais **opérations absentes** (`det`, `rref`, `ref`, `identity`, `randM`, `augment`, `T`, `Matr►list`) |
+| MATRX (éditeur + MATH/OPS) | ✅ | ~90 % — éditeur `[A]`-`[J]` ✅ + opérations `det`, `rref`/`ref`, `identity`, `randM`, `augment`, `Matr►list`/`List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse, `dim`, `cumSum` (v3.4.0). Manque : `Fill`/`SortA` en place, stockage résultat→matrice |
 | FINANCE (TVM + cash flows) | ✅ | ~95 % — `tvm_PV/N/I/PMT/FV`, `NPV`, `IRR`, `bal`, `ΣPrn`, `ΣInt`, `Nom`, `Eff` |
 | SOLVER | ✅ | ~100 % |
 | PRGM (TI-BASIC) | ✅ | ~75 % — 39+ commandes + `getKey` (jeux) ; manquent : chaînes (`length`, `sub`, `inString`, `expr`), `Archive`, `Asm(`, link |
@@ -325,15 +369,14 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 
 ### Synthèse
 
-- **~80 %** en comptant toutes les commandes du catalogue TI-83 Plus
-- **~85–90 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
+- **~85 %** en comptant toutes les commandes du catalogue TI-83 Plus
+- **~90 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
 
-### Deux principaux manques
+### Principal manque restant
 
 1. **STAT TESTS** — un menu entier (tests d'hypothèses / intervalles de confiance) est absent, alors que les *distributions* (DISTR) sont complètes. C'est le plus gros écart pour un usage statistique.
-2. **Opérations matricielles** (MATRX MATH/OPS) — l'éditeur permet de saisir les matrices, mais les calculs (`det`, `rref`, `ref`, `identity`, `augment`, transposée…) ne sont pas implémentés.
 
-Manques mineurs : `nDeriv(`/`fnInt(` (calcul), fonctions chaîne en PRGM, notations ANGLE exactes.
+Manques mineurs : `nDeriv(`/`fnInt(` (calcul), fonctions chaîne en PRGM, notations ANGLE exactes, `Fill`/`SortA` matricielles en place, stockage d'un résultat matriciel vers une variable matrice.
 
 ---
 

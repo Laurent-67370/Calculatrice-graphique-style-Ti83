@@ -16,7 +16,8 @@ export type MenuType =
   | 'CATALOG'
   | 'LIST'
   | 'DISTR'
-  | 'DRAW';
+  | 'DRAW'
+  | 'MATRIX';
 
 // Item de menu
 export interface MenuItem {

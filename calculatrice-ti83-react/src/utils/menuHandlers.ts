@@ -699,6 +699,48 @@ export const createLogicHandlers = (
 });
 
 /**
+ * Handlers pour le menu MATRX (2ND + X⁻¹) — onglets NAMES / MATH / OPS + Edit
+ */
+export const createMatrixHandlers = (
+  appendInput: (value: string) => void,
+  setCurrentMenu: (menu: string | null) => void,
+  setMode: (mode: string) => void
+) => ({
+  // NAMES
+  'mx-edit': () => { setMode('MATRIX'); setCurrentMenu(null); },
+  'mx-a': () => { appendInput('[A]'); setCurrentMenu(null); },
+  'mx-b': () => { appendInput('[B]'); setCurrentMenu(null); },
+  'mx-c': () => { appendInput('[C]'); setCurrentMenu(null); },
+  'mx-d': () => { appendInput('[D]'); setCurrentMenu(null); },
+  'mx-e': () => { appendInput('[E]'); setCurrentMenu(null); },
+  'mx-f': () => { appendInput('[F]'); setCurrentMenu(null); },
+  'mx-g': () => { appendInput('[G]'); setCurrentMenu(null); },
+  'mx-h': () => { appendInput('[H]'); setCurrentMenu(null); },
+  'mx-i': () => { appendInput('[I]'); setCurrentMenu(null); },
+  'mx-j': () => { appendInput('[J]'); setCurrentMenu(null); },
+  // MATH
+  'mx-det': () => { appendInput('det('); setCurrentMenu(null); },
+  'mx-transpose': () => { appendInput('^T'); setCurrentMenu(null); },
+  'mx-dim': () => { appendInput('dim('); setCurrentMenu(null); },
+  'mx-fill': () => { appendInput('Fill('); setCurrentMenu(null); },
+  'mx-identity': () => { appendInput('identity('); setCurrentMenu(null); },
+  'mx-randm': () => { appendInput('randM('); setCurrentMenu(null); },
+  'mx-augment': () => { appendInput('augment('); setCurrentMenu(null); },
+  'mx-matrlist': () => { appendInput('Matr►list('); setCurrentMenu(null); },
+  'mx-listmatr': () => { appendInput('List►matr('); setCurrentMenu(null); },
+  'mx-cumsum': () => { appendInput('cumSum('); setCurrentMenu(null); },
+  'mx-ref': () => { appendInput('ref('); setCurrentMenu(null); },
+  'mx-rref': () => { appendInput('rref('); setCurrentMenu(null); },
+  'mx-rowswap': () => { appendInput('rowSwap('); setCurrentMenu(null); },
+  'mx-row': () => { appendInput('*row('); setCurrentMenu(null); },
+  'mx-rowplus': () => { appendInput('*row+('); setCurrentMenu(null); },
+  'mx-rowminus': () => { appendInput('*row-('); setCurrentMenu(null); },
+  // OPS
+  'mx-sorta': () => { appendInput('SortA('); setCurrentMenu(null); },
+  'mx-sortd': () => { appendInput('SortD('); setCurrentMenu(null); },
+});
+
+/**
  * Fonction utilitaire pour obtenir le handler d'un menu
  */
 export const getMenuHandler = (

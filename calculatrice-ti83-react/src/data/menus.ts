@@ -294,3 +294,56 @@ export const drawMenuItems: MenuItem[] = [
   { id: 'draw-sto', label: 'STO', action: () => {}, submenu: drawStoMenuItems },
 ];
 
+// Menu MATRX (2ND + X⁻¹) — onglets NAMES / MATH / OPS + Edit
+const matrixNamesMenuItems: MenuItem[] = [
+  { id: 'mx-edit', label: 'Edit...', action: () => {} },
+  { id: 'mx-a', label: '[A]', action: () => {} },
+  { id: 'mx-b', label: '[B]', action: () => {} },
+  { id: 'mx-c', label: '[C]', action: () => {} },
+  { id: 'mx-d', label: '[D]', action: () => {} },
+  { id: 'mx-e', label: '[E]', action: () => {} },
+  { id: 'mx-f', label: '[F]', action: () => {} },
+  { id: 'mx-g', label: '[G]', action: () => {} },
+  { id: 'mx-h', label: '[H]', action: () => {} },
+  { id: 'mx-i', label: '[I]', action: () => {} },
+  { id: 'mx-j', label: '[J]', action: () => {} },
+];
+
+const matrixMathMenuItems: MenuItem[] = [
+  { id: 'mx-det', label: 'det(', action: () => {} },
+  { id: 'mx-transpose', label: 'ᵀ', action: () => {} },
+  { id: 'mx-dim', label: 'dim(', action: () => {} },
+  { id: 'mx-fill', label: 'Fill(', action: () => {} },
+  { id: 'mx-identity', label: 'identity(', action: () => {} },
+  { id: 'mx-randm', label: 'randM(', action: () => {} },
+  { id: 'mx-augment', label: 'augment(', action: () => {} },
+  { id: 'mx-matrlist', label: 'Matr►list(', action: () => {} },
+  { id: 'mx-listmatr', label: 'List►matr(', action: () => {} },
+  { id: 'mx-cumsum', label: 'cumSum(', action: () => {} },
+  { id: 'mx-ref', label: 'ref(', action: () => {} },
+  { id: 'mx-rref', label: 'rref(', action: () => {} },
+  { id: 'mx-rowswap', label: 'rowSwap(', action: () => {} },
+  { id: 'mx-row', label: '*row(', action: () => {} },
+  { id: 'mx-rowplus', label: '*row+(', action: () => {} },
+  { id: 'mx-rowminus', label: '*row-(', action: () => {} },
+];
+
+const matrixOpsMenuItems: MenuItem[] = [
+  { id: 'mx-sorta', label: 'SortA(', action: () => {} },
+  { id: 'mx-sortd', label: 'SortD(', action: () => {} },
+  { id: 'mx-dim', label: 'dim(', action: () => {} },
+  { id: 'mx-fill', label: 'Fill(', action: () => {} },
+  { id: 'mx-identity', label: 'identity(', action: () => {} },
+  { id: 'mx-randm', label: 'randM(', action: () => {} },
+  { id: 'mx-augment', label: 'augment(', action: () => {} },
+  { id: 'mx-matrlist', label: 'Matr►list(', action: () => {} },
+  { id: 'mx-listmatr', label: 'List►matr(', action: () => {} },
+  { id: 'mx-cumsum', label: 'cumSum(', action: () => {} },
+];
+
+export const matrixMenuItems: MenuItem[] = [
+  { id: 'mx-names', label: 'NAMES', action: () => {}, submenu: matrixNamesMenuItems },
+  { id: 'mx-math', label: 'MATH', action: () => {}, submenu: matrixMathMenuItems },
+  { id: 'mx-ops', label: 'OPS', action: () => {}, submenu: matrixOpsMenuItems },
+];
+
