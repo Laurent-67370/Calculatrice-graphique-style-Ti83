@@ -35,10 +35,31 @@ import { ProgramMenu } from '../Program/ProgramMenu';
 import { ProgramEditor } from '../Program/ProgramEditor';
 import { ProgramOutput } from '../Program/ProgramOutput';
 import { useProgramStore } from '../../store/programStore';
+import { ProgramInterpreter } from '../../services/ProgramInterpreter';
 import type { KeyAction, GraphFunction } from '../../types';
 
 // Créer une instance de mathjs avec toutes les fonctions
 const math = create(all);
+
+/**
+ * Codes getKey TI-BASIC (ligne×10 + colonne) associés à chaque touche de la
+ * calculatrice. Utilisés pour alimenter ProgramInterpreter.pushKey() quand un
+ * programme tourne et lit le clavier via getKey.
+ * Réf. : http://tibasicdev.wikidot.com/key-codes
+ * Les flèches suivent la convention TI (←24 ↑25 →26 ↓34), pas la grille.
+ */
+const GETKEY_CODES: Record<string, number> = {
+  'y-vars': 11, window: 12, zoom: 13, trace: 14, graph: 15,
+  '2nd': 21, mode: 22, del: 23, left: 24, up: 25, right: 26,
+  alpha: 31, x: 32, stat: 33, down: 34,
+  math: 41, apps: 42, prgm: 43, vars: 44, clear: 45,
+  inverse: 51, sin: 52, cos: 53, tan: 54, pow: 55,
+  square: 61, comma: 62, 'left-paren': 63, 'right-paren': 64, divide: 65,
+  log: 71, '7': 72, '8': 73, '9': 74, multiply: 75,
+  ln: 81, '4': 82, '5': 83, '6': 84, subtract: 85,
+  sto: 91, '1': 92, '2': 93, '3': 94, add: 95,
+  '0': 102, dot: 103, negative: 104, enter: 105,
+};
 
 export const Calculator: React.FC = () => {
   // State pour le modal d'aide
@@ -324,6 +345,20 @@ export const Calculator: React.FC = () => {
 
         // Ignorer les autres touches pendant l'input
         return;
+      }
+
+      // Si un programme tourne et lit le clavier via getKey (hors attente
+      // d'Input ou de Menu), router la touche vers le tampon de l'interpréteur.
+      if (
+        executingProgram &&
+        !executionContext?.isWaitingInput &&
+        !executionContext?.isWaitingMenu
+      ) {
+        const code = GETKEY_CODES[action];
+        if (code !== undefined) {
+          ProgramInterpreter.pushKey(code);
+        }
+        return; // consommer la touche (pas d'action calculatrice normale)
       }
 
       // Si un menu est ouvert, gérer la navigation
@@ -1779,6 +1814,7 @@ export const Calculator: React.FC = () => {
       isSecondFunction,
       isAlphaMode,
       executionContext,
+      executingProgram,
       updateInputValue,
       provideInput,
       programInputValue,
