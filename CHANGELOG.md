@@ -6,6 +6,13 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.4.2] - 2026-06-21
+
+### ✨ Changé - Saisie matrice simplifiée
+- Le menu MATRX (`2ND + X⁻¹`) ouvre désormais directement la liste `[A]`-`[J]` (+ `Edit…`) — fidèle à la TI-83 où NAMES est l'onglet par défaut. Insérer `[A]` passe de 2 à 1 étape (`2ND + X⁻¹` → `[A]`).
+- `MATH` et `OPS` deviennent des sous-menus drill-in en fin de liste (toujours accessibles : `2ND + X⁻¹` → `MATH` → `det(`).
+- Restructuration de `matrixMenuItems` dans `src/data/menus.ts` (NAMES à plat en racine + MATH/OPS en sous-menus). Aide intégrée MATRX mise à jour pour refléter le flux en 1 étape.
+
 ## [3.4.1] - 2026-06-21
 
 ### ✨ Ajouté - Aide intégrée MATRX

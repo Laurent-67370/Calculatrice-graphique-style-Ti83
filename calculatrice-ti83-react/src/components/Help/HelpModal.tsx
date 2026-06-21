@@ -1274,11 +1274,13 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               <h3>🚀 Accès au menu MATRX</h3>
               <div className="help-examples">
                 Appuyez sur : <code>2ND + X⁻¹</code><br/>
-                Le menu MATRX s'ouvre avec 3 onglets : <strong>NAMES</strong>, <strong>MATH</strong>, <strong>OPS</strong><br/>
-                + un item <strong>Edit…</strong> (onglet NAMES) pour modifier les matrices<br/>
+                Le menu MATRX s'ouvre directement sur <strong>NAMES</strong> : la liste <code>[A]</code>…<code>[J]</code> + <code>Edit…</code> (comme une vraie TI-83)<br/>
+                <code>MATH</code> et <code>OPS</code> sont des sous-menus en fin de liste<br/>
+                <br/>
+                <strong>Insérer une matrice (1 étape) :</strong> <code>2ND + X⁻¹</code> → <code>[A]</code><br/>
                 <br/>
                 <strong>Éditer une matrice :</strong><br/>
-                1. <code>2ND + X⁻¹</code> → onglet <code>NAMES</code> → <code>Edit…</code><br/>
+                1. <code>2ND + X⁻¹</code> → <code>Edit…</code><br/>
                 2. Choisir <code>[A]</code>, régler dimensions, saisir les valeurs<br/>
                 3. <code>ENTER</code> pour valider
               </div>
@@ -1660,7 +1662,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.4.1 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref)
+            Version 3.4.2 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref)
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

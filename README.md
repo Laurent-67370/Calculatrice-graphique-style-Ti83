@@ -1,8 +1,8 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.4.1 - Aide intégrée MATRX 🔢
+## Version 3.4.2 - Saisie matrice simplifiée (NAMES racine) 🔢
 
-> Ajout d'un onglet **🔢 MATRX** dans l'aide intégrée (📖 Guide) documentant toutes les opérations matricielles introduites en v3.4.0 : accès au menu, arithmétique, onglet MATH, opérations sur lignes, conversions liste↔matrice, exemple de résolution de système, limitations. Basé sur la v3.4.0.
+> Le menu MATRX (`2ND + X⁻¹`) ouvre désormais directement la liste `[A]`-`[J]` (+ `Edit…`) — comme l'onglet NAMES par défaut d'une vraie TI-83. Insérer `[A]` ne demande plus qu'une étape (`2ND + X⁻¹` → `[A]`), MATH et OPS restant accessibles en sous-menus. Basé sur la v3.4.1.
 
 > 🔢 **v3.4.0** : opérations matricielles MATRX MATH/OPS (`det`, `rref`, `ref`, `identity`, `randM`, `augment`, `Matr►list`, `List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse). Voir **✨ Nouveautés v3.4.0**.
 

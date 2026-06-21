@@ -341,8 +341,10 @@ const matrixOpsMenuItems: MenuItem[] = [
   { id: 'mx-cumsum', label: 'cumSum(', action: () => {} },
 ];
 
+// Menu MATRX (2ND + X⁻¹) — NAMES ([A]-[J] + Edit) à plat en racine (fidèle TI-83 :
+// l'onglet NAMES est l'onglet par défaut), MATH et OPS en sous-menus drill-in.
 export const matrixMenuItems: MenuItem[] = [
-  { id: 'mx-names', label: 'NAMES', action: () => {}, submenu: matrixNamesMenuItems },
+  ...matrixNamesMenuItems,   // Edit..., [A]..[J] directement accessibles (1 étape)
   { id: 'mx-math', label: 'MATH', action: () => {}, submenu: matrixMathMenuItems },
   { id: 'mx-ops', label: 'OPS', action: () => {}, submenu: matrixOpsMenuItems },
 ];
