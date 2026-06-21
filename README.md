@@ -1,8 +1,8 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.2.1 - Correctifs mathématiques, finance & graphique 🐛
+## Version 3.2.2 - Correctifs module PRGM (TI-BASIC) 🐛
 
-> Patch de maintenance basé sur la v3.2.0 (Mode SEQUENCE + Export/Import Programmes). Voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+> Patch de maintenance du module PRGM (interpréteur TI-BASIC), basé sur la v3.2.1. Voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
@@ -15,7 +15,33 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 
 **Version v3.0** : Programmation TI-BASIC complète avec 39+ commandes, structures de contrôle, menus interactifs et compatibilité 100% TI-83 Plus !
 
+**Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
+
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.2.2
+
+Version de maintenance du **module PRGM** (interpréteur TI-BASIC, `ProgramInterpreter`). Trois bugs qui rendaient la programmation TI-BASIC largement inutilisable en pratique. Chaque correctif a été vérifié par un harnais de tests exécutant de vrais programmes TI-BASIC (13/13 réussis) ; build vert (`tsc -b` + `vite build`).
+
+| # | Bug | Impact |
+|---|---|:---:|
+| 1 | Opérateurs `=` `≠` `≥` `≤` dans les conditions (`If`/`While`/`Repeat`) | 🔴 Haute |
+| 2 | Substitution de variables à l'intérieur des littéraux chaîne (`Disp`/`Output`) | 🔴 Haute |
+| 3 | `If` mono-ligne `If cond:commande` (séparateur `:`) | 🟡 Moyenne |
+
+### Détails
+
+- **Opérateurs de comparaison dans les conditions** : le menu TEST de la calculatrice insère `=`, `≠`, `≥`, `≤`, mais l'interpréteur les passait tels quels à mathjs — `=` était traité comme une assignation (`Invalid left hand side of assignment`) et `≠`/`≥`/`≤` (Unicode) n'étaient pas reconnus. `If X=3`, `While X≠0`, `Repeat X≥5`, `If X≤3` crashaient tous (seuls `>` et `<` fonctionnaient). Désormais conversion TI-BASIC → mathjs (`≠`→`!=`, `≥`→`>=`, `≤`→`<=`, `=` isolé → `==`).
+
+- **Littéraux chaîne** : `evaluateExpression` substituait les variables A-Z/θ **avant** de tester la présence d'une chaîne entre guillemets. `Disp "ENTREZ N"` avec `N=5` affichait `ENTREZ 5`. Désormais les chaînes entre guillemets sont retournées telles quelles, sans interpolation.
+
+- **`If` mono-ligne** : `If X>0:Disp "OK"` n'était pas supporté — `parseLine` captait `X>0:Disp "OK"` entier comme condition. Désormais la condition est séparée de la commande inline sur le premier `:` hors guillemets, et la commande est exécutée si la condition est vraie. Le formulaire `If cond` + commande sur la ligne suivante reste inchangé.
+
+- **Bonus** : `findThen` ne plante plus quand `If` est sur la dernière ligne d'un programme (borne `ifLine+1 >= lines.length`).
+
+> 🔗 Détails techniques : PR [#121](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/pull/121)
 
 ---
 
