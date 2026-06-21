@@ -1,8 +1,8 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.2.2 - Correctifs module PRGM (TI-BASIC) 🐛
+## Version 3.2.3 - Correctifs Input/Prompt module PRGM (TI-BASIC) 🐛
 
-> Patch de maintenance du module PRGM (interpréteur TI-BASIC), basé sur la v3.2.1. Voir la section **🔧 Correctifs v3.2.2** ci-dessous.
+> Patch de maintenance du module PRGM (saisie `Input`/`Prompt` et affichage des résultats), basé sur la v3.2.2. Voir la section **🔧 Correctifs v3.2.3** ci-dessous.
 
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
@@ -15,9 +15,39 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 
 **Version v3.0** : Programmation TI-BASIC complète avec 39+ commandes, structures de contrôle, menus interactifs et compatibilité 100% TI-83 Plus !
 
+**Correctifs v3.2.3** 🐛 : 5 bugs du module PRGM corrigés (saisie `Input`/`Prompt` : ligne suivante sautée, statut [TERMINÉ] prématuré, drapeaux d'attente non propagés au store, clavier Android intempestif, résultat FACT effacé + champ tronqué au scroll) — voir la section **🔧 Correctifs v3.2.3** ci-dessous.
+
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.2.3
+
+Version de maintenance du **module PRGM** (saisie utilisateur `Input`/`Prompt` et affichage des résultats). Cinq bugs qui empêchaient la saisie interactive de fonctionner (champ absent, résultat effacé, clavier Android intempestif). Chaque correctif vérifié ; build vert (`tsc -b` + `vite build`).
+
+| # | Bug | Impact |
+|---|---|:---:|
+| 1 | `Input`/`Prompt` sautait la ligne suivante | 🔴 Haute |
+| 2 | `onComplete` se déclenchait en attente de saisie → [TERMINÉ] prématuré | 🔴 Haute |
+| 3 | Drapeaux `isWaitingInput`/`isWaitingMenu` non propagés au store → champ absent | 🔴 Haute |
+| 4 | Le champ `Input` ouvrait le clavier système Android | 🟡 Moyenne |
+| 5 | Résultat effacé après saisie (FACT) + champ tronqué au scroll (TEST) | 🔴 Haute |
+
+### Détails
+
+- **`Input`/`Prompt` saute la ligne suivante** : double-incrément de `currentLine` — l'interpréteur avançait déjà passé la commande `Input`/`Prompt`, mais `provideInput` incrémentait `currentLine` une 2ᵉ fois avant de reprendre → la ligne suivante était systématiquement sautée (`Input N:Disp N*2` n'affichait pas `N*2`). Désormais `provideInput` ne décale plus `currentLine`.
+
+- **`onComplete` prématuré en attente de Input/Menu** : la condition de fin d'exécution dans `executeProgram()` ne vérifiait que `isPaused` → le statut [TERMINÉ] s'affichait dès qu'un programme rencontrait `Input`/`Prompt`/`Menu`, alors qu'il attendait encore une saisie. Ajout des gardes `isWaitingInput` et `isWaitingMenu` sur cette condition.
+
+- **Drapeaux d'attente non propagés vers le store** : l'interpréteur posait `isWaitingInput = true` directement sur l'objet `context`, mais `addOutput()` (qui affiche le prompt `N=`) recopiait le contexte et figeait ce drapeau primitif à `false` à cet instant → le store ne savait jamais qu'une saisie était attendue → pas de champ de saisie, touches non routées. Désormais, après chaque exécution (run, resume, provideInput, provideMenuSelection), les drapeaux réels du contexte sont resynchronisés vers le store via `.then()`.
+
+- **Clavier Android intempestif** : le champ `Input` ouvrait le clavier système Android — seules les touches de la calculatrice (1-9, ENTER…) doivent l'alimenter. Désormais le champ n'ouvre plus le clavier système.
+
+- **Résultat effacé après saisie + champ tronqué au scroll** : (a) les chemins `resume`/`provideInput`/`menu` appelaient `stopProgram()` à la fin → le programme se fermait dès qu'il se terminait après un Input, le résultat `FACT=40320` disparaissait instantanément ; désormais `isCompleted = true` comme `runProgram` (sortie persistée avec [TERMINÉ] et bouton Fermer). (b) le champ était en `position: absolute` dans la zone d'écran qui défile → il se calait sur le contenu défilé (pas le viewport) et remontait sous l'en-tête ; les blocs interactifs (saisie, menu, erreur, pause) sont désormais en flux normal entre l'écran et le pied de page, toujours visibles.
+
+> 🔗 Détails techniques : PR [#124](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/pull/124) (`dd24362`), puis commits `0fc3c59`, `6899447`, `68d6489`, `b95b868` sur la branche par défaut.
 
 ---
 

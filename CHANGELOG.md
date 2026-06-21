@@ -6,6 +6,16 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.2.3] - 2026-06-21
+
+### 🐛 Corrigé - Module PRGM (saisie Input/Prompt & affichage)
+- **`Input`/`Prompt` sautait la ligne suivante** : double-incrément de `currentLine` dans `provideInput` — l'interpréteur avançait déjà passé la commande, qui était incrémentée une 2ᵉ fois avant la reprise. `Input N:Disp N*2` affiche désormais `N*2`. (PR [#124](https://github.com/Laurent-67370/Calculatrice-graphique-style-Ti83/pull/124), commit `dd24362`)
+- **`onComplete` prématuré en attente de Input/Menu** : la condition de fin d'exécution ne vérifiait que `isPaused` → le statut [TERMINÉ] s'affichait pendant la saisie. Ajout des gardes `isWaitingInput`/`isWaitingMenu`. (commit `0fc3c59`)
+- **Drapeaux d'attente non propagés vers le store** : `isWaitingInput` posé sur `context` était figé à `false` par la recopie de `addOutput()` → champ de saisie absent, touches non routées. Resynchronisation des drapeaux réels du contexte vers le store après chaque exécution (run, resume, provideInput, provideMenuSelection). (commit `68d6489`)
+- **Clavier Android intempestif** : le champ `Input` n'ouvre plus le clavier système — seules les touches calc (1-9, ENTER…) l'alimentent. (commit `6899447`)
+- **Résultat effacé après saisie (FACT)** : les chemins `resume`/`provideInput`/`menu` appelaient `stopProgram()` → le programme se fermait en fin d'Input et le résultat disparaissait. Désormais `isCompleted = true` (sortie persistée avec [TERMINÉ] et bouton Fermer). (commit `b95b868`)
+- **Champ tronqué au scroll (TEST)** : blocs interactifs (saisie/menu/erreur/pause) en flux normal au lieu de `position: absolute` → toujours visibles, jamais coupés par le défilement. (commit `b95b868`)
+
 ## [3.2.2] - 2026-06-21
 
 ### 🐛 Corrigé - Module PRGM (interpréteur TI-BASIC)
