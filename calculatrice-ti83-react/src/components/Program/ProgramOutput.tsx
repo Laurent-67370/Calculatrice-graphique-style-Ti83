@@ -144,15 +144,14 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
             <div className="input-field">
               <input
                 ref={inputRef}
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*"
+                type="text"
+                inputMode="none"
+                readOnly
                 value={programInputValue}
                 onChange={(e) => updateInputValue(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 onClick={() => inputRef.current?.focus()}
                 placeholder="Entrez un nombre..."
-                autoFocus
                 className="input-value"
                 style={{ fontSize: '16px' }} // Évite le zoom sur iOS
               />
