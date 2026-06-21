@@ -113,8 +113,8 @@ export class GraphingEngine {
       expr = expr
         .replace(/sqrt\(/g, 'Math.sqrt(')
         .replace(/abs\(/g, 'Math.abs(')
-        .replace(/ln\(/g, 'Math.log(')
         .replace(/log\(/g, 'Math.log10(')
+        .replace(/ln\(/g, 'Math.log(')
         .replace(/exp\(/g, 'Math.exp(');
 
       // Évaluer l'expression
@@ -582,11 +582,10 @@ export class GraphingEngine {
       if (values[n] !== undefined) continue; // Déjà initialisé
 
       try {
-        // Remplacer n et les références aux valeurs précédentes dans l'expression
-        let expr = func.replace(/n/g, `(${n})`);
-
-        // Remplacer u(n-1), u(n-2), etc. par leurs valeurs calculées
-        // Rechercher tous les u(n-k) dans l'expression
+        // D'abord remplacer u(n-1), u(n-2), etc. par leurs valeurs calculées
+        // IMPORTANT : doit être fait AVANT la substitution de n, sinon u(n-1)
+        // devient u((5)-1) et le regex u\(n-(\d+)\) ne matche plus jamais.
+        let expr = func;
         const matches = expr.match(/u\(n-(\d+)\)/g);
         if (matches) {
           matches.forEach(match => {
@@ -602,6 +601,9 @@ export class GraphingEngine {
             }
           });
         }
+
+        // Ensuite remplacer n par sa valeur courante
+        expr = expr.replace(/n/g, `(${n})`);
 
         // Également supporter u(n-1) écrit simplement comme u
         expr = expr.replace(/\bu\b/g, values[n-1] !== undefined ? `(${values[n-1]})` : '0');
@@ -665,8 +667,8 @@ export class GraphingEngine {
       expr = expr
         .replace(/sqrt\(/g, 'Math.sqrt(')
         .replace(/abs\(/g, 'Math.abs(')
-        .replace(/ln\(/g, 'Math.log(')
         .replace(/log\(/g, 'Math.log10(')
+        .replace(/ln\(/g, 'Math.log(')
         .replace(/exp\(/g, 'Math.exp(')
         .replace(/sin\(/g, 'Math.sin(')
         .replace(/cos\(/g, 'Math.cos(')

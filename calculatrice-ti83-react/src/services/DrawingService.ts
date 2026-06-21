@@ -342,7 +342,7 @@ export class DrawingService {
     try {
       const compiled = math.compile(element.expr);
       const { yMin, yMax } = windowSettings;
-      const step = (yMax - yMin) / canvasWidth;
+      const step = (yMax - yMin) / canvasHeight;
 
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 1;

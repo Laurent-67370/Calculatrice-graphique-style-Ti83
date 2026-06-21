@@ -65,9 +65,11 @@ export class FinanceService {
 
       const pmt = PMTEnd ? PMT : PMT * (1 + i);
 
-      // Formule : N = -log((FV * i - pmt) / (PV * i + pmt)) / log(1 + i)
-      const numerator = FV * i - pmt;
-      const denominator = PV * i + pmt;
+      // Formule : N = -log((PV*i + pmt) / (pmt - FV*i)) / log(1 + i)
+      // L'ancienne formule (FV*i - pmt)/(PV*i + pmt) était l'inverse négatif et
+      // renvoyait "Pas de solution" pour un prêt standard (PV>0, PMT<0, FV=0).
+      const numerator = PV * i + pmt;
+      const denominator = pmt - FV * i;
 
       if (denominator === 0 || numerator / denominator <= 0) {
         return { success: false, error: 'Pas de solution' };
@@ -108,8 +110,9 @@ export class FinanceService {
 
           f = PV + payment * (1 - pvFactor) / i + FV * pvFactor;
 
-          // Dérivée de la fonction TVM
-          df = payment * ((1 - pvFactor) / (i * i) - N * pvFactor / i) - N * FV * pvFactor / (1 + i);
+          // Dérivée de la fonction TVM par rapport à i.
+          // L'ancienne formule avait le signe inversé (Newton-Raphson divergeait).
+          df = payment * (N * Math.pow(1 + i, -N - 1) / i - (1 - pvFactor) / (i * i)) - N * FV * pvFactor / (1 + i);
         }
 
         if (Math.abs(f) < this.TOLERANCE) {
