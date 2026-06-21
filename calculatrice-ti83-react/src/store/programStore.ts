@@ -371,13 +371,16 @@ export const useProgramStore = create<ProgramStore>()(
             programInputValue: '', // Réinitialiser
           });
 
-          // Passer à la ligne suivante
+          // Reprendre l'exécution.
+          // NB: ne PAS incrémenter currentLine ici — l'interpréteur a déjà avancé
+          // passé la commande Input/Prompt (branche else après executeCommand),
+          // comme pour Pause dont resumeProgram ne décale pas non plus.
+          // Incrémenter ici doublait le saut et faisait sauter la ligne suivant
+          // l'Input/Prompt (et cassait les boucles For/While contenant un Input).
           const context = get().executionContext;
           if (context && state.executingProgram) {
             const program = state.programs[state.executingProgram];
             if (program) {
-              context.currentLine++;
-
               // Reprendre l'exécution
               ProgramInterpreter.executeProgram(
                 program.lines,
