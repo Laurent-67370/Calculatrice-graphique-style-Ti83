@@ -47,13 +47,13 @@ const keyLayout: Key[][] = [
     { action: 'down', primary: '↓', color: 'gray' },
     { action: 'right', primary: '→', color: 'gray' },
   ],
-  // Ligne 4 : MATH, APPS, PRGM, VARS, CLEAR
+  // Ligne 4 : MATH, APPS, PRGM, VARS, CLEAR  (ALPHA : A, B, C, D, E — guidebook TI officiel)
   [
-    { action: 'math', secondAction: 'test', primary: 'MATH', second: 'TEST', color: 'gray' },
-    { action: 'apps', secondAction: 'angle', primary: 'APPS', second: 'ANGLE', color: 'gray' },
-    { action: 'prgm', secondAction: 'draw', primary: 'PRGM', second: 'DRAW', color: 'gray' },
-    { action: 'vars', secondAction: 'distr', primary: 'VARS', second: 'DISTR', color: 'gray' },
-    { action: 'clear', primary: 'CLEAR', color: 'gray' },
+    { action: 'math', secondAction: 'test', primary: 'MATH', second: 'TEST', alpha: 'A', color: 'gray' },
+    { action: 'apps', secondAction: 'angle', primary: 'APPS', second: 'ANGLE', alpha: 'B', color: 'gray' },
+    { action: 'prgm', secondAction: 'draw', primary: 'PRGM', second: 'DRAW', alpha: 'C', color: 'gray' },
+    { action: 'vars', secondAction: 'distr', primary: 'VARS', second: 'DISTR', alpha: 'D', color: 'gray' },
+    { action: 'clear', primary: 'CLEAR', alpha: 'E', color: 'gray' },
   ],
   // Ligne 5 : X⁻¹, SIN, COS, TAN, ^
   [
@@ -69,21 +69,21 @@ const keyLayout: Key[][] = [
     { action: 'comma', secondAction: 'ee', primary: ',', second: 'EE', alpha: 'V' },
     { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'W' },
     { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'θ' },
-    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e', alpha: 'X' },
+    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e' },
   ],
   // Ligne 7 : LOG, 7, 8, 9, ×
   [
     { action: 'log', secondAction: 'power10', primary: 'LOG', second: '10ˣ', alpha: 'Y' },
-    { action: '7', secondAction: 'u', primary: '7', second: 'u', alpha: 'A' },
-    { action: '8', secondAction: 'v', primary: '8', second: 'v', alpha: 'B' },
-    { action: '9', secondAction: 'w', primary: '9', second: 'w', alpha: 'C' },
+    { action: '7', secondAction: 'u', primary: '7', second: 'u' },
+    { action: '8', secondAction: 'v', primary: '8', second: 'v' },
+    { action: '9', secondAction: 'w', primary: '9', second: 'w' },
     { action: 'multiply', secondAction: 'left-bracket', primary: '×', second: '[', alpha: 'Z' },
   ],
   // Ligne 8 : LN, 4, 5, 6, −
   [
     { action: 'ln', secondAction: 'exp-func', primary: 'LN', second: 'eˣ', alpha: 'n' },
-    { action: '4', secondAction: 'left-brace-small', primary: '4', second: '{', alpha: 'D' },
-    { action: '5', primary: '5', alpha: 'E' },
+    { action: '4', secondAction: 'left-brace-small', primary: '4', second: '{' },
+    { action: '5', primary: '5' },
     { action: '6', secondAction: 'right-brace-small', primary: '6', second: '}', alpha: 'F' },
     { action: 'subtract', secondAction: 'right-bracket', primary: '−', second: ']', alpha: 'G' },
   ],
