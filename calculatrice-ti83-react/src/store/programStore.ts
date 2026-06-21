@@ -145,6 +145,10 @@ export const useProgramStore = create<ProgramStore>()(
           executionContext: context,
         });
 
+        // Vider le tampon clavier (getKey) pour ne pas hériter d'une touche
+        // pressée avant le lancement du programme.
+        ProgramInterpreter.resetKeyBuffer();
+
         // Lancer l'exécution avec le ProgramInterpreter
         ProgramInterpreter.executeProgram(
           program.lines,
