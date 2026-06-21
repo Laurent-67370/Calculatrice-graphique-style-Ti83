@@ -231,22 +231,17 @@ export class StatisticsService {
       sumX2Y += x * x * y;
     }
 
-    // Résolution du système 3x3 (méthode de Cramer simplifiée)
-    const denom = n * (sumX2 * sumX4 - sumX3 * sumX3) -
-                  sumX * (sumX * sumX4 - sumX2 * sumX3) +
-                  sumX2 * (sumX * sumX3 - sumX2 * sumX2);
+    // Résolution du système 3x3 par élimination de Gauss (cohérent avec CubicReg/QuartReg).
+    // L'ancienne formule de Cramer manuelle positionnait mal les facteurs sumY/sumXY/sumX2Y
+    // et renvoyait des coefficients erronés (ex: a≈237 au lieu de 2 pour y=2x²+3x+1).
+    const matrix = [
+      [n, sumX, sumX2, sumY],
+      [sumX, sumX2, sumX3, sumXY],
+      [sumX2, sumX3, sumX4, sumX2Y]
+    ];
 
-    const a = (n * (sumX2Y * sumX2 - sumXY * sumX3) -
-               sumY * (sumX * sumX2 - sumX2 * sumX2) +
-               sumX2Y * (sumX * sumX3 - sumX2 * sumX2)) / denom;
-
-    const b = (n * (sumXY * sumX4 - sumX2Y * sumX3) -
-               sumX * (sumY * sumX4 - sumX2Y * sumX2) +
-               sumX2 * (sumY * sumX3 - sumXY * sumX2)) / denom;
-
-    const c = (n * (sumX2 * sumX2Y - sumX3 * sumXY) -
-               sumX * (sumX * sumX2Y - sumX2 * sumXY) +
-               sumX2 * (sumX * sumXY - sumX2 * sumY)) / denom;
+    const coefficients = this.gaussianElimination(matrix);
+    const [c, b, a] = coefficients;
 
     return {
       type: 'QuadReg',
