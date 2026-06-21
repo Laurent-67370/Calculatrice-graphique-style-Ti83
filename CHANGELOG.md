@@ -6,6 +6,11 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.4.1] - 2026-06-21
+
+### ✨ Ajouté - Aide intégrée MATRX
+- Nouvel onglet **🔢 MATRX** dans le Guide d'utilisation (HelpModal) : accès au menu MATRX (`2ND+X⁻¹`), arithmétique matricielle, onglet MATH (`det`/`ref`/`rref`/`identity`/`randM`/`augment`/`dim`/`cumSum`), opérations sur lignes 1-based (`rowSwap`/`*row`/`*row+`/`*row-`), conversions `Matr►list`/`List►matr`, exemple de résolution d'un système 2×2 par `rref`, limitations v1.
+
 ## [3.4.0] - 2026-06-21
 
 ### ✨ Ajouté - Opérations matricielles (MATRX MATH/OPS)

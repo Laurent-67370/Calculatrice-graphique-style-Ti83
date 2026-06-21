@@ -10,7 +10,7 @@ interface HelpModalProps {
 }
 
 export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'quick' | 'prgm' | 'draw' | 'graph' | 'stats' | 'advanced' | 'pwa'>('quick');
+  const [activeTab, setActiveTab] = useState<'quick' | 'prgm' | 'draw' | 'graph' | 'stats' | 'matrix' | 'advanced' | 'pwa'>('quick');
 
   if (!isOpen) return null;
 
@@ -52,6 +52,12 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             onClick={() => setActiveTab('stats')}
           >
             📈 Stats & Listes
+          </button>
+          <button
+            className={`help-tab ${activeTab === 'matrix' ? 'active' : ''}`}
+            onClick={() => setActiveTab('matrix')}
+          >
+            🔢 MATRX
           </button>
           <button
             className={`help-tab ${activeTab === 'advanced' ? 'active' : ''}`}
@@ -1258,6 +1264,107 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
+          {activeTab === 'matrix' && (
+            <div className="help-section">
+              <h3>🔢 MATRX - Opérations matricielles</h3>
+              <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
+                Manipulez des matrices <code>[A]</code> à <code>[J]</code> et appliquez toutes les opérations standard de la TI-83 Plus !
+              </p>
+
+              <h3>🚀 Accès au menu MATRX</h3>
+              <div className="help-examples">
+                Appuyez sur : <code>2ND + X⁻¹</code><br/>
+                Le menu MATRX s'ouvre avec 3 onglets : <strong>NAMES</strong>, <strong>MATH</strong>, <strong>OPS</strong><br/>
+                + un item <strong>Edit…</strong> (onglet NAMES) pour modifier les matrices<br/>
+                <br/>
+                <strong>Éditer une matrice :</strong><br/>
+                1. <code>2ND + X⁻¹</code> → onglet <code>NAMES</code> → <code>Edit…</code><br/>
+                2. Choisir <code>[A]</code>, régler dimensions, saisir les valeurs<br/>
+                3. <code>ENTER</code> pour valider
+              </div>
+
+              <h3>➗ Arithmétique matricielle</h3>
+              <div className="help-examples">
+                <code>[A]*[B]</code> — produit matriciel<br/>
+                <code>[A]+[B]</code> / <code>[A]-[B]</code> — somme / différence<br/>
+                <code>[A]^3</code> — puissance<br/>
+                <code>[A]⁻¹</code> — inverse (ou <code>inv</code>)<br/>
+                <code>[A]ᵀ</code> — transposée (touche <code>ᵀ</code> onglet MATH)<br/>
+                <br/>
+                Les dimensions doivent être compatibles (sinon <code>ERREUR</code>).
+              </div>
+
+              <h3>📐 Onglet MATH — Fonctions</h3>
+              <div className="help-examples">
+                <strong>det( — Déterminant :</strong><br/>
+                <code>:det([A])</code> → scalaire<br/>
+                <br/>
+                <strong>ref( / rref( — Formes échelonnées :</strong><br/>
+                <code>:rref([A])</code> — forme échelonnée réduite (résout un système !)<br/>
+                <code>:ref([A])</code> — forme échelonnée<br/>
+                <br/>
+                <strong>identity( — Matrice identité :</strong><br/>
+                <code>:identity(3)</code> → matrice 3×3 identité<br/>
+                <br/>
+                <strong>randM( — Matrice aléatoire :</strong><br/>
+                <code>:randM(2,3)</code> → matrice 2×3 de nombres aléatoires<br/>
+                <br/>
+                <strong>augment( — Concaténation horizontale :</strong><br/>
+                <code>:augment([A],[B])</code> → matrices côte à côte<br/>
+                <br/>
+                <strong>dim( — Dimensions :</strong><br/>
+                <code>:dim([A])</code> → <code>[lignes colonnes]</code><br/>
+                <br/>
+                <strong>cumSum( — Sommes cumulées :</strong><br/>
+                <code>:cumSum([A])</code> — cumul colonne par colonne
+              </div>
+
+              <h3>🔀 Opérations sur lignes (1-based)</h3>
+              <div className="help-examples">
+                <strong>rowSwap( — Échanger 2 lignes :</strong><br/>
+                <code>:rowSwap([A],1,2)</code> — échange les lignes 1 et 2<br/>
+                <br/>
+                <strong>*row( — Multiplier une ligne :</strong><br/>
+                <code>:*row(2,[A],1)</code> — ligne 1 × 2<br/>
+                <br/>
+                <strong>*row+( — Ligne += facteur × autre ligne :</strong><br/>
+                <code>:*row+(3,[A],1,2)</code> — ligne 2 += 3 × ligne 1<br/>
+                <br/>
+                <strong>*row-( — Ligne -= facteur × autre ligne :</strong><br/>
+                <code>:*row-(3,[A],1,2)</code> — ligne 2 -= 3 × ligne 1<br/>
+                <br/>
+                ⚠️ Les indices de ligne sont <strong>1-based</strong> (comme sur la TI-83).
+              </div>
+
+              <h3>🔄 Conversions liste ↔ matrice</h3>
+              <div className="help-examples">
+                <strong>Matr►list( — Colonne → liste :</strong><br/>
+                <code>:Matr►list([A],1)</code> → liste = colonne 1 de [A]<br/>
+                <br/>
+                <strong>List►matr( — Listes → colonnes :</strong><br/>
+                <code>:List►matr(L₁,L₂)</code> → matrice avec L₁ et L₂ en colonnes
+              </div>
+
+              <h3>📚 Exemple - Résoudre un système 2×2</h3>
+              <div className="help-examples">
+                Système :<br/>
+                <code>x + 2y = 5</code><br/>
+                <code>3x + 4y = 7</code><br/>
+                <br/>
+                1. Éditer <code>[A]</code> = <code>[[1,2,5],[3,4,7]]</code> (matrice augmentée)<br/>
+                2. <code>rref([A])</code> → <code>[[1,0,-3],[0,1,4]]</code><br/>
+                → <strong>x = -3, y = 4</strong>
+              </div>
+
+              <h3>⚠️ Limitations</h3>
+              <div className="help-examples">
+                • <code>Fill(</code>, <code>SortA(</code>, <code>SortD(</code> renvoient une valeur (ne modifient pas la variable en place)<br/>
+                • Le stockage d'un résultat vers une variable matrice (<code>rref([A])→[B]</code>) n'est pas encore géré — le résultat s'affiche à l'écran<br/>
+                • Erreurs sur matrices singulières : génériques (pas encore <code>ERR:SINGULAR MAT</code>)
+              </div>
+            </div>
+          )}
+
           {activeTab === 'advanced' && (
             <div className="help-section">
               <h3>🔬 Fonctions avancées</h3>
@@ -1553,7 +1660,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.4.0 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 💾 MATRIX OPS (det/rref)
+            Version 3.4.1 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref)
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

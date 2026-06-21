@@ -1,10 +1,10 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.4.0 - Opérations matricielles (MATRX MATH/OPS) 🔢
+## Version 3.4.1 - Aide intégrée MATRX 🔢
 
-> Nouvelle fonctionnalité : opérations matricielles complètes via le menu MATRX (`2ND + X⁻¹`) — onglets NAMES / MATH / OPS + Edit. `det`, `rref`, `ref`, `identity`, `randM`, `augment`, `Matr►list`, `List►matr`, opérations sur lignes (`rowSwap`, `*row`, `*row+`, `*row-`), transposée, inverse, `dim`, `cumSum`. Basé sur la v3.3.1. Voir la section **✨ Nouveautés v3.4.0** ci-dessous.
+> Ajout d'un onglet **🔢 MATRX** dans l'aide intégrée (📖 Guide) documentant toutes les opérations matricielles introduites en v3.4.0 : accès au menu, arithmétique, onglet MATH, opérations sur lignes, conversions liste↔matrice, exemple de résolution de système, limitations. Basé sur la v3.4.0.
 
-> 🎹 **v3.3.1** : correctifs mapping ALPHA (rang haut A-E, doublon X éliminé). Voir **🔧 Correctifs v3.3.1**.
+> 🔢 **v3.4.0** : opérations matricielles MATRX MATH/OPS (`det`, `rref`, `ref`, `identity`, `randM`, `augment`, `Matr►list`, `List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse). Voir **✨ Nouveautés v3.4.0**.
 
 > 🎮 **v3.3.0** : `getKey` lit l'entrée clavier (codes officiels TI-BASIC) avec un tampon consommable à la lecture — comportement identique à une vraie TI-83. Écrivez des jeux et programmes interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
 
