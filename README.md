@@ -300,6 +300,43 @@ Sauvegardez et partagez vos programmes TI-BASIC avec support complet des formats
 
 ---
 
+## 📊 État de compatibilité TI-83 Plus
+
+Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur `src/services/`, `src/data/menus.ts` et les éditeurs). Légende : ✅ complet · ⚠️ partiel · ❌ absent.
+
+| Domaine | Statut | Détail / couverture |
+|---|:---:|---|
+| Calcul de base (arith, trig, log, π, e) | ✅ | ~100 % |
+| MATH — NUM / CPX / PRB / hyperbolic | ✅ | ~95 % (complet + extras : `ceil`, `floor`, `sign`, `mod`) |
+| MATH — calcul symbolique (`nDeriv(`, `fnInt(`, `fMin`, `fMax`) | ⚠️ | ~15 % — quasi absent |
+| ANGLE (`R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`, `►DMS`) | ⚠️ | ~50 % — conversions génériques (rad↔deg, rect↔polar) mais pas les notations TI exactes |
+| Graphing (Func / Param / Polar / Seq) | ✅ | ~95 % — 4 modes + Window/Zoom/Trace + CALC (`value`, `zero`, `min`, `max`, `intersect`, `dy/dx`, `∫f(x)`) |
+| DRAW | ✅ | ~100 % — 17/17 (`Line`, `Circle`, `Text`, `Shade`, `Tangent`, `DrawInv`, `StorePic`…) |
+| STAT CALC (1/2-Var, 9 régressions) | ✅ | ~95 % — `LinReg`, `QuadReg`, `CubicReg`, `ExpReg`, `SinReg`, `Logistic`… |
+| **STAT TESTS** (tests d'hypothèse + intervalles) | ❌ | **~0 %** — `Z-Test`, `T-Test`, `2-Samp`, `1-PropZ`, `χ²-Test`, `ANOVA`, `LinRegTTest`… manquants |
+| DISTR (15 lois) | ✅ | ~100 % — `normalpdf/cdf`, `invNorm`, `t`, `χ²`, `F`, `binom`, `poisson`, `geomet` |
+| LIST OPS | ✅ | ~95 % — `SortA/D`, `dim`, `Fill`, `seq`, `cumSum`, `ΔList`, `mean`, `stdDev`… |
+| MATRX (éditeur + MATH/OPS) | ⚠️ | ~40 % — éditeur `[A]`-`[J]` ✅, mais **opérations absentes** (`det`, `rref`, `ref`, `identity`, `randM`, `augment`, `T`, `Matr►list`) |
+| FINANCE (TVM + cash flows) | ✅ | ~95 % — `tvm_PV/N/I/PMT/FV`, `NPV`, `IRR`, `bal`, `ΣPrn`, `ΣInt`, `Nom`, `Eff` |
+| SOLVER | ✅ | ~100 % |
+| PRGM (TI-BASIC) | ✅ | ~75 % — 39+ commandes + `getKey` (jeux) ; manquent : chaînes (`length`, `sub`, `inString`, `expr`), `Archive`, `Asm(`, link |
+| TABLE / VARS / Y-VARS / MODE / MEM | ✅ | ~95 % — éditeurs présents |
+| CATALOG | ⚠️ | ~70 % — construit dynamiquement à partir des menus |
+
+### Synthèse
+
+- **~80 %** en comptant toutes les commandes du catalogue TI-83 Plus
+- **~85–90 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
+
+### Deux principaux manques
+
+1. **STAT TESTS** — un menu entier (tests d'hypothèses / intervalles de confiance) est absent, alors que les *distributions* (DISTR) sont complètes. C'est le plus gros écart pour un usage statistique.
+2. **Opérations matricielles** (MATRX MATH/OPS) — l'éditeur permet de saisir les matrices, mais les calculs (`det`, `rref`, `ref`, `identity`, `augment`, transposée…) ne sont pas implémentés.
+
+Manques mineurs : `nDeriv(`/`fnInt(` (calcul), fonctions chaîne en PRGM, notations ANGLE exactes.
+
+---
+
 ## 🔒 Améliorations par rapport à la version JavaScript
 
 ### **Sécurité et Robustesse**
