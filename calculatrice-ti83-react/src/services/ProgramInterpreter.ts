@@ -344,7 +344,15 @@ export class ProgramInterpreter {
     context: ExecutionContext
   ): number | string {
     try {
-      // Remplacer les variables par leurs valeurs
+      // Si l'expression est entre guillemets, c'est une chaîne :
+      // la retourner telle quelle, SANS substituer les variables
+      // (sinon "ENTREZ N" avec N=5 deviendrait "ENTREZ 5").
+      const stringMatch = expr.match(/^"(.+)"$/);
+      if (stringMatch) {
+        return stringMatch[1]; // Retourner la chaîne sans guillemets
+      }
+
+      // Remplacer les variables par leurs valeurs (expressions numériques uniquement)
       let processedExpr = expr;
 
       // Remplacer les variables A-Z et θ
@@ -358,12 +366,6 @@ export class ProgramInterpreter {
             processedExpr = processedExpr.replace(regex, value.toString());
           }
         }
-      }
-
-      // Si l'expression est entre guillemets, c'est une chaîne
-      const stringMatch = processedExpr.match(/^"(.+)"$/);
-      if (stringMatch) {
-        return stringMatch[1]; // Retourner la chaîne sans guillemets
       }
 
       // Sinon, évaluer l'expression mathématique
@@ -405,6 +407,15 @@ export class ProgramInterpreter {
         }
       }
 
+      // Convertir les opérateurs de comparaison TI-BASIC vers la syntaxe mathjs :
+      //  - '=' est l'égalité en TI-BASIC (mathjs l'interprète sinon comme une assignation)
+      //  - les caractères Unicode ≠ ≥ ≤ ne sont pas reconnus par mathjs
+      processedCondition = processedCondition
+        .replace(/≠/g, '!=')
+        .replace(/≥/g, '>=')
+        .replace(/≤/g, '<=')
+        .replace(/(?<![<>=!])=(?!=)/g, '==');
+
       // Évaluer l'expression booléenne
       const result = math.evaluate(processedCondition);
 
@@ -420,6 +431,25 @@ export class ProgramInterpreter {
       console.error('Erreur évaluation condition:', condition, error);
       throw new Error(`Erreur de condition: ${condition}`);
     }
+  }
+
+  /**
+   * Index du premier ':' non inclus dans une chaîne entre guillemets.
+   * Sert à séparer "If cond:commande" sans couper les ':' à l'intérieur d'une
+   * chaîne littérale (ex: If X=3:Disp "A:B").
+   * Retourne -1 s'il n'y en a aucun.
+   */
+  static indexOfColonOutsideQuotes(s: string): number {
+    let inQuote = false;
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      if (c === '"') {
+        inQuote = !inQuote;
+      } else if (c === ':' && !inQuote) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   /**
@@ -713,6 +743,7 @@ export class ProgramInterpreter {
    * Trouver le Then correspondant à un If
    */
   static findThen(lines: string[], ifLine: number): number {
+    if (ifLine + 1 >= lines.length) return -1; // If sur la dernière ligne
     const command = this.parseLine(lines[ifLine + 1]);
     if (command?.type === 'THEN') {
       return ifLine + 1;
@@ -792,22 +823,33 @@ export class ProgramInterpreter {
 
         // Gérer les structures de contrôle
         if (command.type === 'IF') {
-          const condition = command.params.condition as string;
-          const conditionResult = this.evaluateCondition(condition, context);
-
+          const rawCondition = command.params.condition as string;
           const thenLine = this.findThen(lines, context.currentLine);
 
           if (thenLine === -1) {
-            // If sur une seule ligne : If condition:commande
+            // If mono-ligne : soit "If cond" (commande sur la ligne suivante),
+            // soit "If cond:commande" (commande sur la même ligne, séparateur ':')
+            let condition = rawCondition;
+            let inlineCommand: string | null = null;
+            const colonIdx = this.indexOfColonOutsideQuotes(condition);
+            if (colonIdx !== -1) {
+              inlineCommand = condition.substring(colonIdx + 1).trim();
+              condition = condition.substring(0, colonIdx).trim();
+            }
+            const conditionResult = this.evaluateCondition(condition, context);
             if (conditionResult) {
-              // Exécuter la ligne suivante
+              if (inlineCommand !== null) {
+                this.executeLine(inlineCommand, context, onOutput, onClearScreen);
+              }
+              // avancer après la ligne If (et sa commande inline éventuelle)
               context.currentLine++;
             } else {
-              // Sauter la ligne suivante
-              context.currentLine += 2;
+              // condition fausse : sauter la commande (ligne suivante, ou inline sur la même ligne)
+              context.currentLine += inlineCommand !== null ? 1 : 2;
             }
           } else {
             // If/Then/End (multilignes)
+            const conditionResult = this.evaluateCondition(rawCondition, context);
             const endLine = this.findMatchingEnd(lines, context.currentLine);
             const elseLine = this.findElse(lines, context.currentLine, endLine);
 
