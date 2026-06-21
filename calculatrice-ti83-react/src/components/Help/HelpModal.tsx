@@ -252,6 +252,14 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <code>:Disp "PETIT"</code><br/>
                 <code>:End</code><br/>
                 <br/>
+                <strong>Opérateurs de comparaison (menu TEST, 2ND+MATH) :</strong><br/>
+                <code>=</code> égal &nbsp; <code>≠</code> différent &nbsp; <code>&gt;</code> supérieur &nbsp; <code>≥</code> sup. ou égal &nbsp; <code>&lt;</code> inférieur &nbsp; <code>≤</code> inf. ou égal<br/>
+                → Utilisables dans <code>If</code>, <code>While</code> et <code>Repeat</code> (ex : <code>If A=10</code>, <code>While X≠0</code>, <code>Repeat N≥5</code>)<br/>
+                <br/>
+                <strong>If mono-ligne (une seule action, séparateur ":") :</strong><br/>
+                <code>:If A&gt;10:Disp "GRAND"</code><br/>
+                → Équivalent à <code>If</code>/<code>Then</code>/<code>End</code> sans le <code>Else</code><br/>
+                <br/>
                 <strong>For - Boucle For :</strong><br/>
                 <code>:For(I,1,10)</code><br/>
                 <code>:Disp I</code><br/>
@@ -405,7 +413,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>Les menus permettent de créer des interfaces conviviales</li>
               </ul>
 
-              <h3>💾 Export/Import de Programmes - NOUVEAU v3.2.0 !</h3>
+              <h3>💾 Export/Import de Programmes</h3>
               <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
                 Sauvegardez et partagez vos programmes TI-BASIC avec support des formats JSON, .8xp et .83p !
               </p>
