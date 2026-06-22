@@ -1358,10 +1358,16 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 → <strong>x = -3, y = 4</strong>
               </div>
 
+              <h3>✅ En place & stockage (v3.6.0)</h3>
+              <div className="help-examples">
+                • <code>Fill(5,[A])</code> remplit <code>[A]</code> en place → <code>Done</code><br/>
+                • <code>SortA([A])</code> / <code>SortD([A])</code> trient chaque ligne en place → <code>Done</code><br/>
+                • Stockage d'un résultat vers une matrice : <code>[A]→[B]</code>, <code>randM(2,3)→[A]</code>, <code>[[1,2],[3,4]]→[A]</code>, <code>augment([A],[B])→[C]</code> → <code>Done</code>
+              </div>
+
               <h3>⚠️ Limitations</h3>
               <div className="help-examples">
-                • <code>Fill(</code>, <code>SortA(</code>, <code>SortD(</code> renvoient une valeur (ne modifient pas la variable en place)<br/>
-                • Le stockage d'un résultat vers une variable matrice (<code>rref([A])→[B]</code>) n'est pas encore géré — le résultat s'affiche à l'écran<br/>
+                • <code>Fill</code>/<code>SortA</code>/<code>SortD</code> en place sur les <strong>matrices</strong> uniquement (pas les listes <code>L₁</code>-<code>L₆</code>)<br/>
                 • Erreurs sur matrices singulières : génériques (pas encore <code>ERR:SINGULAR MAT</code>)
               </div>
             </div>
@@ -1370,6 +1376,51 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           {activeTab === 'advanced' && (
             <div className="help-section">
               <h3>🔬 Fonctions avancées</h3>
+
+              <h3>∫ Calcul numérique - nDeriv / fnInt / fMin / fMax</h3>
+              <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
+                Dérivée, intégrale et optimisation numériques (menu <code>MATH</code>, entrées 6/7/8/9). L'expression est donnée non évaluée avec la variable.
+              </p>
+              <div className="help-examples">
+                <strong>Accès :</strong> <code>MATH</code> → <code>fMin(</code> / <code>fMax(</code> / <code>nDeriv(</code> / <code>fnInt(</code> (ou CATALOG)<br/>
+                <br/>
+                <code>nDeriv(X²,X,3)</code> → <code>6</code> (dérivée de X² en X=3)<br/>
+                <code>fnInt(X²,X,0,2)</code> → <code>2.6667</code> (∫₀² X² dX = 8/3)<br/>
+                <code>fMin(X²,X,-2,2)</code> → <code>0</code> (X qui minimise X²)<br/>
+                <code>fMax(-X²+2X,X,-2,3)</code> → <code>1</code> (X qui maximise)<br/>
+                <code>fMin(sin(X),X,0,6)</code> → <code>4.712</code> (3π/2)<br/>
+                <br/>
+                • <code>nDeriv(expr,var,value[,ε])</code> : différence symétrique (ε=1e-3)<br/>
+                • <code>fnInt(expr,var,lower,upper)</code> : Simpson (1000 intervalles)<br/>
+                • <code>fMin</code>/<code>fMax</code> retournent la <strong>valeur de var</strong> (pas la valeur de f)<br/>
+                • <em>Limitation</em> : écran home + CATALOG (pas encore dans l'interpréteur PRGM)
+              </div>
+
+              <h3>🔤 Chaînes & variables Str1-9</h3>
+              <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
+                Fonctions chaîne TI-BASIC et variables chaîne persistantes <code>Str1</code>-<code>Str9</code>.
+              </p>
+              <div className="help-examples">
+                <strong>Accès :</strong> CATALOG (<code>length(</code>, <code>sub(</code>, <code>inString(</code>, <code>expr(</code>) · VARS → String... (<code>Str1</code>-<code>Str9</code>)<br/>
+                <br/>
+                <code>length("hello")</code> → <code>5</code><br/>
+                <code>sub("abcdef",2,3)</code> → <code>"bcd"</code> (positions 1-based)<br/>
+                <code>inString("abcdef","c")</code> → <code>3</code> (0 si absent)<br/>
+                <code>expr("2+3*4")</code> → <code>14</code> (évalue une chaîne)<br/>
+                <br/>
+                <code>"hello"→Str1</code> → <code>Done</code> · <code>length(Str1)</code> → <code>5</code> · <code>Str1→Str2</code> (copie)<br/>
+                En PRGM : <code>Input Str1</code> (saisie texte), <code>Disp sub(Str1,1,3)</code>
+              </div>
+
+              <h3>🧭 ANGLE - conversions & DMS</h3>
+              <div className="help-examples">
+                <strong>Accès :</strong> <code>MATH</code> → <code>ANGLE</code><br/>
+                <br/>
+                <code>R►Pr(3,4)</code> → <code>5</code> · <code>R►Pθ(3,4)</code> → <code>53.13</code> (DEGREE)<br/>
+                <code>P►Rx(5,53.13)</code> → <code>3</code> · <code>P►Ry(5,53.13)</code> → <code>4</code><br/>
+                <code>°→rad(180)</code> → <code>π</code> · <code>rad→°(π)</code> → <code>180</code><br/>
+                <code>→DMS(12.5)</code> → <code>12°30'0"</code> · <code>→Dec(→DMS(12.5))</code> → <code>12.5</code> (round-trip)
+              </div>
 
               <h3>🎯 SOLVER - Résolveur d'équations</h3>
               <p style={{ fontSize: '0.95em', marginBottom: '15px', color: '#555' }}>
@@ -1483,7 +1534,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>NUM ▶</strong> : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod</li>
                 <li><strong>CPX ▶</strong> : conj, real, imag, angle, abs, Rect, Polar</li>
                 <li><strong>PRB ▶</strong> : rand, nPr, nCr, !, randInt, randNorm, randBin</li>
-                <li><strong>ANGLE ▶</strong> : °→rad, rad→°, →DMS, →Dec</li>
+                <li><strong>ANGLE ▶</strong> : °→rad, rad→°, →DMS, →Dec, R►Pr, R►Pθ, P►Rx, P►Ry</li>
                 <li><strong>TRIG ▶</strong> : sinh, cosh, tanh, asinh, acosh, atanh</li>
               </ul>
 
