@@ -33,6 +33,9 @@ export const mathMenuItems: MenuItem[] = [
   { id: 'exp', label: 'e^(', action: () => {} },
   { id: 'pow10', label: '10^(', action: () => {} },
   { id: 'hypot', label: 'hypot(', action: () => {} },
+  // MATH>6/7 : optimisation numérique (fidèle à la TI-83)
+  { id: 'fmin', label: 'fMin(', action: () => {} },
+  { id: 'fmax', label: 'fMax(', action: () => {} },
   // MATH>8 / MATH>9 : calcul numérique (fidèle à la TI-83)
   { id: 'nderiv', label: 'nDeriv(', action: () => {} },
   { id: 'fnint', label: 'fnInt(', action: () => {} },
@@ -187,6 +190,19 @@ export const varsMenuItems: MenuItem[] = [
     { id: 'matrix-h', label: '[H]', action: () => {} },
     { id: 'matrix-i', label: '[I]', action: () => {} },
     { id: 'matrix-j', label: '[J]', action: () => {} },
+  ]},
+
+  // Sous-menu String (variables chaîne Str1-Str9)
+  { id: 'vars-string', label: 'String...', action: () => {}, submenu: [
+    { id: 'str1', label: 'Str1', action: () => {} },
+    { id: 'str2', label: 'Str2', action: () => {} },
+    { id: 'str3', label: 'Str3', action: () => {} },
+    { id: 'str4', label: 'Str4', action: () => {} },
+    { id: 'str5', label: 'Str5', action: () => {} },
+    { id: 'str6', label: 'Str6', action: () => {} },
+    { id: 'str7', label: 'Str7', action: () => {} },
+    { id: 'str8', label: 'Str8', action: () => {} },
+    { id: 'str9', label: 'Str9', action: () => {} },
   ]},
 ];
 

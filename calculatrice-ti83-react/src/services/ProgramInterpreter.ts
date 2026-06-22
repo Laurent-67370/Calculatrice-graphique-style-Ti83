@@ -14,29 +14,73 @@ import type {
 const math = create(all);
 
 /**
- * Remplace les variables A-Z et θ par leur valeur, SAUF à l'intérieur des
- * littéraux chaîne "..." (sinon length("ABC") avec A=5 deviendrait length("5BC")).
- * @param expr          Expression à traiter
- * @param variables     Map varName → valeur (toString()-able)
- * @param presentVars   Liste des noms de variables présents dans l'expression
+ * Substitue les variables par leur valeur dans une expression, en préservant
+ * le contenu des littéraux chaîne "...".
+ *
+ * Deux passes quote-aware (via transformOutsideQuotes) :
+ *  1. tokens Str1-Str9 (chaînes) → littéral "..." échappé (JSON.stringify).
+ *     Fait AVANT la passe mono-caractère pour que le contenu des chaînes
+ *     insérées soit protégé par la passe 2.
+ *  2. variables mono-caractère A-Z, θ → valeur numérique.
+ *
+ * @param expr              Expression à traiter
+ * @param variables         Map varName → valeur (number | string)
+ * @param presentSingleLetterVars  Noms de vars mono-caractère présents dans l'expression
  */
-function substituteVarsOutsideQuotes(
+function substituteVariables(
   expr: string,
-  variables: Record<string, number>,
-  presentVars: string[]
+  variables: Record<string, number | string>,
+  presentSingleLetterVars: string[]
 ): string {
-  const apply = (code: string) => {
-    let out = code;
-    for (const varName of presentVars) {
-      const value = variables[varName];
-      if (value !== undefined) {
-        const regex = new RegExp(`\\b${varName}\\b`, 'g');
-        out = out.replace(regex, value.toString());
+  // Passe 1 : Str1-Str9 (valeurs chaîne) → littéral échappé
+  const strNames = Object.keys(variables).filter(
+    k => /^Str[1-9]$/.test(k) && typeof variables[k] === 'string'
+  );
+  if (strNames.length) {
+    expr = transformOutsideQuotes(expr, (code) => {
+      let out = code;
+      for (const name of strNames) {
+        const regex = new RegExp(`\\b${name}\\b`, 'g');
+        out = out.replace(regex, () => JSON.stringify(String(variables[name])));
       }
-    }
-    return out;
-  };
+      return out;
+    });
+  }
+  // Passe 2 : vars mono-caractère (hors guillemets, y compris ceux insérés en passe 1)
+  if (presentSingleLetterVars.length) {
+    expr = transformOutsideQuotes(expr, (code) => {
+      let out = code;
+      for (const varName of presentSingleLetterVars) {
+        const value = variables[varName];
+        if (value !== undefined) {
+          const regex = new RegExp(`\\b${varName}\\b`, 'g');
+          out = out.replace(regex, value.toString());
+        }
+      }
+      return out;
+    });
+  }
+  return expr;
+}
 
+/**
+ * Normalise un nom de variable capturé : majuscule pour les vars mono-caractère
+ * (A-Z, θ), forme canonique "StrN" pour les variables chaîne.
+ */
+function normVar(v: string): string {
+  const trimmed = v.trim();
+  if (/^str[1-9]$/i.test(trimmed)) {
+    return 'Str' + trimmed.slice(-1);
+  }
+  return trimmed.toUpperCase();
+}
+
+/**
+ * Applique `fn` aux segments de code hors guillemets (littéraux chaîne "..."
+ * préservés intacts). Utilisé pour la substitution de variables sans corrompre
+ * le contenu des chaînes.
+ */
+function transformOutsideQuotes(expr: string, fn: (code: string) => string): string {
   let result = '';
   let buf = '';
   let inStr = false;
@@ -44,7 +88,7 @@ function substituteVarsOutsideQuotes(
     const ch = expr[i];
     if (ch === '"') {
       if (!inStr) {
-        result += apply(buf) + '"';
+        result += fn(buf) + '"';
         buf = '';
         inStr = true;
       } else {
@@ -56,8 +100,7 @@ function substituteVarsOutsideQuotes(
       buf += ch;
     }
   }
-  // Flush final : on substitue seulement si on n'est pas dans une chaîne
-  result += inStr ? buf : apply(buf);
+  result += inStr ? buf : fn(buf);
   return result;
 }
 
@@ -107,7 +150,17 @@ math.import({
     const S = Math.round((minF - M) * 60);
     return `${sign}${D}°${M}'${S}"`;
   },
-  toDec: (x: number) => Math.round(x * 1e10) / 1e10,
+  toDec: (x: number | string) => {
+    if (typeof x === 'string') {
+      const m = x.match(/^(-?\d+)°(\d+)'(\d+(?:\.\d+)?)"$/);
+      if (m) {
+        const sign = m[1].startsWith('-') ? -1 : 1;
+        return sign * (Math.abs(Number(m[1])) + Number(m[2]) / 60 + Number(m[3]) / 3600);
+      }
+      return Number(x);
+    }
+    return Math.round(x * 1e10) / 1e10;
+  },
 }, { override: true });
 
 /**
@@ -195,12 +248,12 @@ export class ProgramInterpreter {
     }
 
     // Assignment: variable→valeur ou valeur→variable
-    const assignMatch = trimmedLine.match(/^(.+?)\s*→\s*([A-Z])$/i);
+    const assignMatch = trimmedLine.match(/^(.+?)\s*→\s*([A-Zθ]|Str[1-9])$/i);
     if (assignMatch) {
       return {
         type: 'ASSIGN',
         params: {
-          variable: assignMatch[2].toUpperCase(),
+          variable: normVar(assignMatch[2]),
           expression: assignMatch[1].trim(),
         },
       };
@@ -289,13 +342,13 @@ export class ProgramInterpreter {
     }
 
     // Input "prompt",variable ou Input variable
-    const inputMatch = trimmedLine.match(/^Input\s+(?:"(.+?)"\s*,\s*)?([A-Z])$/i);
+    const inputMatch = trimmedLine.match(/^Input\s+(?:"(.+?)"\s*,\s*)?([A-Zθ]|Str[1-9])$/i);
     if (inputMatch) {
       return {
         type: 'INPUT',
         params: {
           prompt: inputMatch[1]?.trim(),
-          variable: inputMatch[2].toUpperCase(),
+          variable: normVar(inputMatch[2]),
         },
       };
     }
@@ -303,7 +356,7 @@ export class ProgramInterpreter {
     // Prompt variable1,variable2,...
     const promptMatch = trimmedLine.match(/^Prompt\s+(.+)$/i);
     if (promptMatch) {
-      const variables = promptMatch[1].split(',').map(v => v.trim().toUpperCase());
+      const variables = promptMatch[1].split(',').map(v => normVar(v));
       return {
         type: 'PROMPT',
         params: {
@@ -343,12 +396,12 @@ export class ProgramInterpreter {
     }
 
     // DelVar variable
-    const delVarMatch = trimmedLine.match(/^DelVar\s+([A-Zθ])$/i);
+    const delVarMatch = trimmedLine.match(/^DelVar\s+([A-Zθ]|Str[1-9])$/i);
     if (delVarMatch) {
       return {
         type: 'DELVAR',
         params: {
-          variable: delVarMatch[1].toUpperCase(),
+          variable: normVar(delVarMatch[1]),
         },
       };
     }
@@ -482,12 +535,10 @@ export class ProgramInterpreter {
         expr = expr.replace(/getKey/gi, String(code));
       }
 
-      // Remplacer les variables par leurs valeurs (expressions numériques uniquement)
+      // Remplacer les variables par leurs valeurs (Str1-Str9 puis A-Z/θ)
       // en préservant le contenu des littéraux chaîne "..."
       const varMatches = expr.match(/[A-Zθ]/g);
-      let processedExpr = varMatches
-        ? substituteVarsOutsideQuotes(expr, context.variables, varMatches)
-        : expr;
+      let processedExpr = substituteVariables(expr, context.variables, varMatches || []);
 
       // Réécrire les tokens ANGLE TI (►/→/°) en identifiants mathjs
       processedExpr = rewriteAngleTokens(processedExpr);
@@ -529,9 +580,7 @@ export class ProgramInterpreter {
 
       // Remplacer les variables A-Z et θ (en préservant les littéraux chaîne)
       const varMatches = condition.match(/[A-Zθ]/g);
-      if (varMatches) {
-        processedCondition = substituteVarsOutsideQuotes(processedCondition, context.variables, varMatches);
-      }
+      processedCondition = substituteVariables(processedCondition, context.variables, varMatches || []);
 
       // Réécrire les tokens ANGLE TI (►/→/°) en identifiants mathjs
       processedCondition = rewriteAngleTokens(processedCondition);
@@ -658,7 +707,8 @@ export class ProgramInterpreter {
 
         try {
           const value = this.evaluateExpression(expression, context);
-          context.variables[variable] = Number(value);
+          // Conserver les chaînes (Str1-Str9) ; coercer numérique sinon.
+          context.variables[variable] = typeof value === 'string' ? value : Number(value);
         } catch (error) {
           throw new Error('ERR:SYNTAX');
         }

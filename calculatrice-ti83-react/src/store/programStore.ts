@@ -36,7 +36,7 @@ interface ProgramStore extends ProgramState {
   setWaitingInput: (waiting: boolean, prompt?: string, variable?: string) => void;
   updateInputValue: (value: string) => void;
   clearInputValue: () => void;
-  provideInput: (value: number) => void;
+  provideInput: (value: number | string) => void;
   provideMenuSelection: (optionIndex: number) => void;
   updateVariable: (name: string, value: number) => void;
   clearHomeScreen: () => void;
@@ -367,7 +367,7 @@ export const useProgramStore = create<ProgramStore>()(
       },
 
       // Fournir la valeur d'input
-      provideInput: (value: number) => {
+      provideInput: (value: number | string) => {
         const state = get();
         if (!state.executionContext || !state.executionContext.inputVariable) {
           return;

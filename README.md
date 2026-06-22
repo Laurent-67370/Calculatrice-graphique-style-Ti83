@@ -1,8 +1,10 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.5.0 - nDeriv/fnInt, fonctions chaîne, conversions R►P/P►R ∫🔤🧭
+## Version 3.6.0 - fMin/fMax, variables chaîne Str1-9, Fill/SortA en place, →Dec DMS ∫🔤🔢🧭
 
-> Trois manques mineurs de l'audit de compatibilité comblés : calcul numérique `nDeriv(`/`fnInt(` (MATH>8/9), fonctions chaîne TI-BASIC `length(`/`sub(`/`inString(`/`expr(`, et conversions polaire/rectangulaire exactes `R►Pr`/`R►Pθ`/`P►Rx`/`P►Ry` (ANGLE>4-7) — plus réparation des tokens ANGLE existants (`°→rad`, `rad→°`, `→DMS`, `→Dec`) qui renvoyaient une erreur. Basé sur la v3.4.2.
+> Les 4 manques mineurs restants de l'audit comblés : optimisation numérique `fMin(`/`fMax(` (MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, avec `Input Str1`), commandes matricielles en place `Fill(`/`SortA(`/`SortD(` + stockage d'un résultat vers une matrice (`[A]→[B]`, `randM(2,2)→[A]`), et `→Dec` parsing DMS (round-trip avec `→DMS`). Basé sur la v3.5.0.
+
+> ∫🔤🧭 **v3.5.0** : `nDeriv(`/`fnInt(` (MATH>8/9), fonctions chaîne `length`/`sub`/`inString`/`expr`, conversions `R►P`/`P►R` + réparation `°→rad`/`→DMS`. Voir **✨ Nouveautés Version 3.5.0**.
 
 > 🔢 **v3.4.2** : saisie matrice simplifiée — menu MATRX (`2ND + X⁻¹`) ouvre directement `[A]`-`[J]` (+ `Edit…`), NAMES onglet par défaut. MATH/OPS en sous-menus. Voir **✨ Nouveautés v3.4.0**.
 
@@ -15,6 +17,8 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Nouveautés v3.4.0** 🔢 : opérations matricielles — menu MATRX (`2ND + X⁻¹`) avec onglets NAMES/MATH/OPS + Edit. `det(`, `rref(`, `ref(`, `identity(`, `randM(`, `augment(`, `Matr►list(`, `List►matr(`, `cumSum(`, `dim(`, opérations sur lignes (`rowSwap(`, `*row(`, `*row+(`, `*row-(`), transposée (`ᵀ`), inverse, arithmétique (`[A]*[B]`, `[A]+[B]`). Voir la section **✨ Nouveautés v3.4.0** ci-dessous.
 
 **Nouveautés v3.5.0** ∫🔤🧭 : `nDeriv(`/`fnInt(` (dérivée & intégrale numériques, MATH>8/9), fonctions chaîne TI-BASIC `length(`/`sub(`/`inString(`/`expr(` (CATALOG), conversions polaire↔rectangulaire `R►Pr(`/`R►Pθ(`/`P►Rx(`/`P►Ry(` (ANGLE>4-7) + réparation de `°→rad`/`rad→°`/`→DMS`/`→Dec`. Voir la section **✨ Nouveautés Version 3.5.0** ci-dessous.
+
+**Nouveautés v3.6.0** ∫🔤🔢 : `fMin(`/`fMax(` (optimisation numérique, MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, `Input Str1`), `Fill(`/`SortA(`/`SortD(` en place sur matrices + stockage résultat vers `[A]`-`[J]` (`[A]→[B]`, `randM(2,2)→[A]`), `→Dec` parsing DMS (round-trip `→Dec(→DMS(x))`). Voir la section **✨ Nouveautés Version 3.6.0** ci-dessous.
 
 **Correctifs v3.3.1** 🎹 : mapping ALPHA du clavier partiellement corrigé — rang haut MATH/APPS/PRGM/VARS/CLEAR = A/B/C/D/E (confirmé guidebook TI officiel), doublon `X` sur `÷` supprimé, mauvaises lettres A-E retirées des touches numériques 7/8/9/4/5. Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
 
@@ -35,6 +39,52 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## ✨ Nouveautés Version 3.6.0
+
+Les 4 manques mineurs restants de l'audit de compatibilité sont comblés.
+
+### ∫ Optimisation numérique — `fMin(` / `fMax(` (MATH>6 / MATH>7)
+
+| Fonction | Syntaxe | Exemple | Résultat |
+|---|---|---|---|
+| `fMin(` | `fMin(expr, var, lower, upper)` | `fMin(X²,X,-2,2)` | `0` (X qui minimise X²) |
+| `fMax(` | `fMax(expr, var, lower, upper)` | `fMax(-X²+2X,X,-2,3)` | `1` (X qui maximise -X²+2X) |
+
+- Échantillonnage dense (1000 pts) puis raffinement par section dorée. Retourne la **valeur de la variable** qui min/maximise (comportement TI-83).
+- Exemples : `fMin(sin(X),X,0,6)`→`4.712` (3π/2) ; `fMax(cos(X),X,0,6)`→`0` ou `6.283`.
+
+### 🔤 Variables chaîne persistantes — `Str1`-`Str9`
+
+Variables chaîne accessibles via **VARS → String...** et le **CATALOG**. Le store accepte désormais les valeurs chaîne (`setVariable(name, value: number|string)`).
+
+| Opération | Exemple | Résultat |
+|---|---|---|
+| Affectation home | `"hello"→Str1` | `Done` (Str1 = "hello") |
+| Lecture | `length(Str1)` | `5` |
+| Sous-chaîne | `sub(Str1,2,3)` | `"ell"` |
+| Copie | `Str1→Str2` | `Done` (Str2 = "hello") |
+| Saisie PRGM | `Input Str1` | texte saisi → Str1 |
+
+- **PRGM** : `"hello"→Str1`, `Disp length(Str1)`, `Input Str1`, `Str1→Str2`. La substitution de variables préserve le contenu des chaînes (passe `Str`-tokens puis mono-caractère, quote-aware).
+- Exemple programme : `:Input Str1:Disp length(Str1):Disp sub(Str1,1,3)`.
+
+### 🔢 Commandes matricielles en place + stockage résultat→matrice
+
+- `Fill(value,[X])` remplit `[X]` en place et affiche `Done` (au lieu de renvoyer une copie).
+- `SortA([X])` / `SortD([X])` trient chaque ligne de `[X]` en place → `Done`.
+- Stockage d'un résultat matriciel vers une matrice : `[A]→[B]`, `randM(2,3)→[A]`, `[[1,2],[3,4]]→[A]`, `augment([A],[B])→[C]` → `Done`. Couvre toutes les expressions produisant une matrice.
+
+### 🧭 `→Dec` parsing DMS (round-trip avec `→DMS`)
+
+`→Dec` accepte désormais une chaîne `D°M'S"` (format produit par `→DMS`) et la convertit en degrés décimaux : `D + M/60 + S/3600`. Round-trip : `→Dec(→DMS(12.5))`→`12.5`. Sur un nombre, `→Dec` conserve son comportement d'arrondi.
+
+### Limitations v1
+- `fMin`/`fMax` : supportés sur écran home + CATALOG (pas encore dans l'interpréteur PRGM).
+- `Fill`/`SortA`/`SortD` en place sur **matrices** uniquement (les listes `L1`-`L6` gardent leur comportement actuel).
+- Variables chaîne `Str1`-`Str9` : saisie `Input Str1` accepte le texte brut ; un littéral DMS contenant `"` ne peut s'écrire directement (passer par `→DMS` ou une variable).
 
 ---
 
@@ -408,31 +458,31 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 |---|:---:|---|
 | Calcul de base (arith, trig, log, π, e) | ✅ | ~100 % |
 | MATH — NUM / CPX / PRB / hyperbolic | ✅ | ~95 % (complet + extras : `ceil`, `floor`, `sign`, `mod`) |
-| MATH — calcul numérique (`nDeriv(`, `fnInt(`) | ✅ | ~80 % — `nDeriv`/`fnInt` présents (v3.5.0) ; manquent `fMin`, `fMax` symboliques |
-| ANGLE (`R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`, `°→rad`, `rad→°`, `→DMS`, `→Dec`) | ✅ | ~95 % — conversions polaire↔rectangulaire exactes + rad↔deg + DMS (v3.5.0) |
+| MATH — calcul numérique (`nDeriv(`, `fnInt(`, `fMin(`, `fMax(`) | ✅ | ~95 % — `nDeriv`/`fnInt` (v3.5.0) + `fMin`/`fMax` (v3.6.0) |
+| ANGLE (`R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`, `°→rad`, `rad→°`, `→DMS`, `→Dec`) | ✅ | ~100 % — polaire↔rect + rad↔deg + DMS + `→Dec` parsing DMS (v3.5.0/v3.6.0) |
 | Graphing (Func / Param / Polar / Seq) | ✅ | ~95 % — 4 modes + Window/Zoom/Trace + CALC (`value`, `zero`, `min`, `max`, `intersect`, `dy/dx`, `∫f(x)`) |
 | DRAW | ✅ | ~100 % — 17/17 (`Line`, `Circle`, `Text`, `Shade`, `Tangent`, `DrawInv`, `StorePic`…) |
 | STAT CALC (1/2-Var, 9 régressions) | ✅ | ~95 % — `LinReg`, `QuadReg`, `CubicReg`, `ExpReg`, `SinReg`, `Logistic`… |
 | **STAT TESTS** (tests d'hypothèse + intervalles) | ❌ | **~0 %** — `Z-Test`, `T-Test`, `2-Samp`, `1-PropZ`, `χ²-Test`, `ANOVA`, `LinRegTTest`… manquants |
 | DISTR (15 lois) | ✅ | ~100 % — `normalpdf/cdf`, `invNorm`, `t`, `χ²`, `F`, `binom`, `poisson`, `geomet` |
 | LIST OPS | ✅ | ~95 % — `SortA/D`, `dim`, `Fill`, `seq`, `cumSum`, `ΔList`, `mean`, `stdDev`… |
-| MATRX (éditeur + MATH/OPS) | ✅ | ~90 % — éditeur `[A]`-`[J]` ✅ + opérations `det`, `rref`/`ref`, `identity`, `randM`, `augment`, `Matr►list`/`List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse, `dim`, `cumSum` (v3.4.0). Manque : `Fill`/`SortA` en place, stockage résultat→matrice |
+| MATRX (éditeur + MATH/OPS) | ✅ | ~95 % — éditeur `[A]`-`[J]` ✅ + opérations `det`, `rref`/`ref`, `identity`, `randM`, `augment`, `Matr►list`/`List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse, `dim`, `cumSum` (v3.4.0) + `Fill`/`SortA`/`SortD` en place + stockage résultat→matrice (v3.6.0) |
 | FINANCE (TVM + cash flows) | ✅ | ~95 % — `tvm_PV/N/I/PMT/FV`, `NPV`, `IRR`, `bal`, `ΣPrn`, `ΣInt`, `Nom`, `Eff` |
 | SOLVER | ✅ | ~100 % |
-| PRGM (TI-BASIC) | ✅ | ~80 % — 39+ commandes + `getKey` (jeux) + chaînes `length`/`sub`/`inString`/`expr` (v3.5.0) ; manquent : `Str1`-`Str9`, `Archive`, `Asm(`, link |
+| PRGM (TI-BASIC) | ✅ | ~85 % — 39+ commandes + `getKey` (jeux) + chaînes `length`/`sub`/`inString`/`expr` (v3.5.0) + variables `Str1`-`Str9` & `Input Str1` (v3.6.0) ; manquent : `Archive`, `Asm(`, link |
 | TABLE / VARS / Y-VARS / MODE / MEM | ✅ | ~95 % — éditeurs présents |
-| CATALOG | ✅ | ~80 % — construit dynamiquement à partir des menus (v3.5.0 : `nDeriv`, `fnInt`, chaînes, R►P/P►R ajoutés) |
+| CATALOG | ✅ | ~85 % — construit dynamiquement à partir des menus (v3.6.0 : `fMin`/`fMax`, `Str1`-`Str9`, R►P/P►R) |
 
 ### Synthèse
 
-- **~88 %** en comptant toutes les commandes du catalogue TI-83 Plus
-- **~92 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
+- **~90 %** en comptant toutes les commandes du catalogue TI-83 Plus
+- **~94 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
 
 ### Principal manque restant
 
 1. **STAT TESTS** — un menu entier (tests d'hypothèses / intervalles de confiance) est absent, alors que les *distributions* (DISTR) sont complètes. C'est le plus gros écart pour un usage statistique.
 
-Manques mineurs restants : `fMin`/`fMax` symboliques, variables chaîne `Str1`-`Str9`, `Fill`/`SortA` matricielles en place, stockage d'un résultat matriciel vers une variable matrice.
+Manques mineurs restants : `Fill`/`SortA`/`SortD` en place sur les **listes** `L1`-`L6`, `Archive`/`Asm(`/link, `fMin`/`fMax` dans l'interpréteur PRGM.
 
 ---
 

@@ -139,6 +139,8 @@ export const createMathHandlers = (
   'exp': () => { appendInput('e^('); setCurrentMenu(null); },
   'pow10': () => { appendInput('10^('); setCurrentMenu(null); },
   'hypot': () => { appendInput('hypot('); setCurrentMenu(null); },
+  'fmin': () => { appendInput('fMin('); setCurrentMenu(null); },
+  'fmax': () => { appendInput('fMax('); setCurrentMenu(null); },
   'nderiv': () => { appendInput('nDeriv('); setCurrentMenu(null); },
   'fnint': () => { appendInput('fnInt('); setCurrentMenu(null); },
 

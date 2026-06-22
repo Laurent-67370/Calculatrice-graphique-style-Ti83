@@ -71,6 +71,67 @@ export class CalculusService {
     }
     return (h / 3) * sum;
   }
+
+  /**
+   * fMin / fMax — recherche numérique de l'extremum d'une expression sur
+   * [lower, upper]. TI-83: fMin(expr, var, lower, upper) / fMax(...).
+   * Retourne la VALEUR DE VAR qui minimise/maximise (pas la valeur de f).
+   * Échantillonnage dense (1000 pts) pour localiser la zone, puis raffinement
+   * par section dorée autour du meilleur point.
+   */
+  private optimize(
+    exprStr: string,
+    varName: string,
+    lower: number,
+    upper: number,
+    maximize: boolean
+  ): number {
+    const n = 1000;
+    const h = (upper - lower) / n;
+    let bestX = lower;
+    let bestF = this.evalAt(exprStr, varName, lower);
+    for (let i = 1; i <= n; i++) {
+      const x = lower + i * h;
+      const f = this.evalAt(exprStr, varName, x);
+      if ((maximize && f > bestF) || (!maximize && f < bestF)) {
+        bestF = f;
+        bestX = x;
+      }
+    }
+    // Raffinement section dorée autour du meilleur point (±un pas d'échantillonnage)
+    const span = Math.max(Math.abs(h), 1e-6);
+    let a = Math.max(lower, bestX - span);
+    let b = Math.min(upper, bestX + span);
+    const phi = (Math.sqrt(5) - 1) / 2;
+    let c = b - phi * (b - a);
+    let d = a + phi * (b - a);
+    let fc = this.evalAt(exprStr, varName, c);
+    let fd = this.evalAt(exprStr, varName, d);
+    for (let k = 0; k < 60 && Math.abs(b - a) > 1e-9; k++) {
+      if ((maximize && fc < fd) || (!maximize && fc > fd)) {
+        a = c;
+        c = d;
+        fc = fd;
+        d = a + phi * (b - a);
+        fd = this.evalAt(exprStr, varName, d);
+      } else {
+        b = d;
+        d = c;
+        fd = fc;
+        c = b - phi * (b - a);
+        fc = this.evalAt(exprStr, varName, c);
+      }
+    }
+    return (a + b) / 2;
+  }
+
+  fMin(exprStr: string, varName: string, lower: number, upper: number): number {
+    return this.optimize(exprStr, varName, lower, upper, false);
+  }
+
+  fMax(exprStr: string, varName: string, lower: number, upper: number): number {
+    return this.optimize(exprStr, varName, lower, upper, true);
+  }
 }
 
 export const calculusService = new CalculusService();

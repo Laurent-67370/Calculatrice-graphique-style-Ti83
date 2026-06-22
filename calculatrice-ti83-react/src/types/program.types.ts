@@ -15,7 +15,7 @@ export interface Program {
 export interface ExecutionContext {
   programName: string;           // Nom du programme en cours
   currentLine: number;           // Ligne en cours d'exécution
-  variables: Record<string, number>; // Variables du programme
+  variables: Record<string, number | string>; // Variables du programme (A-Z, θ numériques ; Str1-Str9 chaînes)
   stack: StackFrame[];           // Pile d'appels (pour sous-programmes)
   labels: Record<string, number>; // Labels et leurs numéros de ligne
   forLoops: ForLoopState[];      // Stack des boucles For
@@ -45,7 +45,7 @@ export interface ExecutionContext {
 export interface StackFrame {
   programName: string;    // Programme appelant
   returnLine: number;     // Ligne de retour
-  variables: Record<string, number>; // Variables locales
+  variables: Record<string, number | string>; // Variables locales
 }
 
 // État d'une boucle For

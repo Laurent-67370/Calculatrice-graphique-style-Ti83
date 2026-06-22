@@ -62,9 +62,15 @@ export const ProgramOutput: React.FC<ProgramOutputProps> = ({ onClose }) => {
   };
 
   const handleSubmitInput = () => {
-    const value = parseFloat(programInputValue);
-    if (!isNaN(value)) {
-      provideInput(value);
+    const targetVar = executionContext?.inputVariable;
+    if (targetVar && /^Str[1-9]$/.test(targetVar)) {
+      // Input StrN : saisie d'une chaîne (texte brut)
+      provideInput(programInputValue);
+    } else {
+      const value = parseFloat(programInputValue);
+      if (!isNaN(value)) {
+        provideInput(value);
+      }
     }
   };
 

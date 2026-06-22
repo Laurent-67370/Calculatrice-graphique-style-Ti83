@@ -6,6 +6,22 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.6.0] - 2026-06-22
+
+### ✨ Ajouté - fMin/fMax, Str1-9, Fill/SortA en place, →Dec DMS
+
+- **`fMin(`** / **`fMax(`** (MATH>6 / MATH>7) : optimisation numérique (échantillonnage 1000 pts + raffinement section dorée), retourne la valeur de la variable qui min/maximise. `CalculusService.fMin/fMax` + extension de `extractCalculusCalls` (`src/utils/calculus.ts`). Exemples : `fMin(X²,X,-2,2)`→0, `fMax(-X²+2X,X,-2,3)`→1, `fMin(sin(X),X,0,6)`→4.712.
+- **Variables chaîne `Str1`-`Str9`** (home + PRGM) : le store acceptait déjà `number|string` (`StoredVariables`) — câblage désormais complet. Home : `storeMatch` étendu à `([A-Zθ]|Str[1-9])`, stockage des résultats chaîne vers `StrN` (affiche `Done`), variables chaîne ajoutées au scope mathjs, sous-menu **VARS → String...** + CATALOG. PRGM : `variables: Record<string, number|string>` (`program.types.ts`), regexes `ASSIGN`/`INPUT`/`PROMPT`/`DELVAR` étendues à `Str[1-9]` (+ `normVar` pour la forme canonique `StrN`), `ASSIGN` conserve les chaînes, `provideInput: number|string` + `Input Str1` (saisie texte brut). Substitution **multi-passes quote-aware** : `transformOutsideQuotes` + `substituteVariables` (passe 1 : tokens `Str1`-`Str9` → littéral `"..."` échappé ; passe 2 : vars mono-caractère A-Z/θ — protège le contenu des chaînes). Exemples : `"hello"→Str1`, `Disp length(Str1)`→5, `Input Str1`, `Str1→Str2`.
+- **MATRX en place** : `Fill(v,[X])`, `SortA([X])`, `SortD([X])` modifient `[X]` en place et affichent `Done` (intercepts dans `Calculator.tsx`, zone StorePic) au lieu de renvoyer une copie. **Stockage résultat→matrice** : `matrixStoreMatch` `^(.+)→\[(A..J)\]$` + `toStoredMatrix` → `[A]→[B]`, `randM(2,3)→[A]`, `[[1,2],[3,4]]→[A]`, `augment([A],[B])→[C]` affichent `Done`.
+- **`→Dec` parsing DMS** : accepte une chaîne `D°M'S"` (format `→DMS`) → `D + M/60 + S/3600`. Round-trip `→Dec(→DMS(12.5))`→12.5. Sur un nombre, conserve l'arrondi. Màj `scope.toDec` (Calculator.tsx) + `math.import toDec` (ProgramInterpreter.ts).
+- CATALOG enrichi : `fMin(`, `fMax(`, `Str1`-`Str9`.
+- Table de compatibilité mise à jour : MATH calcul numérique 80%→95%, ANGLE 95%→100%, MATRX 90%→95%, PRGM 80%→85%, CATALOG 80%→85% ; synthèse ~88%→~90% / ~92%→~94%. « Manques mineurs restants » réduits à : `Fill`/`SortA` sur listes `L1`-`L6`, `Archive`/`Asm(`/link, `fMin`/`fMax` en PRGM.
+
+### Limitations v1
+- `fMin`/`fMax` : écran home + CATALOG (pas encore dans l'interpréteur PRGM).
+- `Fill`/`SortA`/`SortD` en place sur matrices uniquement (listes `L1`-`L6` inchangées).
+- Variables chaîne : un littéral DMS contenant `"` ne peut s'écrire directement (passer par `→DMS` ou une variable `Str`).
+
 ## [3.5.0] - 2026-06-22
 
 ### ✨ Ajouté - nDeriv / fnInt, fonctions chaîne, conversions R►P/P►R

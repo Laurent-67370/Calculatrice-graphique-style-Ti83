@@ -19,7 +19,7 @@ export function extractCalculusCalls(expr: string): string {
     return typeof v === 'number' ? v : Number(v);
   };
 
-  const processOne = (name: 'nDeriv' | 'fnInt'): boolean => {
+  const processOne = (name: 'nDeriv' | 'fnInt' | 'fMin' | 'fMax'): boolean => {
     const token = name + '(';
     const start = expr.indexOf(token);
     if (start < 0) return false;
@@ -49,10 +49,16 @@ export function extractCalculusCalls(expr: string): string {
         const val = evaluateNumericArg(valStr);
         const eps = epsStr !== undefined && epsStr !== '' ? evaluateNumericArg(epsStr) : 1e-3;
         value = calculusService.nDeriv(fStr, varName, val, eps);
-      } else {
+      } else if (name === 'fnInt') {
         // fnInt(expr, var, lower, upper)
         const [fStr, varName, loStr, upStr] = args;
         value = calculusService.fnInt(fStr, varName, evaluateNumericArg(loStr), evaluateNumericArg(upStr));
+      } else {
+        // fMin(expr, var, lower, upper) / fMax(expr, var, lower, upper)
+        const [fStr, varName, loStr, upStr] = args;
+        value = name === 'fMin'
+          ? calculusService.fMin(fStr, varName, evaluateNumericArg(loStr), evaluateNumericArg(upStr))
+          : calculusService.fMax(fStr, varName, evaluateNumericArg(loStr), evaluateNumericArg(upStr));
       }
       const rounded = Math.round(value * 1e10) / 1e10;
       expr = expr.slice(0, start) + '(' + rounded + ')' + expr.slice(end);
@@ -65,7 +71,7 @@ export function extractCalculusCalls(expr: string): string {
 
   // Traiter tous les appels présents (plusieurs possibles).
   let guard = 0;
-  while (guard++ < 50 && (processOne('nDeriv') || processOne('fnInt'))) {
+  while (guard++ < 50 && (processOne('nDeriv') || processOne('fnInt') || processOne('fMin') || processOne('fMax'))) {
     /* boucle */
   }
   return expr;

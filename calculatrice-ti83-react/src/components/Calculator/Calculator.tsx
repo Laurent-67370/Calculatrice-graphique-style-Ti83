@@ -64,6 +64,39 @@ const GETKEY_CODES: Record<string, number> = {
   '0': 102, dot: 103, negative: 104, enter: 105,
 };
 
+/**
+ * Convertit un résultat Matrix mathjs au format store {rows, cols, data}.
+ */
+function toStoredMatrix(m: any): { rows: number; cols: number; data: number[][] } {
+  const arr = (m && typeof m.toArray === 'function') ? m.toArray() : m;
+  if (Array.isArray(arr) && Array.isArray(arr[0])) {
+    return { rows: arr.length, cols: arr[0].length, data: arr as number[][] };
+  }
+  // Vecteur 1D → matrice 1×n
+  const flat = (Array.isArray(arr) ? arr : [arr]) as number[];
+  return { rows: 1, cols: flat.length, data: [flat] };
+}
+
+/**
+ * Sépare les arguments de premier niveau d'un appel de fonction (split sur
+ * les ',' hors parenthèses). Retourne null si les parenthèses sont déséquilibrées.
+ */
+function splitTopLevelArgs(s: string): string[] | null {
+  const args: string[] = [];
+  let depth = 0;
+  let cur = '';
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === '(') { depth++; cur += ch; }
+    else if (ch === ')') { depth--; if (depth < 0) return null; cur += ch; }
+    else if (ch === ',' && depth === 0) { args.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  if (depth !== 0) return null;
+  args.push(cur);
+  return args;
+}
+
 export const Calculator: React.FC = () => {
   // State pour le modal d'aide
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -124,6 +157,8 @@ export const Calculator: React.FC = () => {
     isInputResult,
     matrices,
     variables,
+    getMatrix,
+    setMatrix,
     cursorPosition,
     // cursorPosition et setCursorPosition sont gérés automatiquement par le store
     setInput,
@@ -345,9 +380,15 @@ export const Calculator: React.FC = () => {
 
         // Enter pour valider
         if (action === 'enter') {
-          const value = parseFloat(currentValue);
-          if (!isNaN(value)) {
-            provideInput(value);
+          const targetVar = executionContext?.inputVariable;
+          if (targetVar && /^Str[1-9]$/.test(targetVar)) {
+            // Input StrN : saisie d'une chaîne (texte brut)
+            provideInput(currentValue);
+          } else {
+            const value = parseFloat(currentValue);
+            if (!isNaN(value)) {
+              provideInput(value);
+            }
           }
           return;
         }
@@ -1654,16 +1695,57 @@ export const Calculator: React.FC = () => {
               }
             }
 
+            // Fill(v,[X]) / SortA([X]) / SortD([X]) — commandes en place sur matrices.
+            // Sur TI-83 ces commandes modifient la matrice en place et affichent Done.
+            const matrixCmdMatch = input.match(/^(Fill|SortA|SortD)\((.+)\)$/);
+            if (matrixCmdMatch) {
+              const [, cmd, argsStr] = matrixCmdMatch;
+              const args = splitTopLevelArgs(argsStr);
+              if (args) {
+                try {
+                  if (cmd === 'Fill') {
+                    // Fill(value, [X])
+                    const target = args[1]?.match(/^\[([A-J])\]$/);
+                    if (target) {
+                      const m = getMatrix(target[1]);
+                      const filled = MatrixService.fill(Number(args[0]), math.matrix(m.data));
+                      setMatrix(target[1], toStoredMatrix(filled));
+                      addToHistory(input); setInput('Done'); return;
+                    }
+                  } else {
+                    // SortA([X]) / SortD([X]) — trie chaque ligne en place
+                    const target = args[0]?.match(/^\[([A-J])\]$/);
+                    if (target) {
+                      const m = getMatrix(target[1]);
+                      const sorted = (cmd === 'SortA' ? MatrixService.sortA : MatrixService.sortD)(math.matrix(m.data));
+                      setMatrix(target[1], toStoredMatrix(sorted));
+                      addToHistory(input); setInput('Done'); return;
+                    }
+                  }
+                } catch {
+                  // tombé à l'eau → évaluation normale ci-dessous
+                }
+              }
+            }
+
             // Détecter si c'est un stockage de variable (→)
-            const storeMatch = currentInput.match(/^(.+)→([A-Z])$/);
+            const storeMatch = currentInput.match(/^(.+)→([A-Zθ]|Str[1-9])$/);
+            // Stockage vers une matrice : expr→[A]..[J]
+            const matrixStoreMatch = !storeMatch
+              ? currentInput.match(/^(.+)→\[(A|B|C|D|E|F|G|H|I|J)\]$/)
+              : null;
 
             let expr = currentInput;
             let varName: string | null = null;
+            let matrixTarget: string | null = null;
 
             if (storeMatch) {
               // C'est un stockage de variable : expression→VarName
               expr = storeMatch[1].trim();
               varName = storeMatch[2];
+            } else if (matrixStoreMatch) {
+              expr = matrixStoreMatch[1].trim();
+              matrixTarget = matrixStoreMatch[2];
             }
 
             // Préparer l'expression
@@ -1693,8 +1775,9 @@ export const Calculator: React.FC = () => {
             };
 
             // Ajouter les variables utilisateur au scope
+            // (numériques ET chaînes — Str1-Str9 sont des identifiants mathjs valides)
             Object.entries(variables).forEach(([name, value]) => {
-              if (typeof value === 'number') {
+              if (typeof value === 'number' || typeof value === 'string') {
                 scope[name] = value;
               }
             });
@@ -1799,9 +1882,20 @@ export const Calculator: React.FC = () => {
               const S = Math.round((minF - M) * 60);
               return `${sign}${D}°${M}'${S}"`;
             };
-            // →Dec : convertit une valeur DMS (degrés décimaux) en degrés décimaux.
-            // V1 : accepte un nombre de degrés décimaux (passe-passe arrondi).
-            scope.toDec = (x: number) => Math.round(x * 1e10) / 1e10;
+            // →Dec : convertit une valeur DMS en degrés décimaux. Accepte une
+            // chaîne "D°M'S\"" (format produit par →DMS) → D + M/60 + S/3600,
+            // ou un nombre (arrondi). Permet le round-trip →Dec(→DMS(12.5)).
+            scope.toDec = (x: number | string) => {
+              if (typeof x === 'string') {
+                const m = x.match(/^(-?\d+)°(\d+)'(\d+(?:\.\d+)?)"$/);
+                if (m) {
+                  const sign = m[1].startsWith('-') ? -1 : 1;
+                  return sign * (Math.abs(Number(m[1])) + Number(m[2]) / 60 + Number(m[3]) / 3600);
+                }
+                return Number(x);
+              }
+              return Math.round(x * 1e10) / 1e10;
+            };
 
             // Fonctions chaîne TI-BASIC (length/sub/inString/expr)
             scope.length = (s: string) => stringService.length(s);
@@ -1843,6 +1937,16 @@ export const Calculator: React.FC = () => {
               setVariable(varName, result);
               addToHistory(`${currentInput} = ${resultStr}`);
               setInputResult(resultStr); // Afficher le résultat
+            } else if (varName && typeof result === 'string' && /^Str[1-9]$/.test(varName)) {
+              // Stockage d'une chaîne vers Str1-Str9 (fidèle TI-83 : affiche Done)
+              setVariable(varName, result);
+              addToHistory(input);
+              setInput('Done');
+            } else if (matrixTarget && result && typeof result === 'object' && result.type === 'Matrix') {
+              // Stockage d'un résultat matriciel vers [A]-[J] (fidèle TI-83 : Done)
+              setMatrix(matrixTarget, toStoredMatrix(result));
+              addToHistory(input);
+              setInput('Done');
             } else {
               addToHistory(`${currentInput} = ${resultStr}`);
               setInputResult(resultStr); // Marquer comme résultat pour le remplacer lors du prochain input
