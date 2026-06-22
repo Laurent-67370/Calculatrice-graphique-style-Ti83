@@ -1568,6 +1568,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <br/>
                 <strong>Exemples NUM :</strong><br/>
                 <code>abs(-10)</code> → 10<br/>
+                <code>iPart(-3.7)</code> → -3 (troncature vers 0)<br/>
+                <code>int(-3.7)</code> → -4 (plus grand entier ≤ x)<br/>
+                <code>fPart(-3.7)</code> → -0.7 (signe préservé)<br/>
                 <code>gcd(24, 18)</code> → 6 (PGCD)<br/>
                 <code>lcm(12, 18)</code> → 36 (PPCM)<br/>
                 <code>ceil(3.2)</code> → 4 (arrondi sup)<br/>
