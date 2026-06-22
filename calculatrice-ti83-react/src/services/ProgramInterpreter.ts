@@ -14,6 +14,103 @@ import type {
 const math = create(all);
 
 /**
+ * Remplace les variables A-Z et θ par leur valeur, SAUF à l'intérieur des
+ * littéraux chaîne "..." (sinon length("ABC") avec A=5 deviendrait length("5BC")).
+ * @param expr          Expression à traiter
+ * @param variables     Map varName → valeur (toString()-able)
+ * @param presentVars   Liste des noms de variables présents dans l'expression
+ */
+function substituteVarsOutsideQuotes(
+  expr: string,
+  variables: Record<string, number>,
+  presentVars: string[]
+): string {
+  const apply = (code: string) => {
+    let out = code;
+    for (const varName of presentVars) {
+      const value = variables[varName];
+      if (value !== undefined) {
+        const regex = new RegExp(`\\b${varName}\\b`, 'g');
+        out = out.replace(regex, value.toString());
+      }
+    }
+    return out;
+  };
+
+  let result = '';
+  let buf = '';
+  let inStr = false;
+  for (let i = 0; i < expr.length; i++) {
+    const ch = expr[i];
+    if (ch === '"') {
+      if (!inStr) {
+        result += apply(buf) + '"';
+        buf = '';
+        inStr = true;
+      } else {
+        result += buf + '"';
+        buf = '';
+        inStr = false;
+      }
+    } else {
+      buf += ch;
+    }
+  }
+  // Flush final : on substitue seulement si on n'est pas dans une chaîne
+  result += inStr ? buf : apply(buf);
+  return result;
+}
+
+/**
+ * Réécrit les tokens ANGLE TI (caractères non-identifiants ►/→/°) en noms
+ * de fonctions mathjs. Doit être appelé avant math.evaluate().
+ */
+function rewriteAngleTokens(expr: string): string {
+  return expr
+    .replace(/R►Pr\(/g, 'rToP_r(')
+    .replace(/R►Pθ\(/g, 'rToP_theta(')
+    .replace(/P►Rx\(/g, 'pToR_x(')
+    .replace(/P►Ry\(/g, 'pToR_y(')
+    .replace(/°→rad\(/g, 'degToRad(')
+    .replace(/rad→°\(/g, 'radToDeg(')
+    .replace(/→DMS\(/g, 'toDMS(')
+    .replace(/→Dec\(/g, 'toDec(');
+}
+
+// Importer les fonctions chaîne + ANGLE sur l'instance mathjs partagée par
+// l'interpréteur (qui n'utilise pas de scope). Mode d'angle par défaut :
+// DEGREE (cohérent avec le mode par défaut de l'application).
+const _toRad = (a: number) => a * (Math.PI / 180);
+const _toDeg = (a: number) => a * (180 / Math.PI);
+math.import({
+  // Fonctions chaîne TI-BASIC
+  length: (s: string) => String(s).length,
+  sub: (s: string, start: number, len: number) => String(s).substr(Math.max(0, Math.floor(start) - 1), Math.max(0, Math.floor(len))),
+  inString: (s: string, needle: string, start: number = 1) => {
+    const idx = String(s).indexOf(String(needle), Math.max(0, Math.floor(start) - 1));
+    return idx < 0 ? 0 : idx + 1;
+  },
+  expr: (s: string) => math.evaluate(String(s)),
+  // Fonctions ANGLE
+  rToP_r: (x: number, y: number) => Math.hypot(x, y),
+  rToP_theta: (x: number, y: number) => _toDeg(Math.atan2(y, x)),
+  pToR_x: (r: number, t: number) => r * Math.cos(_toRad(t)),
+  pToR_y: (r: number, t: number) => r * Math.sin(_toRad(t)),
+  degToRad: (d: number) => _toRad(d),
+  radToDeg: (r: number) => _toDeg(r),
+  toDMS: (deg: number) => {
+    const sign = deg < 0 ? '-' : '';
+    const abs = Math.abs(deg);
+    const D = Math.floor(abs);
+    const minF = (abs - D) * 60;
+    const M = Math.floor(minF);
+    const S = Math.round((minF - M) * 60);
+    return `${sign}${D}°${M}'${S}"`;
+  },
+  toDec: (x: number) => Math.round(x * 1e10) / 1e10,
+}, { override: true });
+
+/**
  * Service d'interprétation de programmes TI-BASIC
  */
 export class ProgramInterpreter {
@@ -386,20 +483,14 @@ export class ProgramInterpreter {
       }
 
       // Remplacer les variables par leurs valeurs (expressions numériques uniquement)
-      let processedExpr = expr;
-
-      // Remplacer les variables A-Z et θ
+      // en préservant le contenu des littéraux chaîne "..."
       const varMatches = expr.match(/[A-Zθ]/g);
-      if (varMatches) {
-        for (const varName of varMatches) {
-          const value = context.variables[varName];
-          if (value !== undefined) {
-            // Utiliser une regex pour remplacer uniquement les variables isolées
-            const regex = new RegExp(`\\b${varName}\\b`, 'g');
-            processedExpr = processedExpr.replace(regex, value.toString());
-          }
-        }
-      }
+      let processedExpr = varMatches
+        ? substituteVarsOutsideQuotes(expr, context.variables, varMatches)
+        : expr;
+
+      // Réécrire les tokens ANGLE TI (►/→/°) en identifiants mathjs
+      processedExpr = rewriteAngleTokens(processedExpr);
 
       // Sinon, évaluer l'expression mathématique
       const result = math.evaluate(processedExpr);
@@ -436,17 +527,14 @@ export class ProgramInterpreter {
         processedCondition = processedCondition.replace(/getKey/gi, String(code));
       }
 
-      // Remplacer les variables A-Z et θ
+      // Remplacer les variables A-Z et θ (en préservant les littéraux chaîne)
       const varMatches = condition.match(/[A-Zθ]/g);
       if (varMatches) {
-        for (const varName of varMatches) {
-          const value = context.variables[varName];
-          if (value !== undefined) {
-            const regex = new RegExp(`\\b${varName}\\b`, 'g');
-            processedCondition = processedCondition.replace(regex, value.toString());
-          }
-        }
+        processedCondition = substituteVarsOutsideQuotes(processedCondition, context.variables, varMatches);
       }
+
+      // Réécrire les tokens ANGLE TI (►/→/°) en identifiants mathjs
+      processedCondition = rewriteAngleTokens(processedCondition);
 
       // Convertir les opérateurs de comparaison TI-BASIC vers la syntaxe mathjs :
       //  - '=' est l'égalité en TI-BASIC (mathjs l'interprète sinon comme une assignation)

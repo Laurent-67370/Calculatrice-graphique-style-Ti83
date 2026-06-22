@@ -33,6 +33,9 @@ export const mathMenuItems: MenuItem[] = [
   { id: 'exp', label: 'e^(', action: () => {} },
   { id: 'pow10', label: '10^(', action: () => {} },
   { id: 'hypot', label: 'hypot(', action: () => {} },
+  // MATH>8 / MATH>9 : calcul numérique (fidèle à la TI-83)
+  { id: 'nderiv', label: 'nDeriv(', action: () => {} },
+  { id: 'fnint', label: 'fnInt(', action: () => {} },
 
   // Sous-menu NUM
   { id: 'math-num', label: 'NUM', action: () => {}, submenu: [
@@ -80,6 +83,11 @@ export const mathMenuItems: MenuItem[] = [
     { id: 'rad-to-deg', label: 'rad→°', action: () => {} },
     { id: 'dms', label: '→DMS', action: () => {} },
     { id: 'dec', label: '→Dec', action: () => {} },
+    // Conversions polaire / rectangulaire (TI-83 ANGLE>4..7)
+    { id: 'r-pr', label: 'R►Pr(', action: () => {} },
+    { id: 'r-ptheta', label: 'R►Pθ(', action: () => {} },
+    { id: 'p-rx', label: 'P►Rx(', action: () => {} },
+    { id: 'p-ry', label: 'P►Ry(', action: () => {} },
   ]},
 
   // Sous-menu TRIG

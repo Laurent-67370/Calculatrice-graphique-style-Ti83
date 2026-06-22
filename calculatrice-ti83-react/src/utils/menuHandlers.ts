@@ -139,6 +139,8 @@ export const createMathHandlers = (
   'exp': () => { appendInput('e^('); setCurrentMenu(null); },
   'pow10': () => { appendInput('10^('); setCurrentMenu(null); },
   'hypot': () => { appendInput('hypot('); setCurrentMenu(null); },
+  'nderiv': () => { appendInput('nDeriv('); setCurrentMenu(null); },
+  'fnint': () => { appendInput('fnInt('); setCurrentMenu(null); },
 
   // Menu NUM supplémentaire
   'ceil': () => { appendInput('ceil('); setCurrentMenu(null); },
@@ -155,6 +157,11 @@ export const createMathHandlers = (
   'rad-to-deg': () => { appendInput('rad→°('); setCurrentMenu(null); },
   'dms': () => { appendInput('→DMS('); setCurrentMenu(null); },
   'dec': () => { appendInput('→Dec('); setCurrentMenu(null); },
+  // Conversions polaire / rectangulaire (TI-83 ANGLE>4..7)
+  'r-pr': () => { appendInput('R►Pr('); setCurrentMenu(null); },
+  'r-ptheta': () => { appendInput('R►Pθ('); setCurrentMenu(null); },
+  'p-rx': () => { appendInput('P►Rx('); setCurrentMenu(null); },
+  'p-ry': () => { appendInput('P►Ry('); setCurrentMenu(null); },
 
   // Menu TRIG
   'sinh': () => { appendInput('sinh('); setCurrentMenu(null); },

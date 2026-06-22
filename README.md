@@ -1,8 +1,10 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.4.2 - Saisie matrice simplifiée (NAMES racine) 🔢
+## Version 3.5.0 - nDeriv/fnInt, fonctions chaîne, conversions R►P/P►R ∫🔤🧭
 
-> Le menu MATRX (`2ND + X⁻¹`) ouvre désormais directement la liste `[A]`-`[J]` (+ `Edit…`) — comme l'onglet NAMES par défaut d'une vraie TI-83. Insérer `[A]` ne demande plus qu'une étape (`2ND + X⁻¹` → `[A]`), MATH et OPS restant accessibles en sous-menus. Basé sur la v3.4.1.
+> Trois manques mineurs de l'audit de compatibilité comblés : calcul numérique `nDeriv(`/`fnInt(` (MATH>8/9), fonctions chaîne TI-BASIC `length(`/`sub(`/`inString(`/`expr(`, et conversions polaire/rectangulaire exactes `R►Pr`/`R►Pθ`/`P►Rx`/`P►Ry` (ANGLE>4-7) — plus réparation des tokens ANGLE existants (`°→rad`, `rad→°`, `→DMS`, `→Dec`) qui renvoyaient une erreur. Basé sur la v3.4.2.
+
+> 🔢 **v3.4.2** : saisie matrice simplifiée — menu MATRX (`2ND + X⁻¹`) ouvre directement `[A]`-`[J]` (+ `Edit…`), NAMES onglet par défaut. MATH/OPS en sous-menus. Voir **✨ Nouveautés v3.4.0**.
 
 > 🔢 **v3.4.0** : opérations matricielles MATRX MATH/OPS (`det`, `rref`, `ref`, `identity`, `randM`, `augment`, `Matr►list`, `List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse). Voir **✨ Nouveautés v3.4.0**.
 
@@ -11,6 +13,8 @@
 Une implémentation moderne et performante de la calculatrice graphique TI-83 Plus, entièrement reconstruite avec **React**, **TypeScript** et **Zustand**. Disponible en **Progressive Web App** (PWA) installable sur mobile et bureau.
 
 **Nouveautés v3.4.0** 🔢 : opérations matricielles — menu MATRX (`2ND + X⁻¹`) avec onglets NAMES/MATH/OPS + Edit. `det(`, `rref(`, `ref(`, `identity(`, `randM(`, `augment(`, `Matr►list(`, `List►matr(`, `cumSum(`, `dim(`, opérations sur lignes (`rowSwap(`, `*row(`, `*row+(`, `*row-(`), transposée (`ᵀ`), inverse, arithmétique (`[A]*[B]`, `[A]+[B]`). Voir la section **✨ Nouveautés v3.4.0** ci-dessous.
+
+**Nouveautés v3.5.0** ∫🔤🧭 : `nDeriv(`/`fnInt(` (dérivée & intégrale numériques, MATH>8/9), fonctions chaîne TI-BASIC `length(`/`sub(`/`inString(`/`expr(` (CATALOG), conversions polaire↔rectangulaire `R►Pr(`/`R►Pθ(`/`P►Rx(`/`P►Ry(` (ANGLE>4-7) + réparation de `°→rad`/`rad→°`/`→DMS`/`→Dec`. Voir la section **✨ Nouveautés Version 3.5.0** ci-dessous.
 
 **Correctifs v3.3.1** 🎹 : mapping ALPHA du clavier partiellement corrigé — rang haut MATH/APPS/PRGM/VARS/CLEAR = A/B/C/D/E (confirmé guidebook TI officiel), doublon `X` sur `÷` supprimé, mauvaises lettres A-E retirées des touches numériques 7/8/9/4/5. Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
 
@@ -31,6 +35,58 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## ✨ Nouveautés Version 3.5.0
+
+Trois manques mineurs identifiés par l'audit de compatibilité sont comblés. Toutes ces fonctions sont accessibles depuis l'écran home (saisie de l'expression puis `ENTER`), depuis le **CATALOG** (`2ND + 0`) et, pour les programmes TI-BASIC, depuis l'interpréteur.
+
+### ∫ Calcul numérique — `nDeriv(` / `fnInt(` (MATH>8 / MATH>9)
+
+| Fonction | Syntaxe | Exemple | Résultat |
+|---|---|---|---|
+| `nDeriv(` | `nDeriv(expr, var, value[, ε])` | `nDeriv(X²,X,3)` | `6` (dérivée de X² en 3) |
+| `fnInt(` | `fnInt(expr, var, lower, upper)` | `fnInt(X²,X,0,2)` | `2.666666667` (∫₀² X² dX = 8/3) |
+
+- `nDeriv` utilise le quotient à différence symétrique `(f(x+ε) − f(x−ε)) / (2ε)` avec `ε = 1e-3` par défaut (comportement identique à une vraie TI-83).
+- `fnInt` utilise l'intégration de Simpson composée (1000 intervalles).
+- L'argument `expr` est une expression **non évaluée** contenant la variable (`X` par ex.) ; `var` est le nom de cette variable.
+- Exemples : `nDeriv(sin(X),X,0)` → `1` ; `fnInt(sin(X),X,0,π)` → `2` ; `nDeriv(3X+2,X,5)` → `3`.
+
+### 🔤 Fonctions chaîne TI-BASIC — `length(` / `sub(` / `inString(` / `expr(`
+
+Accessibles via le **CATALOG** (`2ND + 0`). Les positions sont **1-based** comme sur la TI-83.
+
+| Fonction | Effet | Exemple | Résultat |
+|---|---|---|---|
+| `length(` | Nombre de caractères | `length("hello")` | `5` |
+| `sub(` | Sous-chaîne : `sub(str, start, len)` | `sub("abcdef",2,3)` | `"bcd"` |
+| `inString(` | Index 1-based du 1ᵉ match (0 si absent) ; `inString(str, sub[, start])` | `inString("abcdef","c")` | `3` |
+| `expr(` | Évalue une chaîne comme expression | `expr("2+3*4")` | `14` |
+
+- Les arguments chaîne sont des littéraux `"..."`. Les variables `Str1`-`Str9` ne sont pas encore supportées (le store des variables est numérique) — limitation v1.
+- Dans les programmes TI-BASIC, la substitution de variables préserve désormais le contenu des littéraux chaîne (`length("ABC")` avec `A=5` reste `3`, et `sub("ABC",1,2)` renvoie bien `"AB"`).
+
+### 🧭 Conversions polaire / rectangulaire — `R►Pr` / `R►Pθ` / `P►Rx` / `P►Ry` (ANGLE>4-7)
+
+Sous-menu **MATH → ANGLE** (ou CATALOG). `θ` est renvoyé dans le mode d'angle courant (DEGREE ou RADIAN).
+
+| Fonction | Effet | Exemple (DEGREE) | Résultat |
+|---|---|---|---|
+| `R►Pr(` | Rectangulaire → polaire (r) | `R►Pr(3,4)` | `5` |
+| `R►Pθ(` | Rectangulaire → polaire (θ) | `R►Pθ(3,4)` | `53.13010235` |
+| `P►Rx(` | Polaire → rectangulaire (x) | `P►Rx(5,53.13)` | `3` |
+| `P►Ry(` | Polaire → rectangulaire (y) | `P►Ry(5,53.13)` | `4` |
+
+**Réparation** : les tokens ANGLE existants `°→rad(`, `rad→°(`, `→DMS(`, `→Dec(` (insérés par le menu mais jamais réécrits pour mathjs) renvoyaient une erreur `ERREUR`. Ils sont désormais fonctionnels :
+- `°→rad(180)` → `3.141592654` ; `rad→°(π)` → `180`
+- `→DMS(12.5)` → `12°30'0"` (chaîne DMS) ; `→Dec(12.5)` → `12.5`
+
+### Limitations v1
+- `nDeriv`/`fnInt` : supportés sur l'écran home et le CATALOG (pas encore dans l'interpréteur PRGM).
+- Fonctions chaîne : arguments en littéraux `"..."` uniquement (pas de `Str1`-`Str9`).
+- `→Dec` accepte un nombre de degrés décimaux (pas encore le parsing d'une chaîne `D°M'S"`).
 
 ---
 
@@ -352,8 +408,8 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 |---|:---:|---|
 | Calcul de base (arith, trig, log, π, e) | ✅ | ~100 % |
 | MATH — NUM / CPX / PRB / hyperbolic | ✅ | ~95 % (complet + extras : `ceil`, `floor`, `sign`, `mod`) |
-| MATH — calcul symbolique (`nDeriv(`, `fnInt(`, `fMin`, `fMax`) | ⚠️ | ~15 % — quasi absent |
-| ANGLE (`R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`, `►DMS`) | ⚠️ | ~50 % — conversions génériques (rad↔deg, rect↔polar) mais pas les notations TI exactes |
+| MATH — calcul numérique (`nDeriv(`, `fnInt(`) | ✅ | ~80 % — `nDeriv`/`fnInt` présents (v3.5.0) ; manquent `fMin`, `fMax` symboliques |
+| ANGLE (`R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`, `°→rad`, `rad→°`, `→DMS`, `→Dec`) | ✅ | ~95 % — conversions polaire↔rectangulaire exactes + rad↔deg + DMS (v3.5.0) |
 | Graphing (Func / Param / Polar / Seq) | ✅ | ~95 % — 4 modes + Window/Zoom/Trace + CALC (`value`, `zero`, `min`, `max`, `intersect`, `dy/dx`, `∫f(x)`) |
 | DRAW | ✅ | ~100 % — 17/17 (`Line`, `Circle`, `Text`, `Shade`, `Tangent`, `DrawInv`, `StorePic`…) |
 | STAT CALC (1/2-Var, 9 régressions) | ✅ | ~95 % — `LinReg`, `QuadReg`, `CubicReg`, `ExpReg`, `SinReg`, `Logistic`… |
@@ -363,20 +419,20 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 | MATRX (éditeur + MATH/OPS) | ✅ | ~90 % — éditeur `[A]`-`[J]` ✅ + opérations `det`, `rref`/`ref`, `identity`, `randM`, `augment`, `Matr►list`/`List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse, `dim`, `cumSum` (v3.4.0). Manque : `Fill`/`SortA` en place, stockage résultat→matrice |
 | FINANCE (TVM + cash flows) | ✅ | ~95 % — `tvm_PV/N/I/PMT/FV`, `NPV`, `IRR`, `bal`, `ΣPrn`, `ΣInt`, `Nom`, `Eff` |
 | SOLVER | ✅ | ~100 % |
-| PRGM (TI-BASIC) | ✅ | ~75 % — 39+ commandes + `getKey` (jeux) ; manquent : chaînes (`length`, `sub`, `inString`, `expr`), `Archive`, `Asm(`, link |
+| PRGM (TI-BASIC) | ✅ | ~80 % — 39+ commandes + `getKey` (jeux) + chaînes `length`/`sub`/`inString`/`expr` (v3.5.0) ; manquent : `Str1`-`Str9`, `Archive`, `Asm(`, link |
 | TABLE / VARS / Y-VARS / MODE / MEM | ✅ | ~95 % — éditeurs présents |
-| CATALOG | ⚠️ | ~70 % — construit dynamiquement à partir des menus |
+| CATALOG | ✅ | ~80 % — construit dynamiquement à partir des menus (v3.5.0 : `nDeriv`, `fnInt`, chaînes, R►P/P►R ajoutés) |
 
 ### Synthèse
 
-- **~85 %** en comptant toutes les commandes du catalogue TI-83 Plus
-- **~90 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
+- **~88 %** en comptant toutes les commandes du catalogue TI-83 Plus
+- **~92 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
 
 ### Principal manque restant
 
 1. **STAT TESTS** — un menu entier (tests d'hypothèses / intervalles de confiance) est absent, alors que les *distributions* (DISTR) sont complètes. C'est le plus gros écart pour un usage statistique.
 
-Manques mineurs : `nDeriv(`/`fnInt(` (calcul), fonctions chaîne en PRGM, notations ANGLE exactes, `Fill`/`SortA` matricielles en place, stockage d'un résultat matriciel vers une variable matrice.
+Manques mineurs restants : `fMin`/`fMax` symboliques, variables chaîne `Str1`-`Str9`, `Fill`/`SortA` matricielles en place, stockage d'un résultat matriciel vers une variable matrice.
 
 ---
 
@@ -487,7 +543,7 @@ Voir [DEPLOIEMENT-BLOG-V3.0.md](./DEPLOIEMENT-BLOG-V3.0.md) pour le guide comple
 - **NUM** : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod
 - **CPX** : conj, real, imag, angle, abs, Rect, Polar
 - **PRB** : rand, nPr, nCr, !, randInt, randNorm, randBin
-- **ANGLE** : °→rad, rad→°, →DMS, →Dec
+- **ANGLE** : °→rad, rad→°, →DMS, →Dec, R►Pr, R►Pθ, P►Rx, P►Ry
 - **TRIG** : sinh, cosh, tanh, asinh, acosh, atanh
 
 ### 📊 **DISTR - Distributions Statistiques**

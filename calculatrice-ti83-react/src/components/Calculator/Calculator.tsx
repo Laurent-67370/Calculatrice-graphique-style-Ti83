@@ -31,6 +31,8 @@ import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcH
 import { listHandlers } from '../../utils/listHandlers';
 import { createDrawHandlers } from '../../utils/drawHandlers';
 import { MatrixService } from '../../services/MatrixService';
+import { stringService } from '../../services/StringService';
+import { extractCalculusCalls } from '../../utils/calculus';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
 import { ProgramMenu } from '../Program/ProgramMenu';
 import { ProgramEditor } from '../Program/ProgramEditor';
@@ -1665,6 +1667,12 @@ export const Calculator: React.FC = () => {
             }
 
             // Préparer l'expression
+            // nDeriv( / fnInt( : ces fonctions reçoivent une expression NON évaluée
+            // et la variable par rapport à laquelle dériver/intégrer. Il faut les
+            // extraire et les calculer AVANT la substitution X→0 (qui casserait
+            // l'argument expression) et avant mathjs.
+            expr = extractCalculusCalls(expr);
+
             expr = expr
               .replace(/−/g, '-')  // Remplacer le signe moins Unicode (U+2212) par le tiret ASCII
               .replace(/×/g, '*')
@@ -1732,6 +1740,18 @@ export const Calculator: React.FC = () => {
             expr = expr.replace(/\*row-\(/g, 'rowMinus(');
             expr = expr.replace(/\*row\(/g, 'row(');
 
+            // Rewrites des tokens ANGLE TI (caractères non-identifiants ►/→/°)
+            // R►Pr/R►Pθ : conversion rectangulaire → polaire ; P►Rx/P►Ry : polaire → rectangulaire
+            // °→rad / rad→° : conversions d'unités d'angle ; →DMS / →Dec : format DMS
+            expr = expr.replace(/R►Pr\(/g, 'rToP_r(');
+            expr = expr.replace(/R►Pθ\(/g, 'rToP_theta(');
+            expr = expr.replace(/P►Rx\(/g, 'pToR_x(');
+            expr = expr.replace(/P►Ry\(/g, 'pToR_y(');
+            expr = expr.replace(/°→rad\(/g, 'degToRad(');
+            expr = expr.replace(/rad→°\(/g, 'radToDeg(');
+            expr = expr.replace(/→DMS\(/g, 'toDMS(');
+            expr = expr.replace(/→Dec\(/g, 'toDec(');
+
             // Enregistrer les fonctions matricielles TI dans le scope.
             // mathjs (create, all) gère déjà en built-in: det, identity, transpose, inv, + arithmétique.
             scope.randM = MatrixService.randM;
@@ -1749,6 +1769,45 @@ export const Calculator: React.FC = () => {
             scope.Fill = MatrixService.fill;
             scope.SortA = MatrixService.sortA;
             scope.SortD = MatrixService.sortD;
+
+            // Fonctions ANGLE — conversions polaire/rectangulaire + DMS.
+            // θ est renvoyé dans le mode d'angle courant (DEGREE ou RADIAN).
+            const toRad = (a: number) => a * (Math.PI / 180);
+            const toDeg = (a: number) => a * (180 / Math.PI);
+            scope.rToP_r = (x: number, y: number) => Math.hypot(x, y);
+            scope.rToP_theta = (x: number, y: number) => {
+              const theta = Math.atan2(y, x);
+              return config.angleMode === 'DEGREE' ? toDeg(theta) : theta;
+            };
+            scope.pToR_x = (r: number, theta: number) => {
+              const t = config.angleMode === 'DEGREE' ? toRad(theta) : theta;
+              return r * Math.cos(t);
+            };
+            scope.pToR_y = (r: number, theta: number) => {
+              const t = config.angleMode === 'DEGREE' ? toRad(theta) : theta;
+              return r * Math.sin(t);
+            };
+            scope.degToRad = (d: number) => toRad(d);
+            scope.radToDeg = (r: number) => toDeg(r);
+            // →DMS : convertit des degrés décimaux en chaîne "D°M'S"
+            scope.toDMS = (deg: number) => {
+              const sign = deg < 0 ? '-' : '';
+              const abs = Math.abs(deg);
+              const D = Math.floor(abs);
+              const minF = (abs - D) * 60;
+              const M = Math.floor(minF);
+              const S = Math.round((minF - M) * 60);
+              return `${sign}${D}°${M}'${S}"`;
+            };
+            // →Dec : convertit une valeur DMS (degrés décimaux) en degrés décimaux.
+            // V1 : accepte un nombre de degrés décimaux (passe-passe arrondi).
+            scope.toDec = (x: number) => Math.round(x * 1e10) / 1e10;
+
+            // Fonctions chaîne TI-BASIC (length/sub/inString/expr)
+            scope.length = (s: string) => stringService.length(s);
+            scope.sub = (s: string, start: number, len: number) => stringService.sub(s, start, len);
+            scope.inString = (s: string, sub: string, start?: number) => stringService.inString(s, sub, start);
+            scope.expr = (s: string) => stringService.expr(s);
 
             // Évaluer l'expression avec mathjs
             const result = math.evaluate(expr, scope);

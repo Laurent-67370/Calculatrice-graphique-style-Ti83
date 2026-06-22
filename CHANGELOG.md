@@ -6,6 +6,23 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.5.0] - 2026-06-22
+
+### ✨ Ajouté - nDeriv / fnInt, fonctions chaîne, conversions R►P/P►R
+
+- **`nDeriv(`** / **`fnInt(`** (MATH>8 / MATH>9) : dérivée numérique par différence symétrique (ε=1e-3) et intégrale numérique par Simpson (1000 intervalles). L'expression est extraite avant l'évaluation mathjs (gère l'argument non évalué `nDeriv(X²,X,3)`). Nouveau service `src/services/CalculusService.ts` + extraction `src/utils/calculus.ts`. Exemples : `nDeriv(X²,X,3)`→6, `fnInt(X²,X,0,2)`→2.6667.
+- **Fonctions chaîne TI-BASIC** `length(`, `sub(`, `inString(`, `expr(` (CATALOG) : positions 1-based, fidèles à la TI-83. Nouveau service `src/services/StringService.ts` + `math.import` sur l'instance de l'interpréteur. Exemples : `length("hello")`→5, `sub("abcdef",2,3)`→"bcd", `inString("abcdef","c")`→3, `expr("2+3*4")`→14.
+- **Conversions polaire/rectangulaire** `R►Pr(`, `R►Pθ(`, `P►Rx(`, `P►Ry(` (ANGLE>4-7) : `θ` dans le mode d'angle courant. Items ajoutés au sous-menu MATH→ANGLE + handlers + réécritures de tokens + fonctions scope.
+- **Réparation** : les tokens ANGLE existants `°→rad(`, `rad→°(`, `→DMS(`, `→Dec(` étaient insérés par le menu mais jamais réécrits pour mathjs → `ERREUR`. Désormais fonctionnels (`°→rad(180)`→π, `→DMS(12.5)`→`12°30'0"`).
+- **PRGM** : la substitution de variables préserve désormais le contenu des littéraux chaîne (`length("ABC")` avec `A=5` reste correct) via `substituteVarsOutsideQuotes`.
+- CATALOG enrichi : `fnInt`, `length`, `sub`, `inString`, `expr`, `R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`.
+- Table de compatibilité mise à jour : MATH calcul numérique ⚠️→✅, ANGLE ⚠️→✅, PRGM chaînes manquantes→présentes, CATALOG ⚠️→✅ ; synthèse ~85%→~88% / ~90%→~92%.
+
+### Limitations v1
+- `nDeriv`/`fnInt` : écran home + CATALOG (pas encore dans l'interpréteur PRGM).
+- Fonctions chaîne : arguments en littéraux `"..."` uniquement (pas de variables `Str1`-`Str9`).
+- `→Dec` : accepte un nombre de degrés décimaux (pas encore le parsing d'une chaîne `D°M'S"`).
+
 ## [3.4.2] - 2026-06-21
 
 ### ✨ Changé - Saisie matrice simplifiée
