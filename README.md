@@ -1,6 +1,10 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.7.0 - STAT TESTS : tests d'hypothèses + intervalles de confiance 📊
+## Version 3.7.1 - Correctifs NUM iPart/int/fPart (sémantique TI-83 + câblage) 🔧🧪
+
+> 🔧 **v3.7.1** : `iPart(`/`int(`/`fPart(` (MATH>NUM) — sémantique TI-83 corrigée (`iPart`=troncature, `int`=greatest integer, `fPart`=signe préservé) **et** désormais réellement câblées (elles renvoyaient « Undefined function »). Première **suite de tests automatisée** (Vitest, 105 tests). Voir **🔧 Correctifs Version 3.7.1**.
+
+> 📐 **v3.7.0** : menu **STAT → TESTS complet** (15 tests) — `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1-PropZTest`, `2-PropZTest`, `χ²-Test`, `ZInterval`, `TInterval`, `2-SampZInt`/`TInt`, `1-PropZInt`, `2-PropZInt`, `LinRegTTest`, `ANOVA`. Le principal manque de l'audit de compatibilité est comblé. Voir **✨ Nouveautés Version 3.7.0**.
 
 > 📐 **v3.7.0** : menu **STAT → TESTS complet** (15 tests) — `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1-PropZTest`, `2-PropZTest`, `χ²-Test`, `ZInterval`, `TInterval`, `2-SampZInt`/`TInt`, `1-PropZInt`, `2-PropZInt`, `LinRegTTest`, `ANOVA`. Le principal manque de l'audit de compatibilité est comblé. Voir **✨ Nouveautés Version 3.7.0**.
 
@@ -43,6 +47,32 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.7.1
+
+Correctif des fonctions **MATH → NUM** `iPart(`, `int(`, `fPart(` — deux bugs découverts via la nouvelle suite de tests.
+
+### 🐛 Sémantique inversée vs TI-83
+
+`MathFunctionsService` avait `iPart` = `floor` et `int` = `trunc`, soit l'**inverse** de la TI-83 réelle. Désormais conforme :
+
+| Fonction | Avant (faux) | Après (TI-83) | Sémantique |
+|---|---|---|---|
+| `iPart(-3.7)` | `-4` | **`-3`** | troncature vers zéro (integer part) |
+| `int(-3.7)` | `-3` | **`-4`** | plus grand entier ≤ x (greatest integer / floor) |
+| `fPart(-3.7)` | `0.3` | **`-0.7`** | partie fractionnaire, signe préservé (`x - iPart(x)`) |
+
+Sur les positifs, `iPart(3.7)` et `int(3.7)` valent tous deux `3` (inchangé) — la différence ne se voit que sur les négatifs.
+
+### 🐛 Fonctions non câblées → « Undefined function »
+
+Le menu MATH>NUM insérait les tokens et le service avait les implémentations, mais **aucune n'était enregistrée dans mathjs** : `iPart(-3.7)`, `int(-3.7)`, `fPart(-3.7)` renvoyaient une erreur sur l'écran home **et** en PRGM. Désormais enregistrées dans le **scope home** (`Calculator.tsx`) et via **`math.import`** en PRGM (`ProgramInterpreter.ts`), source unique = `MathFunctionsService`.
+
+### 🧪 Suite de tests Vitest (interne)
+
+Première suite de tests automatisée du projet : **105 tests** sur 8 fichiers (tous les services purs — `HypothesisTestService`, `DistributionService`, `StatisticsService`, `MatrixService`, `CalculusService`, `StringService`, `FinanceService`, `MathFunctionsService`), env `node` (pas de jsdom). Scripts `npm run test` / `test:run` / `test:ui`. Les gardes anti-régression verrouillent les bugs historiques (Fpdf(0)=NaN, LinReg a/b inversés, ANOVA p-value, fixes TVM v3.2.1).
 
 ---
 

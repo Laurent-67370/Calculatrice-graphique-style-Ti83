@@ -1553,7 +1553,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               <h4>Catégories principales :</h4>
               <ul>
                 <li><strong>MATH</strong> : ³√, logBASE, e^x, 10^x, hypot</li>
-                <li><strong>NUM ▶</strong> : abs, round, iPart, fPart, min, max, gcd, lcm, ceil, floor, sign, trunc, mod</li>
+                <li><strong>NUM ▶</strong> : abs, round, iPart (partie entière tronquée), fPart (partie fractionnaire), int (plus grand entier ≤ x), min, max, gcd, lcm, ceil, floor, sign, trunc, mod</li>
                 <li><strong>CPX ▶</strong> : conj, real, imag, angle, abs, Rect, Polar</li>
                 <li><strong>PRB ▶</strong> : rand, nPr, nCr, !, randInt, randNorm, randBin</li>
                 <li><strong>ANGLE ▶</strong> : °→rad, rad→°, →DMS, →Dec, R►Pr, R►Pθ, P►Rx, P►Ry</li>
@@ -1735,7 +1735,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.7.0 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR (15 lois) • 📐 STAT TESTS (15 tests) • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref) • ∫ nDeriv/fnInt/fMin/fMax • 🔤 chaînes + Str1-9 • 🧭 ANGLE R►P/P►R + →DMS/→Dec
+            Version 3.7.1 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR (15 lois) • 📐 STAT TESTS (15 tests) • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref) • ∫ nDeriv/fnInt/fMin/fMax • 🔤 chaînes + Str1-9 • 🧭 ANGLE R►P/P►R + →DMS/→Dec
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

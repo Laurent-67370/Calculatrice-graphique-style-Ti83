@@ -6,6 +6,18 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.7.1] - 2026-06-22
+
+### 🐛 Corrigé - iPart/int/fPart (MATH>NUM)
+
+- **Sémantique inversée vs TI-83** (`MathFunctionsService`) : `iPart` utilisait `Math.floor` et `int` utilisait `Math.trunc` — l'inverse de la TI-83 (où `int` = greatest integer / floor, `iPart` = integer part / trunc). Désormais `iPart` = troncature vers zéro, `int` = plus grand entier ≤ x, `fPart` = partie fractionnaire signe préservé (`x - iPart(x)`). `iPart(-3.7)` −4→**−3**, `int(-3.7)` −3→**−4**, `fPart(-3.7)` +0.3→**−0.7**.
+- **Fonctions non câblées → "Undefined function"** : le menu MATH>NUM insérait les tokens et le service avait les implémentations, mais aucune n'était enregistrée dans mathjs → erreur sur l'écran home **et** en PRGM. Désormais enregistrées dans le scope home (`Calculator.tsx`) et via `math.import` en PRGM (`ProgramInterpreter.ts`), source unique = `MathFunctionsService`.
+- Runtime vérifié dans les deux chemins (home scope + PRGM import) : `iPart(-3.7)=-3`, `int(-3.7)=-4`, `fPart(-3.7)≈-0.7`.
+
+### 🧪 Ajouté - Suite de tests automatisée (Vitest)
+
+- Première suite de tests du projet : **105 tests** sur 8 fichiers couvrant tous les services purs (env `node`, pas de jsdom). `HypothesisTestService` (18, garde ANOVA p≠NaN + LinReg pente), `DistributionService` (16, garde `Fpdf(0)≠NaN`), `StatisticsService` (7, garde `linearRegression` a=pente/b=ordonnée), `MatrixService` (19), `CalculusService` (9), `StringService` (10), `FinanceService` (9, garde fixes TVM v3.2.1), `MathFunctionsService` (18). Config `vitest.config.ts` + `tsconfig.test.json` (DX, invisible au `tsc -b`) + scripts `test`/`test:run`/`test:ui`. Démo non-régression validée (bug `Fpdf(0)` réintroduit → 5 tests rouges ciblés).
+
 ## [3.7.0] - 2026-06-22
 
 ### ✨ Ajouté - STAT TESTS (tests d'hypothèses + intervalles de confiance)
