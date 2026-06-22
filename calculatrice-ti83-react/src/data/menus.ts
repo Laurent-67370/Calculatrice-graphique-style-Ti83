@@ -4,9 +4,29 @@
 
 import type { MenuItem } from '../components/Menus/Menu';
 
+// Menu STAT > TESTS (15 tests d'hypothèses / intervalles — TI-83)
+export const statTestsMenuItems: MenuItem[] = [
+  { id: 'test-ztest', label: 'Z-Test...', action: () => {} },
+  { id: 'test-ttest', label: 'T-Test...', action: () => {} },
+  { id: 'test-2sampztest', label: '2-SampZTest...', action: () => {} },
+  { id: 'test-2sampttest', label: '2-SampTTest...', action: () => {} },
+  { id: 'test-1propztest', label: '1-PropZTest...', action: () => {} },
+  { id: 'test-2propztest', label: '2-PropZTest...', action: () => {} },
+  { id: 'test-chi2gof', label: 'χ²-Test...', action: () => {} },
+  { id: 'test-zint', label: 'ZInterval...', action: () => {} },
+  { id: 'test-tint', label: 'TInterval...', action: () => {} },
+  { id: 'test-2sampzint', label: '2-SampZInt...', action: () => {} },
+  { id: 'test-2samptint', label: '2-SampTInt...', action: () => {} },
+  { id: 'test-1propzint', label: '1-PropZInt...', action: () => {} },
+  { id: 'test-2propzint', label: '2-PropZInt...', action: () => {} },
+  { id: 'test-linregttest', label: 'LinRegTTest...', action: () => {} },
+  { id: 'test-anova', label: 'ANOVA...', action: () => {} },
+];
+
 // Menu STAT
 export const statMenuItems: MenuItem[] = [
   { id: 'edit', label: 'Edit...', action: () => {} },
+  { id: 'tests', label: 'TESTS...', action: () => {}, submenu: statTestsMenuItems },
   { id: '1-var-stats', label: '1-Var Stats', action: () => {} },
   { id: '2-var-stats', label: '2-Var Stats', action: () => {} },
   { id: 'med-med', label: 'Med-Med', action: () => {} },

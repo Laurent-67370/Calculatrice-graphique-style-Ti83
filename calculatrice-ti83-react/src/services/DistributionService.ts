@@ -143,6 +143,34 @@ export class DistributionService {
   }
 
   /**
+   * Inverse de la distribution t de Student (quantile).
+   * Trouve x tel que P(T ≤ x) = area, par dichotomie.
+   * P(T ≤ x) est calculé via la symétrie (intégration sur [-|x|,|x|] seulement)
+   * pour éviter l'intégration Simpson sur [-∞, x] qui raterait le pic.
+   * Utilisé pour les intervalles T (TInterval, 2-SampleTInt).
+   */
+  invT(area: number, df: number): number {
+    if (df <= 0) throw new Error('df doit être > 0');
+    if (area <= 0 || area >= 1) throw new Error('area doit être entre 0 et 1');
+
+    // P(T ≤ x) = 0.5 + 0.5·sign(x)·tcdf(-|x|, |x|, df)
+    const cdfAt = (x: number): number => {
+      if (x === 0) return 0.5;
+      const central = this.tcdf(-Math.abs(x), Math.abs(x), df);
+      return 0.5 + 0.5 * Math.sign(x) * central;
+    };
+
+    let lo = -100, hi = 100;
+    for (let i = 0; i < 200; i++) {
+      const mid = (lo + hi) / 2;
+      if (cdfAt(mid) < area) lo = mid;
+      else hi = mid;
+      if (hi - lo < 1e-9) break;
+    }
+    return (lo + hi) / 2;
+  }
+
+  /**
    * Distribution Chi-carré - fonction de densité de probabilité
    */
   chi2pdf(x: number, df: number): number {
@@ -169,7 +197,10 @@ export class DistributionService {
    * Distribution F - fonction de densité de probabilité
    */
   Fpdf(x: number, df1: number, df2: number): number {
-    if (x < 0) return 0;
+    // x = 0 est exclu : la formule donnerait 0/0 (NaN) car le dénominateur x·B(a,b)
+    // s'annule en même temps que le numérateur. La pdf de Fisher est définie sur x > 0 ;
+    // renvoyer 0 à ce seul point n'affecte pas l'intégrale (mesure nulle).
+    if (x <= 0) return 0;
     if (df1 <= 0 || df2 <= 0) throw new Error('df1 et df2 doivent être > 0');
 
     const d1 = df1;

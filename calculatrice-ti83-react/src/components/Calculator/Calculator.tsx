@@ -22,6 +22,7 @@ import { StatPlotEditor, type StatPlotEditorHandle } from '../Editors/StatPlotEd
 import { CatalogViewer, type CatalogViewerHandle } from '../Editors/CatalogViewer';
 import { SolverEditor, type SolverEditorHandle } from '../Editors/SolverEditor';
 import { FinanceEditor, type FinanceEditorHandle } from '../Editors/FinanceEditor';
+import { TestsEditor, type TestsEditorHandle } from '../Editors/TestsEditor';
 import { HelpModal } from '../Help/HelpModal';
 import { graphingEngine } from '../../services/GraphingEngine';
 import { statisticsService } from '../../services/StatisticsService';
@@ -110,6 +111,9 @@ export const Calculator: React.FC = () => {
   // State pour la matrice en cours d'édition
   const [editingMatrixName, setEditingMatrixName] = useState<string | null>(null);
 
+  // STAT > TESTS — test sélectionné pour l'éditeur
+  const [selectedTest, setSelectedTest] = useState<string | null>(null);
+
   // Refs pour contrôler les éditeurs depuis le clavier virtuel
   const windowEditorRef = useRef<WindowEditorHandle>(null);
   const modeEditorRef = useRef<ModeEditorHandle>(null);
@@ -123,6 +127,7 @@ export const Calculator: React.FC = () => {
   const catalogViewerRef = useRef<CatalogViewerHandle>(null);
   const solverEditorRef = useRef<SolverEditorHandle>(null);
   const financeEditorRef = useRef<FinanceEditorHandle>(null);
+  const testsEditorRef = useRef<TestsEditorHandle>(null);
 
   // State du programme en cours d'exécution
   const { executingProgram, executionContext, updateInputValue, provideInput, programInputValue } = useProgramStore();
@@ -289,9 +294,16 @@ export const Calculator: React.FC = () => {
     [appendInput, setCurrentMenu, setMode]
   );
 
+  // STAT > TESTS — ouvrir l'éditeur du test sélectionné
+  const openStatTest = useCallback((key: string) => {
+    setSelectedTest(key);
+    setCurrentMenu(null);
+    setMode('STAT_TESTS');
+  }, [setMode]);
+
   const statHandlers = useMemo(() =>
-    createStatHandlers(addToHistory, setCurrentMenu, setMode as (mode: string) => void),
-    [addToHistory, setCurrentMenu, setMode]
+    createStatHandlers(addToHistory, setCurrentMenu, setMode as (mode: string) => void, openStatTest),
+    [addToHistory, setCurrentMenu, setMode, openStatTest]
   );
 
   const calcHandlers = useMemo(() =>
@@ -559,7 +571,7 @@ export const Calculator: React.FC = () => {
       }
 
       // Gérer CLEAR (sauf en mode WINDOW, MODE, ou STAT_EDIT qui ont leur propre gestion)
-      if (action === 'clear' && currentMode !== 'WINDOW' && currentMode !== 'MODE' && currentMode !== 'STAT_EDIT') {
+      if (action === 'clear' && currentMode !== 'WINDOW' && currentMode !== 'MODE' && currentMode !== 'STAT_EDIT' && currentMode !== 'STAT_TESTS') {
         clearInput();
         setMode('NORMAL');
         setCurrentMenu(null);
@@ -569,13 +581,13 @@ export const Calculator: React.FC = () => {
       }
 
       // Gérer DEL (sauf les modes qui ont leur propre gestion)
-      if (action === 'del' && currentMode !== 'STAT_EDIT' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE' && currentMode !== 'MATRIX_EDIT' && currentMode !== 'TBLSET') {
+      if (action === 'del' && currentMode !== 'STAT_EDIT' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE' && currentMode !== 'STAT_TESTS' && currentMode !== 'MATRIX_EDIT' && currentMode !== 'TBLSET') {
         deleteLastChar();
         return;
       }
 
       // Gérer GRAPH (sauf les modes qui ont leur propre gestion)
-      if (action === 'graph' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE') {
+      if (action === 'graph' && currentMode !== 'SOLVER' && currentMode !== 'FINANCE' && currentMode !== 'STAT_TESTS') {
         setGraphMode(true);
         setTraceMode(false);
         setMode('NORMAL');
@@ -985,6 +997,45 @@ export const Calculator: React.FC = () => {
             'dot': '.',
           };
           financeEditorRef.current.handleInput(inputMap[action] || action);
+          return;
+        }
+      }
+
+      // En mode STAT_TESTS - gérer la navigation via ref
+      if (currentMode === 'STAT_TESTS' && testsEditorRef.current) {
+        if (action === 'up') {
+          testsEditorRef.current.navigate('up');
+          return;
+        }
+        if (action === 'down') {
+          testsEditorRef.current.navigate('down');
+          return;
+        }
+        if (action === 'enter') {
+          testsEditorRef.current.handleEnter();
+          return;
+        }
+        if (action === 'del') {
+          testsEditorRef.current.handleDelete();
+          return;
+        }
+        if ((action as string) === 'graph') {
+          testsEditorRef.current.calculate();
+          return;
+        }
+        if (action === 'clear') {
+          testsEditorRef.current.close();
+          return;
+        }
+        // Gérer les chiffres, point et signe moins pour l'édition des champs nombre
+        if (action === '0' || action === '1' || action === '2' || action === '3' || action === '4' ||
+            action === '5' || action === '6' || action === '7' || action === '8' || action === '9' ||
+            action === 'dot' || action === 'negative') {
+          const inputMap: Record<string, string> = {
+            'negative': '-',
+            'dot': '.',
+          };
+          testsEditorRef.current.handleInput(inputMap[action] || action);
           return;
         }
       }
@@ -2324,6 +2375,17 @@ export const Calculator: React.FC = () => {
         <FinanceEditor
           ref={financeEditorRef}
           onClose={() => setMode('NORMAL')}
+        />
+      );
+    }
+
+    // Affichage de l'éditeur STAT > TESTS (test d'hypothèse / intervalle)
+    if (currentMode === 'STAT_TESTS' && selectedTest) {
+      return (
+        <TestsEditor
+          ref={testsEditorRef}
+          test={selectedTest}
+          onClose={() => { setSelectedTest(null); setMode('NORMAL'); }}
         />
       );
     }

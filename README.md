@@ -1,8 +1,10 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.6.0 - fMin/fMax, variables chaîne Str1-9, Fill/SortA en place, →Dec DMS ∫🔤🔢🧭
+## Version 3.7.0 - STAT TESTS : tests d'hypothèses + intervalles de confiance 📊
 
-> Les 4 manques mineurs restants de l'audit comblés : optimisation numérique `fMin(`/`fMax(` (MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, avec `Input Str1`), commandes matricielles en place `Fill(`/`SortA(`/`SortD(` + stockage d'un résultat vers une matrice (`[A]→[B]`, `randM(2,2)→[A]`), et `→Dec` parsing DMS (round-trip avec `→DMS`). Basé sur la v3.5.0.
+> 📐 **v3.7.0** : menu **STAT → TESTS complet** (15 tests) — `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1-PropZTest`, `2-PropZTest`, `χ²-Test`, `ZInterval`, `TInterval`, `2-SampZInt`/`TInt`, `1-PropZInt`, `2-PropZInt`, `LinRegTTest`, `ANOVA`. Le principal manque de l'audit de compatibilité est comblé. Voir **✨ Nouveautés Version 3.7.0**.
+
+> ∫🔤🔢 **v3.6.0** : Les 4 manques mineurs restants de l'audit comblés : optimisation numérique `fMin(`/`fMax(` (MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, avec `Input Str1`), commandes matricielles en place `Fill(`/`SortA(`/`SortD(` + stockage d'un résultat vers une matrice (`[A]→[B]`, `randM(2,2)→[A]`), et `→Dec` parsing DMS (round-trip avec `→DMS`). Basé sur la v3.5.0.
 
 > ∫🔤🧭 **v3.5.0** : `nDeriv(`/`fnInt(` (MATH>8/9), fonctions chaîne `length`/`sub`/`inString`/`expr`, conversions `R►P`/`P►R` + réparation `°→rad`/`→DMS`. Voir **✨ Nouveautés Version 3.5.0**.
 
@@ -17,6 +19,8 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Nouveautés v3.4.0** 🔢 : opérations matricielles — menu MATRX (`2ND + X⁻¹`) avec onglets NAMES/MATH/OPS + Edit. `det(`, `rref(`, `ref(`, `identity(`, `randM(`, `augment(`, `Matr►list(`, `List►matr(`, `cumSum(`, `dim(`, opérations sur lignes (`rowSwap(`, `*row(`, `*row+(`, `*row-(`), transposée (`ᵀ`), inverse, arithmétique (`[A]*[B]`, `[A]+[B]`). Voir la section **✨ Nouveautés v3.4.0** ci-dessous.
 
 **Nouveautés v3.5.0** ∫🔤🧭 : `nDeriv(`/`fnInt(` (dérivée & intégrale numériques, MATH>8/9), fonctions chaîne TI-BASIC `length(`/`sub(`/`inString(`/`expr(` (CATALOG), conversions polaire↔rectangulaire `R►Pr(`/`R►Pθ(`/`P►Rx(`/`P►Ry(` (ANGLE>4-7) + réparation de `°→rad`/`rad→°`/`→DMS`/`→Dec`. Voir la section **✨ Nouveautés Version 3.5.0** ci-dessous.
+
+**Nouveautés v3.7.0** 📐 : `STAT → TESTS` (15 tests d'hypothèses & intervalles : `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1/2-PropZTest`, `χ²-Test`, `LinRegTTest`, `ANOVA` + intervalles `ZInterval`/`TInterval`/`2-Samp`/`Prop-Int`). Éditeur dédié (mode Data/Stats, `μ ≠</>`, `Pooled`, `Calculate`). Voir la section **✨ Nouveautés Version 3.7.0** ci-dessous.
 
 **Nouveautés v3.6.0** ∫🔤🔢 : `fMin(`/`fMax(` (optimisation numérique, MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, `Input Str1`), `Fill(`/`SortA(`/`SortD(` en place sur matrices + stockage résultat vers `[A]`-`[J]` (`[A]→[B]`, `randM(2,2)→[A]`), `→Dec` parsing DMS (round-trip `→Dec(→DMS(x))`). Voir la section **✨ Nouveautés Version 3.6.0** ci-dessous.
 
@@ -39,6 +43,41 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## ✨ Nouveautés Version 3.7.0
+
+Le **principal manque** de l'audit de compatibilité est comblé : le menu **STAT → TESTS** complet (15 tests d'hypothèses et intervalles de confiance), fidèle à la TI-83 Plus. Nouveau service `src/services/HypothesisTestService.ts` + registre config-driven `src/data/statTests.ts` + éditeur `src/components/Editors/TestsEditor.tsx`.
+
+### 📐 STAT TESTS — 15 tests
+
+| Test | Type | Sortie |
+|---|---|---|
+| `Z-Test` | hypothèse, σ connu | z, p, x̄, n |
+| `T-Test` | hypothèse, σ inconnu | t, p, df, x̄, Sx, n |
+| `2-SampZTest` / `2-SampTTest` | 2 échantillons (pooled/Satterthwaite) | z/t, p, df, x̄₁/₂, n₁/₂ |
+| `1-PropZTest` / `2-PropZTest` | proportions | z, p, p̂, n |
+| `χ²-Test` | ajustement (matrice observée `[A]`) | χ², p, df |
+| `LinRegTTest` | test sur la pente β | t, p, df, b (pente), a, r², r |
+| `ANOVA` | un facteur (≥ 2 listes) | F, p, df₁/₂, SS facteur/erreur/total |
+| `ZInterval` / `TInterval` | intervalle, 1 échantillon | CI, z*/t*, x̄, n |
+| `2-SampZInt` / `2-SampTInt` | intervalle, 2 échantillons | CI, x̄₁/₂, n₁/₂ |
+| `1-PropZInt` / `2-PropZInt` | intervalle de proportions | CI, p̂, n |
+
+- **Accès** : `STAT` → `TESTS...`. `↑↓` naviguent, `ENTER` édite un nombre / cycle un sélecteur (`Inpt: Data/Stats`, `μ: ≠</>`, `Pooled: No/Yes`, `List: L1-L6`), `GRAPH` lance le calcul (ou `CALCULATE`), `CLEAR` ferme.
+- **Mode Data** : lit les listes `L1`-`L6` (+ fréquences) ; **mode Stats** : saisie directe de `x̄`, `Sx`, `n`…
+- **Exemple — 1-PropZTest** : `p₀=0.5`, `x=60`, `n=100`, `μ: ≠` → `z=2`, `p=0.0455`, `p̂=0.6`.
+- **Exemple — ANOVA** : 3 listes `L1`/`L2`/`L3` → `F`, `p`, `df₁=2`, `df₂=N-k`, décomposition SS.
+
+### 🐛 Correctifs v3.7.0
+
+- **`Fpdf(0) = NaN`** (`DistributionService`) : la garde `x < 0` laissait passer `x = 0` (formule `0/0`), empoisonnant l'intégrale Simpson → **toutes les p-values ANOVA valaient `NaN`**. Corrigé en `x <= 0 → 0`.
+- **`LinRegTTest` testait le mauvais coefficient** : `statisticsService` nomme la pente `a` / l'ordonnée `b`, mais le test utilisait `b`. Désormais teste la pente (`b` = pente en convention TI-83 `y = a + bx`).
+
+### Limitations v1
+- STAT TESTS accessible via le menu `STAT → TESTS` et l'éditeur dédié (pas de saisie directe sur l'écran home).
+- `χ²-Test` prend la matrice observée `[A]`-`[J]` (expected supposé uniforme) ; pas de `expected` personnalisé saisi.
 
 ---
 
@@ -463,7 +502,7 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 | Graphing (Func / Param / Polar / Seq) | ✅ | ~95 % — 4 modes + Window/Zoom/Trace + CALC (`value`, `zero`, `min`, `max`, `intersect`, `dy/dx`, `∫f(x)`) |
 | DRAW | ✅ | ~100 % — 17/17 (`Line`, `Circle`, `Text`, `Shade`, `Tangent`, `DrawInv`, `StorePic`…) |
 | STAT CALC (1/2-Var, 9 régressions) | ✅ | ~95 % — `LinReg`, `QuadReg`, `CubicReg`, `ExpReg`, `SinReg`, `Logistic`… |
-| **STAT TESTS** (tests d'hypothèse + intervalles) | ❌ | **~0 %** — `Z-Test`, `T-Test`, `2-Samp`, `1-PropZ`, `χ²-Test`, `ANOVA`, `LinRegTTest`… manquants |
+| **STAT TESTS** (tests d'hypothèse + intervalles) | ✅ | ~95 % — `Z-Test`, `T-Test`, `2-SampZ/T`, `1/2-PropZ`, `χ²-Test`, `Z/T-Interval`, `2-Samp`/`Prop-Int`, `LinRegTTest`, `ANOVA` (v3.7.0) |
 | DISTR (15 lois) | ✅ | ~100 % — `normalpdf/cdf`, `invNorm`, `t`, `χ²`, `F`, `binom`, `poisson`, `geomet` |
 | LIST OPS | ✅ | ~95 % — `SortA/D`, `dim`, `Fill`, `seq`, `cumSum`, `ΔList`, `mean`, `stdDev`… |
 | MATRX (éditeur + MATH/OPS) | ✅ | ~95 % — éditeur `[A]`-`[J]` ✅ + opérations `det`, `rref`/`ref`, `identity`, `randM`, `augment`, `Matr►list`/`List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse, `dim`, `cumSum` (v3.4.0) + `Fill`/`SortA`/`SortD` en place + stockage résultat→matrice (v3.6.0) |
@@ -475,14 +514,14 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 
 ### Synthèse
 
-- **~90 %** en comptant toutes les commandes du catalogue TI-83 Plus
-- **~94 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
+- **~93 %** en comptant toutes les commandes du catalogue TI-83 Plus
+- **~96 %** en pondérant par l'usage courant (lycée / enseignement supérieur)
 
-### Principal manque restant
+Les **deux principaux manques** de l'audit initial — opérations matricielles (v3.4.0) et **STAT TESTS** (v3.7.0) — sont désormais comblés. Le périmètre statistique (DISTR + TESTS) est complet.
 
-1. **STAT TESTS** — un menu entier (tests d'hypothèses / intervalles de confiance) est absent, alors que les *distributions* (DISTR) sont complètes. C'est le plus gros écart pour un usage statistique.
+### Manques mineurs restants
 
-Manques mineurs restants : `Fill`/`SortA`/`SortD` en place sur les **listes** `L1`-`L6`, `Archive`/`Asm(`/link, `fMin`/`fMax` dans l'interpréteur PRGM.
+`Fill`/`SortA`/`SortD` en place sur les **listes** `L1`-`L6`, `Archive`/`Asm(`/link (transfert matériel), `fMin`/`fMax` dans l'interpréteur PRGM, et quelques caractères ALPHA du clavier (F-M/N-Z, en attente d'une table autoritaire).
 
 ---
 

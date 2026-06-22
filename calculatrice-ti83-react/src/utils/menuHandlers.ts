@@ -180,12 +180,32 @@ export const createMathHandlers = (
 export const createStatHandlers = (
   addToHistory: (entry: string) => void,
   setCurrentMenu: (menu: string | null) => void,
-  setMode?: (mode: string) => void
+  setMode?: (mode: string) => void,
+  openTest?: (key: string) => void
 ) => ({
   'edit': () => {
     if (setMode) setMode('STAT_EDIT');
     setCurrentMenu(null);
   },
+
+  // STAT > TESTS — ouverture de l'éditeur du test sélectionné.
+  // Le drill-in du sous-menu TESTS est géré par enterSubmenu (item 'tests').
+  'tests': () => { /* drill-in géré par le menu (submenu) */ },
+  'test-ztest': () => { openTest?.('ztest'); },
+  'test-ttest': () => { openTest?.('ttest'); },
+  'test-2sampztest': () => { openTest?.('2sampztest'); },
+  'test-2sampttest': () => { openTest?.('2sampttest'); },
+  'test-1propztest': () => { openTest?.('1propztest'); },
+  'test-2propztest': () => { openTest?.('2propztest'); },
+  'test-chi2gof': () => { openTest?.('chi2gof'); },
+  'test-zint': () => { openTest?.('zint'); },
+  'test-tint': () => { openTest?.('tint'); },
+  'test-2sampzint': () => { openTest?.('2sampzint'); },
+  'test-2samptint': () => { openTest?.('2samptint'); },
+  'test-1propzint': () => { openTest?.('1propzint'); },
+  'test-2propzint': () => { openTest?.('2propzint'); },
+  'test-linregttest': () => { openTest?.('linregttest'); },
+  'test-anova': () => { openTest?.('anova'); },
 
   '1-var-stats': () => {
     try {

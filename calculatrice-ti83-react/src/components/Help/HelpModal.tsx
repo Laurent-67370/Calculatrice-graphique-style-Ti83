@@ -1253,6 +1253,28 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                    • min, Q1, Med, Q3, max (5 nombres)<br/>
               </div>
 
+              <h3>📐 STAT TESTS — Tests d'hypothèses & intervalles</h3>
+              <div className="help-examples">
+                <strong>Accès :</strong> <code>STAT</code> → <code>TESTS...</code> (15 tests, fidèles à la TI-83 Plus).<br/>
+                <strong>Tests d'hypothèses</strong> (statistique + p-value) :
+                <code>Z-Test</code>, <code>T-Test</code>, <code>2-SampZTest</code>, <code>2-SampTTest</code>,
+                <code>1-PropZTest</code>, <code>2-PropZTest</code>, <code>χ²-Test</code> (ajustement),
+                <code>LinRegTTest</code>, <code>ANOVA</code>.<br/>
+                <strong>Intervalles de confiance</strong> (au niveau C-Level) :
+                <code>ZInterval</code>, <code>TInterval</code>, <code>2-SampZInt</code>, <code>2-SampTInt</code>,
+                <code>1-PropZInt</code>, <code>2-PropZInt</code>.<br/>
+                <strong>Utilisation</strong> : pour chaque test, <code>↑↓</code> naviguent entre les champs,
+                <code>ENTER</code> édite un nombre / cycle un sélecteur (<code>Inpt: Data/Stats</code>,
+                <code>μ: ≠ / &lt; / &gt;</code>, <code>Pooled: No/Yes</code>), puis <code>GRAPH</code> lance le calcul
+                (ou sélectionnez <code>CALCULATE</code>). <code>CLEAR</code> ferme.<br/>
+                <strong>Mode Data</strong> : les champs <code>List</code>/<code>Freq</code> lisent les listes
+                <code>L1</code>-<code>L6</code> ; <strong>mode Stats</strong> : on saisit directement
+                <code>x̄</code>, <code>Sx</code>, <code>n</code>…<br/>
+                <strong>Exemple — 1-PropZTest</strong> : 60 succès sur 100, H₀: p=0.5, test bilatéral →
+                entrez <code>p₀=0.5</code>, <code>x=60</code>, <code>n=100</code>, <code>μ: ≠</code>,
+                <code>GRAPH</code> → <code>z=2</code>, <code>p=0.0455</code>, <code>p̂=0.6</code>.
+              </div>
+
               <h3>💡 Astuces statistiques</h3>
               <ul>
                 <li>Les 3 plots (Plot1, Plot2, Plot3) peuvent être actifs simultanément</li>
@@ -1713,7 +1735,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.6.0 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR & TEST • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref) • ∫ nDeriv/fnInt/fMin/fMax • 🔤 chaînes + Str1-9 • 🧭 ANGLE R►P/P►R + →DMS/→Dec
+            Version 3.7.0 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR (15 lois) • 📐 STAT TESTS (15 tests) • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref) • ∫ nDeriv/fnInt/fMin/fMax • 🔤 chaînes + Str1-9 • 🧭 ANGLE R►P/P►R + →DMS/→Dec
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

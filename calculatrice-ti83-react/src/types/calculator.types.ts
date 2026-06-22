@@ -30,6 +30,7 @@ export type CalculatorMode =
   | 'CATALOG'
   | 'SOLVER'
   | 'FINANCE'
+  | 'STAT_TESTS'
   | 'PRGM_EDIT';
 
 // Actions possibles sur les touches

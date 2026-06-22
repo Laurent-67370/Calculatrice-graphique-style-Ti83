@@ -6,6 +6,27 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.7.0] - 2026-06-22
+
+### ✨ Ajouté - STAT TESTS (tests d'hypothèses + intervalles de confiance)
+
+- **Menu STAT → TESTS complet** (15 tests, fidèles à la TI-83 Plus) — le principal manque résiduel de l'audit de compatibilité est désormais comblé. Nouveau service `src/services/HypothesisTestService.ts` + registre config-driven `src/data/statTests.ts` + éditeur `src/components/Editors/TestsEditor.tsx`.
+  - **Tests d'hypothèses** : `Z-Test`, `T-Test`, `2-SampZTest`, `2-SampTTest` (pooled / Satterthwaite), `1-PropZTest`, `2-PropZTest`, `χ²-Test` (ajustement/goodness-of-fit), `LinRegTTest` (test sur la pente β + r), `ANOVA` (un facteur). Renvoient statistique (z/t/χ²/F), p-value, df.
+  - **Intervalles de confiance** (au niveau `C-Level`) : `ZInterval`, `TInterval`, `2-SampZInt`, `2-SampTInt`, `1-PropZInt`, `2-PropZInt`.
+  - **Éditeur config-driven** : navigation `↑↓`, `ENTER` édite un nombre / cycle un sélecteur (`Inpt: Data/Stats`, `μ: ≠</>`, `Pooled: No/Yes`, `List: L1-L6`), `GRAPH` calcule, `CLEAR` ferme. Le mode Data lit les listes `L1`-`L6` (et fréquences) ; le mode Stats saisit `x̄`, `Sx`, `n` directement. `χ²-Test` lit la matrice observée `[A]`-`[J]`.
+  - `STAT_TESTS` ajouté à `CalculatorMode` ; `openStatTest` câblé dans `Calculator.tsx` (ref, garde CLEAR/DEL/GRAPH, bloc dispatch clavier, rendu JSX) ; sous-menu `statTestsMenuItems` + handlers `test-*` dans `createStatHandlers`.
+- **`invT(area, df)`** (`DistributionService`) : quantile de la loi t de Student par dichotomie (intégration symétrique sur `[-|x|,|x|]`). Utilisé par `TInterval` / `2-SampTInt`. `invT(0.975,9)`→2.2622.
+- Aide intégrée : nouvelle section 📐 STAT TESTS dans l'onglet Stats (accès, liste des 15 tests, usage Data/Stats, exemple 1-PropZTest).
+
+### 🐛 Corrigé
+
+- **`Fpdf(0) = NaN`** (`DistributionService`) : la garde `x < 0` laissait passer `x = 0` où la formule faisait `0/0` (dénominateur `x·B(a,b)` et numérateur `sqrt` tous deux nuls), ce qui **empoisonnait l'intégrale Simpson** → toutes les p-values `ANOVA` (`Fcdf` depuis `lower=0`) valaient `NaN`. Corrigé en `x <= 0 → 0` (la pdf de Fisher est définie sur `x > 0` ; le point `0` est de mesure nulle pour l'intégrale).
+- **`LinRegTTest` testait le mauvais coefficient** (`HypothesisTestService`) : `statisticsService` nomme la pente `a` / l'ordonnée `b` (`y = a·x + b`), mais le test calculait `t = b/seB` (l'ordonnée à l'origine) au lieu de la pente, et étiquetait à l'envers. Désormais teste la pente (`slope/seB`) et les étiquettes suivent la convention TI-83 (`b` = pente, `a` = ordonnée, `y = a + b·x`). `LinRegTTest(L1,L2)`→ `b` = pente, `t` = `b/seB`.
+
+### Limitations v1
+- STAT TESTS disponible via le menu `STAT → TESTS` et l'éditeur dédié (pas d'exposition comme fonctions directement saisissables sur l'écran home).
+- `χ²-Test` prend la matrice observée `[A]`-`[J]` (expected supposé uniforme) ; pas de `df` libre ni de `expected` personnalisé saisi.
+
 ## [3.6.0] - 2026-06-22
 
 ### ✨ Ajouté - fMin/fMax, Str1-9, Fill/SortA en place, →Dec DMS
