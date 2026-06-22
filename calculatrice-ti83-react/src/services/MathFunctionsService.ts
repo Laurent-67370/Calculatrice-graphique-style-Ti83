@@ -21,19 +21,20 @@ export class MathFunctionsService {
     return Math.round(x * factor) / factor;
   }
 
-  // Partie entière (floor)
+  // iPart( — partie entière par troncature vers zéro (TI-83 : « integer part »)
   iPart(x: number): number {
-    return Math.floor(x);
-  }
-
-  // Partie fractionnaire
-  fPart(x: number): number {
-    return x - Math.floor(x);
-  }
-
-  // Partie entière (trunc)
-  int(x: number): number {
     return Math.trunc(x);
+  }
+
+  // fPart( — partie fractionnaire, signe préservé (= x - iPart(x)).
+  // TI-83 : fPart(-3.7) = -0.7 (préserve le signe), pas la partie décimale positive.
+  fPart(x: number): number {
+    return x - Math.trunc(x);
+  }
+
+  // int( — plus grand entier ≤ x (fonction « greatest integer » = floor, TI-83)
+  int(x: number): number {
+    return Math.floor(x);
   }
 
   // Minimum

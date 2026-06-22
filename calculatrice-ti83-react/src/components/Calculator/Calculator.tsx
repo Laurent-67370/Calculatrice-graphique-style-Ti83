@@ -1904,6 +1904,12 @@ export const Calculator: React.FC = () => {
             scope.SortA = MatrixService.sortA;
             scope.SortD = MatrixService.sortD;
 
+            // Fonctions NUM TI-83 (iPart = troncature, int = greatest integer / floor,
+            // fPart = partie fractionnaire signe préservé). Non couvertes par les built-ins mathjs.
+            scope.iPart = mathFunctionsService.iPart;
+            scope.int = mathFunctionsService.int;
+            scope.fPart = mathFunctionsService.fPart;
+
             // Fonctions ANGLE — conversions polaire/rectangulaire + DMS.
             // θ est renvoyé dans le mode d'angle courant (DEGREE ou RADIAN).
             const toRad = (a: number) => a * (Math.PI / 180);

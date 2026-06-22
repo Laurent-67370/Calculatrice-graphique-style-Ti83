@@ -12,15 +12,16 @@ describe('MathFunctionsService — MATH NUM', () => {
     it('round() sans décimales → entier', () => expect(M.round(3.7)).toBe(4));
   });
 
-  // ⚠️ ATTENTION : dans CE codebase, iPart = floor et int = trunc — c'est l'INVERSE
-  // de la TI-83 réelle (où int = floor, iPart = trunc). On verrouille le comportement
-  // actuel (pour détecter tout changement involontaire) ; la correction sémantique
-  // est un chantier séparé.
-  describe('iPart / fPart / int (comportement actuel — inversé vs TI-83)', () => {
-    it('iPart(-3.7) = -4 (floor)', () => expect(M.iPart(-3.7)).toBe(-4));
-    it('int(-3.7) = -3 (trunc)', () => expect(M.int(-3.7)).toBe(-3));
-    it('fPart(-3.7) = 0.3 (x - floor(x), toujours ≥ 0)', () => {
-      expect(approx(M.fPart(-3.7), 0.3, 1e-9)).toBe(true);
+  // Sémantique TI-83 : iPart = troncature vers zéro, int = greatest integer (floor),
+  // fPart = partie fractionnaire signe préservé (x - iPart(x)).
+  describe('iPart / fPart / int (sémantique TI-83)', () => {
+    it('iPart(-3.7) = -3 (troncature vers zéro)', () => expect(M.iPart(-3.7)).toBe(-3));
+    it('int(-3.7) = -4 (greatest integer / floor)', () => expect(M.int(-3.7)).toBe(-4));
+    it('fPart(-3.7) = -0.7 (signe préservé)', () => {
+      expect(approx(M.fPart(-3.7), -0.7, 1e-9)).toBe(true);
+    });
+    it('fPart(3.7) = 0.7', () => {
+      expect(approx(M.fPart(3.7), 0.7, 1e-9)).toBe(true);
     });
     it('iPart(3.7) = 3, int(3.7) = 3 (identiques sur positif)', () => {
       expect(M.iPart(3.7)).toBe(3);

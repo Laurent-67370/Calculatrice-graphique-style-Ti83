@@ -4,6 +4,7 @@
  */
 
 import { create, all } from 'mathjs';
+import { mathFunctionsService } from './MathFunctionsService';
 import type {
   ParsedCommand,
   ExecutionContext,
@@ -134,6 +135,10 @@ math.import({
     return idx < 0 ? 0 : idx + 1;
   },
   expr: (s: string) => math.evaluate(String(s)),
+  // Fonctions NUM TI-83 (iPart = troncature, int = greatest integer, fPart = signe préservé)
+  iPart: mathFunctionsService.iPart,
+  int: mathFunctionsService.int,
+  fPart: mathFunctionsService.fPart,
   // Fonctions ANGLE
   rToP_r: (x: number, y: number) => Math.hypot(x, y),
   rToP_theta: (x: number, y: number) => _toDeg(Math.atan2(y, x)),
