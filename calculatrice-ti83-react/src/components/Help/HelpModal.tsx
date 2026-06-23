@@ -10,7 +10,7 @@ interface HelpModalProps {
 }
 
 export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'quick' | 'prgm' | 'draw' | 'graph' | 'stats' | 'matrix' | 'advanced' | 'pwa'>('quick');
+  const [activeTab, setActiveTab] = useState<'quick' | 'alpha' | 'prgm' | 'draw' | 'graph' | 'stats' | 'matrix' | 'advanced' | 'pwa'>('quick');
 
   if (!isOpen) return null;
 
@@ -28,6 +28,12 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             onClick={() => setActiveTab('quick')}
           >
             🚀 Démarrage
+          </button>
+          <button
+            className={`help-tab ${activeTab === 'alpha' ? 'active' : ''}`}
+            onClick={() => setActiveTab('alpha')}
+          >
+            🎹 ALPHA
           </button>
           <button
             className={`help-tab ${activeTab === 'prgm' ? 'active' : ''}`}
@@ -103,7 +109,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li><strong>CLEAR</strong> : Tout effacer</li>
                 <li><strong>(−)</strong> : Signe négatif (ex: −5)</li>
                 <li><strong>2ND</strong> : Fonctions secondaires (jaune)</li>
-                <li><strong>ALPHA</strong> : Lettres (vert)</li>
+                <li><strong>ALPHA</strong> : Lettres (vert) — voir l'onglet <strong>🎹 ALPHA</strong> pour la table complète</li>
               </ul>
 
               <h3>📐 Fonctions mathématiques courantes</h3>
@@ -189,6 +195,33 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <li>La virgule <code>,</code> sépare les arguments : <code>max(5,3)</code> → tapez <code>2ND + 7</code></li>
                 <li>Appuyez sur <code>CLEAR</code> pour fermer les menus et éditeurs</li>
               </ul>
+            </div>
+          )}
+
+          {activeTab === 'alpha' && (
+            <div className="help-section">
+              <h3>🎹 ALPHA - Taper des lettres (A-Z)</h3>
+              <div className="help-examples">
+                Chaque touche porte une lettre <strong>verte</strong> (à droite/au-dessus du label) :
+                <code>ALPHA</code> puis la touche insère la lettre. Pour taper plusieurs lettres d'affilée,
+                <code>2ND + ALPHA</code> verrouille le mode (A-LOCK), puis <code>ALPHA</code> pour déverrouiller.<br/>
+                <br/>
+                <strong>Quelle touche pour chaque lettre :</strong><br/>
+                <code>A</code> MATH &nbsp; <code>B</code> APPS &nbsp; <code>C</code> PRGM &nbsp; <code>D</code> X⁻¹ &nbsp; <code>E</code> SIN &nbsp; <code>F</code> COS &nbsp; <code>G</code> TAN<br/>
+                <code>H</code> ^ &nbsp; <code>I</code> X² &nbsp; <code>J</code> , &nbsp; <code>K</code> ( &nbsp; <code>L</code> ) &nbsp; <code>M</code> ÷ &nbsp; <code>N</code> LOG<br/>
+                <code>O</code> 7 &nbsp; <code>P</code> 8 &nbsp; <code>Q</code> 9 &nbsp; <code>R</code> × &nbsp; <code>S</code> LN &nbsp; <code>T</code> 4 &nbsp; <code>U</code> 5<br/>
+                <code>V</code> 6 &nbsp; <code>W</code> − &nbsp; <code>X</code> STO→ &nbsp; <code>Y</code> 1 &nbsp; <code>Z</code> 2<br/>
+                <br/>
+                <strong>Caractères spéciaux :</strong> <code>+</code> → <code>"</code> (guillemet),
+                <code>.</code> → <code>:</code> (deux-points), <code>0</code> → <code>espace</code>.<br/>
+                <br/>
+                <strong>Exemple — taper le mot TEST :</strong> <code>2ND + ALPHA</code> (verrouillage) puis
+                <code>4</code> <code>SIN</code> <code>LN</code> <code>4</code> → <code>TEST</code>.<br/>
+                <br/>
+                <em>Touches sans lettre verte</em> (action normale en mode ALPHA) : <code>VARS</code>,
+                <code>CLEAR</code>, <code>(−)</code>, <code>3</code>, <code>ENTER</code>, <code>X,T,θ,n</code>,
+                <code>STAT</code> et les touches graphiques.
+              </div>
             </div>
           )}
 

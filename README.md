@@ -89,7 +89,7 @@ L'affectation est confirmée par l'exemple officiel TI : taper le mot **TEST** =
 - **`STO→` = `X`** (et non `L` comme le supposait v3.3.1).
 - **Lettres manquantes ajoutées** : `D`(X⁻¹), `H`(^), `N`(LOG), `O`(7)… et les chiffres `4,5,7,8,9` + `÷` reçoivent maintenant leur lettre.
 
-> 🔗 Détails : `calculatrice-ti83-react/src/components/Calculator/Keyboard.tsx`. `tsc -b` clean, suite Vitest 122/122 inchangée (composant, hors services purs).
+> 🔗 Détails : `calculatrice-ti83-react/src/components/Calculator/Keyboard.tsx`. `tsc -b` clean, suite Vitest 122/122 inchangée (composant, hors services purs). Un onglet **🎹 ALPHA** dans l'aide intégrée référence la table complète (lettre → touche) + l'exemple TEST.
 
 ---
 
