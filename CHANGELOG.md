@@ -6,6 +6,25 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.7.2] - 2026-06-23
+
+### ✨ Ajouté - Parachèvement de la v3.6.0
+
+- **`Fill`/`SortA`/`SortD` en place sur les listes `L1`-`L6`** (`Calculator.tsx`) : la v3.6.0 ne faisait ces opérations en place que sur les matrices. L'intercept reconnaît désormais le token Unicode `L₁`-`L₆` (avec/sans espaces) et write-back via `statisticsService.setList`. `Fill(value, L₁)` garde la dimension courante de la liste (fidèle TI-83) ; `SortA(L₁)`/`SortD(L₁)` trient en place via `ListService`. Sur liste vide → sans effet (équivalent `ERR:INVALID DIM`).
+- **`fMin`/`fMax`/`nDeriv`/`fnInt` dans l'interpréteur PRGM** (`ProgramInterpreter.ts`) : l'extraction pre-eval `extractCalculusCalls` est désormais appelée dans `evaluateExpression` **et** `evaluateCondition` (avant `substituteVariables`, pour ne pas corrompre la var d'optimisation). La v3.6.0 limitait `fMin`/`fMax` à l'écran home + CATALOG ; la v3.5.0 limitait `nDeriv`/`fnInt` de même. `Disp fMin(X²,X,-2,2)`→`0`, `fMax(-X²+2X,X,-2,3)→A`→`A=1`.
+
+### 🐛 Corrigé - Documentation
+
+- **`stdDev`/`variance` de l'aide intégrée** (`HelpModal.tsx`) : affichait `stdDev(L₁)=2.478` / `variance(L₁)=6.143` pour `L₁={2,5,3,8,1,6,4}` — valeurs fausses (le service `ListService` était correct). Corrigé en `stdDev ≈ 2.410` / `variance ≈ 5.810` (échantillon, ÷ n−1). Bug surgir lors de la rédaction de `ListService.test.ts`.
+
+### 🧪 Tests
+
+- Nouveau `tests/ListService.test.ts` (17 tests) : `SortA`/`SortD`/`dim`/`Fill`/`seq`/`cumSum`/`ΔList` + stats `min`/`max`/`mean`/`median`/`sum`/`prod`/`stdDev`/`variance`. Suite Vitest : **122 tests** sur 9 fichiers (env `node`).
+- Bancs `npx tsx` : fMin/fMax/nDeriv/fnInt via `ProgramInterpreter.evaluateExpression` (6/6) + résolution token `L₁` & write-back Fill/SortA/SortD listes (14/14).
+- `tsc -b` clean (0 erreur), `vite build` OK.
+
+---
+
 ## [3.7.1] - 2026-06-22
 
 ### 🐛 Corrigé - iPart/int/fPart (MATH>NUM)

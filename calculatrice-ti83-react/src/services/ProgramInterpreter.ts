@@ -5,6 +5,7 @@
 
 import { create, all } from 'mathjs';
 import { mathFunctionsService } from './MathFunctionsService';
+import { extractCalculusCalls } from '../utils/calculus';
 import type {
   ParsedCommand,
   ExecutionContext,
@@ -540,6 +541,12 @@ export class ProgramInterpreter {
         expr = expr.replace(/getKey/gi, String(code));
       }
 
+      // fMin/fMax/nDeriv/fnInt : l'argument expression est NON évalué
+      // (ex. fMin(X²,X,-2,2)) et la var d'optimisation ne doit pas être
+      // substituée → extraire et calculer AVANT substituteVariables
+      // (comportement identique à l'écran home).
+      expr = extractCalculusCalls(expr);
+
       // Remplacer les variables par leurs valeurs (Str1-Str9 puis A-Z/θ)
       // en préservant le contenu des littéraux chaîne "..."
       const varMatches = expr.match(/[A-Zθ]/g);
@@ -582,6 +589,9 @@ export class ProgramInterpreter {
         ProgramInterpreter.lastKeyCode = 0;
         processedCondition = processedCondition.replace(/getKey/gi, String(code));
       }
+
+      // fMin/fMax/nDeriv/fnInt : extraire AVANT la substitution des variables.
+      processedCondition = extractCalculusCalls(processedCondition);
 
       // Remplacer les variables A-Z et θ (en préservant les littéraux chaîne)
       const varMatches = condition.match(/[A-Zθ]/g);

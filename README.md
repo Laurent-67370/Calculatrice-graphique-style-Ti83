@@ -1,10 +1,10 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
-## Version 3.7.1 - Correctifs NUM iPart/int/fPart (sémantique TI-83 + câblage) 🔧🧪
+## Version 3.7.2 - Complétions v3.6.0 (Fill/SortA/SortD listes + fMin/fMax/nDeriv/fnInt en PRGM) 🔧
+
+> 🔧 **v3.7.2** : parachève la v3.6.0 — `Fill(`/`SortA(`/`SortD(` désormais **en place sur les listes `L1`-`L6`** (pas seulement les matrices), et `fMin(`/`fMax(`/`nDeriv(`/`fnInt(` disponibles **dans l'interpréteur PRGM** (plus seulement écran home + CATALOG). Correctif doc : valeurs `stdDev`/`variance` de l'aide corrigées (2.410 / 5.810 pour `{2,5,3,8,1,6,4}`). Suite Vitest **122 tests** (+`ListService`). Voir **🔧 Correctifs Version 3.7.2**.
 
 > 🔧 **v3.7.1** : `iPart(`/`int(`/`fPart(` (MATH>NUM) — sémantique TI-83 corrigée (`iPart`=troncature, `int`=greatest integer, `fPart`=signe préservé) **et** désormais réellement câblées (elles renvoyaient « Undefined function »). Première **suite de tests automatisée** (Vitest, 105 tests). Voir **🔧 Correctifs Version 3.7.1**.
-
-> 📐 **v3.7.0** : menu **STAT → TESTS complet** (15 tests) — `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1-PropZTest`, `2-PropZTest`, `χ²-Test`, `ZInterval`, `TInterval`, `2-SampZInt`/`TInt`, `1-PropZInt`, `2-PropZInt`, `LinRegTTest`, `ANOVA`. Le principal manque de l'audit de compatibilité est comblé. Voir **✨ Nouveautés Version 3.7.0**.
 
 > 📐 **v3.7.0** : menu **STAT → TESTS complet** (15 tests) — `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1-PropZTest`, `2-PropZTest`, `χ²-Test`, `ZInterval`, `TInterval`, `2-SampZInt`/`TInt`, `1-PropZInt`, `2-PropZInt`, `LinRegTTest`, `ANOVA`. Le principal manque de l'audit de compatibilité est comblé. Voir **✨ Nouveautés Version 3.7.0**.
 
@@ -25,6 +25,8 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Nouveautés v3.5.0** ∫🔤🧭 : `nDeriv(`/`fnInt(` (dérivée & intégrale numériques, MATH>8/9), fonctions chaîne TI-BASIC `length(`/`sub(`/`inString(`/`expr(` (CATALOG), conversions polaire↔rectangulaire `R►Pr(`/`R►Pθ(`/`P►Rx(`/`P►Ry(` (ANGLE>4-7) + réparation de `°→rad`/`rad→°`/`→DMS`/`→Dec`. Voir la section **✨ Nouveautés Version 3.5.0** ci-dessous.
 
 **Nouveautés v3.7.0** 📐 : `STAT → TESTS` (15 tests d'hypothèses & intervalles : `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1/2-PropZTest`, `χ²-Test`, `LinRegTTest`, `ANOVA` + intervalles `ZInterval`/`TInterval`/`2-Samp`/`Prop-Int`). Éditeur dédié (mode Data/Stats, `μ ≠</>`, `Pooled`, `Calculate`). Voir la section **✨ Nouveautés Version 3.7.0** ci-dessous.
+
+**Correctifs v3.7.2** 🔧 : parachèvement de la v3.6.0 — `Fill(`/`SortA(`/`SortD(` en place sur les **listes `L1`-`L6`** (pas seulement les matrices) + `fMin(`/`fMax(`/`nDeriv(`/`fnInt(` dans l'**interpréteur PRGM** (plus seulement écran home + CATALOG) + correctif doc `stdDev`/`variance`. Voir la section **🔧 Correctifs Version 3.7.2** ci-dessous.
 
 **Nouveautés v3.6.0** ∫🔤🔢 : `fMin(`/`fMax(` (optimisation numérique, MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, `Input Str1`), `Fill(`/`SortA(`/`SortD(` en place sur matrices + stockage résultat vers `[A]`-`[J]` (`[A]→[B]`, `randM(2,2)→[A]`), `→Dec` parsing DMS (round-trip `→Dec(→DMS(x))`). Voir la section **✨ Nouveautés Version 3.6.0** ci-dessous.
 
@@ -47,6 +49,44 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.7.2
+
+Parachèvement de la **v3.6.0** — deux complétions + un correctif de documentation.
+
+### 📊 `Fill` / `SortA` / `SortD` en place sur les listes `L1`-`L6`
+
+La v3.6.0 ne faisait ces opérations en place que sur les **matrices**. Désormais elles fonctionnent aussi sur les listes `L₁`-`L₆` (fidèle à la TI-83) :
+
+| Commande | Effet | Exemple |
+|---|---|---|
+| `Fill(value, L₁)` | remplit `L₁` en place (garde sa dimension courante) → `Done` | `Fill(7, L₁)` → `L₁ = {7,7,7,7,7}` |
+| `SortA(L₁)` | trie `L₁` en place par ordre croissant → `Done` | `SortA(L₁)` sur `{5,2,8,1,9}` → `{1,2,5,8,9}` |
+| `SortD(L₁)` | trie `L₁` en place par ordre décroissant → `Done` | `SortD(L₁)` → `{9,8,5,2,1}` |
+
+La cible est la liste peuplée via l'éditeur `STAT → Edit`. Sur liste vide, l'opération est sans effet (équivalent `ERR:INVALID DIM` sur TI-83). L'intercept reconnaît le token Unicode `L₁`-`L₆` (avec ou sans espaces).
+
+### ∫ `fMin` / `fMax` / `nDeriv` / `fnInt` dans l'interpréteur PRGM
+
+La v3.6.0 limitait `fMin`/`fMax` à l'écran home + CATALOG ; la v3.5.0 limitait `nDeriv`/`fnInt` de même. L'extraction pre-eval (`extractCalculusCalls`) est désormais câblée dans `ProgramInterpreter.evaluateExpression` **et** `evaluateCondition` — ces 4 fonctions marchent dans les programmes TI-BASIC :
+
+```basic
+:Disp fMin(X²,X,-2,2)      → 0
+:fMax(-X²+2X,X,-2,3)→A    → A = 1
+:If fMin(sin(X),X,0,6)<4   → vrai (3π/2 ≈ 4.712)
+```
+
+La variable d'optimisation n'est **pas** substituée par les variables programme (l'expression interne est non évaluée), comportement identique à l'écran home. Les bornes `lower`/`upper` littérales sont supportées.
+
+### 🐛 Correctif doc — `stdDev` / `variance` de l'aide
+
+L'aide intégrée affichait `stdDev(L₁)=2.478` / `variance(L₁)=6.143` pour `L₁={2,5,3,8,1,6,4}` — valeurs **fausses** (le service `ListService`, lui, était correct). Les vraies valeurs (écart-type & variance d'échantillon, ÷ n−1) : `stdDev ≈ 2.410`, `variance ≈ 5.810`. Corrigé dans `HelpModal` + verrouillé par le nouveau fichier de tests `ListService.test.ts` (la rédaction du test a fait surgir le bug).
+
+### 🧪 Suite Vitest — `ListService` (+17 tests)
+
+Nouveau fichier `tests/ListService.test.ts` (17 tests) couvrant `SortA`/`SortD`/`dim`/`Fill`/`seq`/`cumSum`/`ΔList` + les stats `min`/`max`/`mean`/`median`/`sum`/`prod`/`stdDev`/`variance`. Suite désormais à **122 tests** sur 9 fichiers.
 
 ---
 
@@ -151,8 +191,8 @@ Variables chaîne accessibles via **VARS → String...** et le **CATALOG**. Le s
 `→Dec` accepte désormais une chaîne `D°M'S"` (format produit par `→DMS`) et la convertit en degrés décimaux : `D + M/60 + S/3600`. Round-trip : `→Dec(→DMS(12.5))`→`12.5`. Sur un nombre, `→Dec` conserve son comportement d'arrondi.
 
 ### Limitations v1
-- `fMin`/`fMax` : supportés sur écran home + CATALOG (pas encore dans l'interpréteur PRGM).
-- `Fill`/`SortA`/`SortD` en place sur **matrices** uniquement (les listes `L1`-`L6` gardent leur comportement actuel).
+- `fMin`/`fMax` : écran home + CATALOG à la v3.6.0 → étendus à l'interpréteur PRGM en **v3.7.2** (avec `nDeriv`/`fnInt`).
+- `Fill`/`SortA`/`SortD` en place sur **matrices** à la v3.6.0 → étendus aux **listes `L1`-`L6`** en **v3.7.2**.
 - Variables chaîne `Str1`-`Str9` : saisie `Input Str1` accepte le texte brut ; un littéral DMS contenant `"` ne peut s'écrire directement (passer par `→DMS` ou une variable).
 
 ---
@@ -203,7 +243,7 @@ Sous-menu **MATH → ANGLE** (ou CATALOG). `θ` est renvoyé dans le mode d'angl
 - `→DMS(12.5)` → `12°30'0"` (chaîne DMS) ; `→Dec(12.5)` → `12.5`
 
 ### Limitations v1
-- `nDeriv`/`fnInt` : supportés sur l'écran home et le CATALOG (pas encore dans l'interpréteur PRGM).
+- `nDeriv`/`fnInt` : écran home + CATALOG à la v3.5.0 → étendus à l'interpréteur PRGM en **v3.7.2**.
 - Fonctions chaîne : arguments en littéraux `"..."` uniquement (pas de `Str1`-`Str9`).
 - `→Dec` accepte un nombre de degrés décimaux (pas encore le parsing d'une chaîne `D°M'S"`).
 
@@ -527,18 +567,18 @@ Audit du périmètre implémenté par rapport à une vraie TI-83 Plus (basé sur
 |---|:---:|---|
 | Calcul de base (arith, trig, log, π, e) | ✅ | ~100 % |
 | MATH — NUM / CPX / PRB / hyperbolic | ✅ | ~95 % (complet + extras : `ceil`, `floor`, `sign`, `mod`) |
-| MATH — calcul numérique (`nDeriv(`, `fnInt(`, `fMin(`, `fMax(`) | ✅ | ~95 % — `nDeriv`/`fnInt` (v3.5.0) + `fMin`/`fMax` (v3.6.0) |
+| MATH — calcul numérique (`nDeriv(`, `fnInt(`, `fMin(`, `fMax(`) | ✅ | ~100 % — `nDeriv`/`fnInt` (v3.5.0) + `fMin`/`fMax` (v3.6.0) + tous disponibles en PRGM (v3.7.2) |
 | ANGLE (`R►Pr`, `R►Pθ`, `P►Rx`, `P►Ry`, `°→rad`, `rad→°`, `→DMS`, `→Dec`) | ✅ | ~100 % — polaire↔rect + rad↔deg + DMS + `→Dec` parsing DMS (v3.5.0/v3.6.0) |
 | Graphing (Func / Param / Polar / Seq) | ✅ | ~95 % — 4 modes + Window/Zoom/Trace + CALC (`value`, `zero`, `min`, `max`, `intersect`, `dy/dx`, `∫f(x)`) |
 | DRAW | ✅ | ~100 % — 17/17 (`Line`, `Circle`, `Text`, `Shade`, `Tangent`, `DrawInv`, `StorePic`…) |
 | STAT CALC (1/2-Var, 9 régressions) | ✅ | ~95 % — `LinReg`, `QuadReg`, `CubicReg`, `ExpReg`, `SinReg`, `Logistic`… |
 | **STAT TESTS** (tests d'hypothèse + intervalles) | ✅ | ~95 % — `Z-Test`, `T-Test`, `2-SampZ/T`, `1/2-PropZ`, `χ²-Test`, `Z/T-Interval`, `2-Samp`/`Prop-Int`, `LinRegTTest`, `ANOVA` (v3.7.0) |
 | DISTR (15 lois) | ✅ | ~100 % — `normalpdf/cdf`, `invNorm`, `t`, `χ²`, `F`, `binom`, `poisson`, `geomet` |
-| LIST OPS | ✅ | ~95 % — `SortA/D`, `dim`, `Fill`, `seq`, `cumSum`, `ΔList`, `mean`, `stdDev`… |
+| LIST OPS | ✅ | ~100 % — `SortA/D`, `dim`, `Fill`, `seq`, `cumSum`, `ΔList`, `mean`, `stdDev`… + `Fill`/`SortA`/`SortD` en place sur `L₁`-`L₆` (v3.7.2) |
 | MATRX (éditeur + MATH/OPS) | ✅ | ~95 % — éditeur `[A]`-`[J]` ✅ + opérations `det`, `rref`/`ref`, `identity`, `randM`, `augment`, `Matr►list`/`List►matr`, `rowSwap`/`*row`/`*row+`/`*row-`, transposée, inverse, `dim`, `cumSum` (v3.4.0) + `Fill`/`SortA`/`SortD` en place + stockage résultat→matrice (v3.6.0) |
 | FINANCE (TVM + cash flows) | ✅ | ~95 % — `tvm_PV/N/I/PMT/FV`, `NPV`, `IRR`, `bal`, `ΣPrn`, `ΣInt`, `Nom`, `Eff` |
 | SOLVER | ✅ | ~100 % |
-| PRGM (TI-BASIC) | ✅ | ~85 % — 39+ commandes + `getKey` (jeux) + chaînes `length`/`sub`/`inString`/`expr` (v3.5.0) + variables `Str1`-`Str9` & `Input Str1` (v3.6.0) ; manquent : `Archive`, `Asm(`, link |
+| PRGM (TI-BASIC) | ✅ | ~85 % — 39+ commandes + `getKey` (jeux) + chaînes `length`/`sub`/`inString`/`expr` (v3.5.0) + variables `Str1`-`Str9` & `Input Str1` (v3.6.0) + calcul numérique `fMin`/`fMax`/`nDeriv`/`fnInt` (v3.7.2) ; manquent : `Archive`, `Asm(`, link |
 | TABLE / VARS / Y-VARS / MODE / MEM | ✅ | ~95 % — éditeurs présents |
 | CATALOG | ✅ | ~85 % — construit dynamiquement à partir des menus (v3.6.0 : `fMin`/`fMax`, `Str1`-`Str9`, R►P/P►R) |
 
@@ -551,7 +591,7 @@ Les **deux principaux manques** de l'audit initial — opérations matricielles 
 
 ### Manques mineurs restants
 
-`Fill`/`SortA`/`SortD` en place sur les **listes** `L1`-`L6`, `Archive`/`Asm(`/link (transfert matériel), `fMin`/`fMax` dans l'interpréteur PRGM, et quelques caractères ALPHA du clavier (F-M/N-Z, en attente d'une table autoritaire).
+`Archive`/`Asm(`/link (transfert matériel) et quelques caractères ALPHA du clavier (F-M/N-Z, en attente d'une table autoritaire). Les listes `L1`-`L6` (`Fill`/`SortA`/`SortD`) et le calcul numérique en PRGM (`fMin`/`fMax`/`nDeriv`/`fnInt`) sont désormais couverts (v3.7.2).
 
 ---
 

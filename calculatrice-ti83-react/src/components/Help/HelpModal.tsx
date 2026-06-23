@@ -1158,8 +1158,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 <code>median(L₁)</code> → <code>4</code> (médiane)<br/>
                 <code>sum(L₁)</code> → <code>29</code> (somme totale)<br/>
                 <code>prod(L₁)</code> → <code>5760</code> (produit)<br/>
-                <code>stdDev(L₁)</code> → <code>2.478</code> (écart-type)<br/>
-                <code>variance(L₁)</code> → <code>6.143</code> (variance)<br/>
+                <code>stdDev(L₁)</code> → <code>2.410</code> (écart-type échantillon)<br/>
+                <code>variance(L₁)</code> → <code>5.810</code> (variance échantillon)<br/>
               </div>
 
               <h3>✏️ Éditer des listes (STAT &gt; Edit)</h3>
@@ -1389,7 +1389,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
               <h3>⚠️ Limitations</h3>
               <div className="help-examples">
-                • <code>Fill</code>/<code>SortA</code>/<code>SortD</code> en place sur les <strong>matrices</strong> uniquement (pas les listes <code>L₁</code>-<code>L₆</code>)<br/>
+                • <code>Fill</code>/<code>SortA</code>/<code>SortD</code> fonctionnent aussi en place sur les listes <code>L₁</code>-<code>L₆</code> (v3.7.2)<br/>
                 • Erreurs sur matrices singulières : génériques (pas encore <code>ERR:SINGULAR MAT</code>)
               </div>
             </div>
@@ -1415,7 +1415,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 • <code>nDeriv(expr,var,value[,ε])</code> : différence symétrique (ε=1e-3)<br/>
                 • <code>fnInt(expr,var,lower,upper)</code> : Simpson (1000 intervalles)<br/>
                 • <code>fMin</code>/<code>fMax</code> retournent la <strong>valeur de var</strong> (pas la valeur de f)<br/>
-                • <em>Limitation</em> : écran home + CATALOG (pas encore dans l'interpréteur PRGM)
+                • Disponibles sur l'écran home, le CATALOG <strong>et</strong> dans l'interpréteur PRGM (v3.7.2)
               </div>
 
               <h3>🔤 Chaînes & variables Str1-9</h3>
@@ -1738,7 +1738,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
         <div className="help-footer">
           <p style={{ fontSize: '0.85em', marginBottom: '10px', color: '#666' }}>
-            Version 3.7.1 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR (15 lois) • 📐 STAT TESTS (15 tests) • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref) • ∫ nDeriv/fnInt/fMin/fMax • 🔤 chaînes + Str1-9 • 🧭 ANGLE R►P/P►R + →DMS/→Dec
+            Version 3.7.2 (PWA) • 💾 EXPORT/IMPORT (.8xp + JSON) • 🔢 MODE SEQUENCE • 🎓 PRGM TI-BASIC (39+ cmd) • 🎨 DRAW 100% (17/17) • 📊 LIST OPS • 📈 DISTR (15 lois) • 📐 STAT TESTS (15 tests) • 💰 FINANCE • 🎯 SOLVER • 🔢 MATRX OPS (det/rref) • ∫ nDeriv/fnInt/fMin/fMax (home + PRGM) • 🔤 chaînes + Str1-9 • 🧭 ANGLE R►P/P►R + →DMS/→Dec
           </p>
           <button className="help-button" onClick={onClose}>Fermer</button>
         </div>

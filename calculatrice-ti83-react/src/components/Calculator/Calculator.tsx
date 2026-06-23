@@ -32,6 +32,7 @@ import { createZoomHandlers, createMathHandlers, createStatHandlers, createCalcH
 import { listHandlers } from '../../utils/listHandlers';
 import { createDrawHandlers } from '../../utils/drawHandlers';
 import { MatrixService } from '../../services/MatrixService';
+import { ListService } from '../../services/ListService';
 import { stringService } from '../../services/StringService';
 import { extractCalculusCalls } from '../../utils/calculus';
 import { ListEditor, type ListEditorHandle } from '../Editors/ListEditor';
@@ -97,6 +98,11 @@ function splitTopLevelArgs(s: string): string[] | null {
   args.push(cur);
   return args;
 }
+
+// Indices Unicode U+2081..U+2086 (tokens de liste L₁..L₆) → chiffre décimal.
+const SUBSCRIPTS: Record<string, string> = {
+  '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6',
+};
 
 export const Calculator: React.FC = () => {
   // State pour le modal d'aide
@@ -1746,16 +1752,22 @@ export const Calculator: React.FC = () => {
               }
             }
 
-            // Fill(v,[X]) / SortA([X]) / SortD([X]) — commandes en place sur matrices.
-            // Sur TI-83 ces commandes modifient la matrice en place et affichent Done.
+            // Fill(v,[X]) / SortA([X]) / SortD([X]) — en place sur matrices
+            // ET sur listes L₁-L₆ : Fill(v,L₁) / SortA(L₁) / SortD(L₁).
+            // Sur TI-83 ces commandes modifient la cible en place et affichent Done.
             const matrixCmdMatch = input.match(/^(Fill|SortA|SortD)\((.+)\)$/);
             if (matrixCmdMatch) {
               const [, cmd, argsStr] = matrixCmdMatch;
               const args = splitTopLevelArgs(argsStr);
+              // Résout un token de liste L₁..L₆ (indice Unicode) → chiffre 1..6.
+              const listNum = (tok?: string): string | null => {
+                const m = (tok ?? '').trim().match(/^L([₁-₆])$/);
+                return m ? SUBSCRIPTS[m[1]] : null;
+              };
               if (args) {
                 try {
                   if (cmd === 'Fill') {
-                    // Fill(value, [X])
+                    // Fill(value, [X])  → matrice
                     const target = args[1]?.match(/^\[([A-J])\]$/);
                     if (target) {
                       const m = getMatrix(target[1]);
@@ -1763,14 +1775,33 @@ export const Calculator: React.FC = () => {
                       setMatrix(target[1], toStoredMatrix(filled));
                       addToHistory(input); setInput('Done'); return;
                     }
+                    // Fill(value, L₁)  → liste en place (garde la dimension courante)
+                    const ln = listNum(args[1]);
+                    if (ln) {
+                      const list = statisticsService.getList(`L${ln}`);
+                      if (list.length > 0) {
+                        statisticsService.setList(`L${ln}`, list.map(() => Number(args[0])));
+                        addToHistory(input); setInput('Done'); return;
+                      }
+                    }
                   } else {
-                    // SortA([X]) / SortD([X]) — trie chaque ligne en place
+                    // SortA([X]) / SortD([X]) — trie chaque ligne en place (matrice)
                     const target = args[0]?.match(/^\[([A-J])\]$/);
                     if (target) {
                       const m = getMatrix(target[1]);
                       const sorted = (cmd === 'SortA' ? MatrixService.sortA : MatrixService.sortD)(math.matrix(m.data));
                       setMatrix(target[1], toStoredMatrix(sorted));
                       addToHistory(input); setInput('Done'); return;
+                    }
+                    // SortA(L₁) / SortD(L₁) — trie la liste en place
+                    const ln = listNum(args[0]);
+                    if (ln) {
+                      const list = statisticsService.getList(`L${ln}`);
+                      if (list.length > 0) {
+                        const sorted = (cmd === 'SortA' ? ListService.sortA : ListService.sortD)(list);
+                        statisticsService.setList(`L${ln}`, sorted);
+                        addToHistory(input); setInput('Done'); return;
+                      }
                     }
                   }
                 } catch {
