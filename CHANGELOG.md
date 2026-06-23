@@ -6,6 +6,18 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [3.7.3] - 2026-06-23
+
+### 🎹 Corrigé - Mapping ALPHA A-Z complet du clavier
+
+- **`Keyboard.tsx`** : les 26 lettres A-Z sont désormais affectées aux bonnes touches (lettres vertes imprimées), conformes à une vraie TI-83/84 Plus. Corrige la totalité de F→Z (fausse ou absente depuis v3.3.1), ajoute les lettres manquantes (`D`=X⁻¹, `H`=^, `N`=LOG, `O`=7, `T`=4, `U`=5…), et corrige le bug `LN='n'` minuscule → `S`.
+- **`VARS` et `CLEAR` n'ont pas de lettre verte** — l'hypothèse v3.3.1 (`VARS=D`, `CLEAR=E`) était incorrecte ; `D` est sur `X⁻¹`. `STO→` = `X` (et non `L`).
+- **Source** : table autoritaire croisée, confirmée par l'exemple officiel TI `[2nd][ALPHA][4][SIN][LN][4]` = TEST → `4=T`, `SIN=E`, `LN=S`, et `7=O`. Séquence A→Z continue, sans trou ni doublon (vérifié : chaque lettre exactement une fois).
+- Caractères spéciaux : `+` → `"`, `.` → `:`, `0` → espace (inchangés). Touches sans lettre (`VARS`, `CLEAR`, `(−)`, `3`, `ENTER`, `X,T,θ,n`, `STAT`, graphiques) → action normale en mode ALPHA.
+- Vérifié : `tsc -b` clean, suite Vitest 122/122 (composant, hors services purs). Mapping A→Z validé par script (26 lettres, 0 doublon, 0 manquante).
+
+---
+
 ## [3.7.2] - 2026-06-23
 
 ### ✨ Ajouté - Parachèvement de la v3.6.0

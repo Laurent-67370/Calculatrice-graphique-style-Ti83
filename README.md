@@ -1,5 +1,9 @@
 # 🧮 Calculatrice Graphique TI-83 Plus
 
+## Version 3.7.3 - Mapping ALPHA A-Z complet du clavier (corrigé via table autoritaire) 🎹
+
+> 🎹 **v3.7.3** : **mapping ALPHA complet et vérifié** (`Keyboard.tsx`) — les 26 lettres A-Z sont désormais affectées aux bonnes touches (lettres vertes imprimées), conformes à une vraie TI-83/84 Plus. Corrige la totalité de F→Z qui était fausse en v3.3.1, ajoute les lettres manquantes (D, H, N, O…), et corrige le bug `LN='n'` minuscule. Source : table autoritaire croisée (notamment l'exemple officiel TI `[2nd][ALPHA][4][SIN][LN][4]` = TEST → `4=T`, `SIN=E`, `LN=S`, `7=O`). Voir **🔧 Correctifs Version 3.7.3**.
+
 ## Version 3.7.2 - Complétions v3.6.0 (Fill/SortA/SortD listes + fMin/fMax/nDeriv/fnInt en PRGM) 🔧
 
 > 🔧 **v3.7.2** : parachève la v3.6.0 — `Fill(`/`SortA(`/`SortD(` désormais **en place sur les listes `L1`-`L6`** (pas seulement les matrices), et `fMin(`/`fMax(`/`nDeriv(`/`fnInt(` disponibles **dans l'interpréteur PRGM** (plus seulement écran home + CATALOG). Correctif doc : valeurs `stdDev`/`variance` de l'aide corrigées (2.410 / 5.810 pour `{2,5,3,8,1,6,4}`). Suite Vitest **122 tests** (+`ListService`). Voir **🔧 Correctifs Version 3.7.2**.
@@ -26,11 +30,13 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 
 **Nouveautés v3.7.0** 📐 : `STAT → TESTS` (15 tests d'hypothèses & intervalles : `Z-Test`, `T-Test`, `2-SampZTest`/`TTest`, `1/2-PropZTest`, `χ²-Test`, `LinRegTTest`, `ANOVA` + intervalles `ZInterval`/`TInterval`/`2-Samp`/`Prop-Int`). Éditeur dédié (mode Data/Stats, `μ ≠</>`, `Pooled`, `Calculate`). Voir la section **✨ Nouveautés Version 3.7.0** ci-dessous.
 
+**Correctifs v3.7.3** 🎹 : **mapping ALPHA A-Z complet du clavier** — toutes les lettres vertes affectées aux bonnes touches (conformes à une vraie TI-83/84 Plus), via une table autoritaire croisée. Corrige F→Z (faux en v3.3.1), ajoute les lettres manquantes, corrige le bug `LN='n'` minuscule ; `VARS`/`CLEAR` n'ont en fait pas de lettre verte. Voir la section **🔧 Correctifs Version 3.7.3** ci-dessous.
+
 **Correctifs v3.7.2** 🔧 : parachèvement de la v3.6.0 — `Fill(`/`SortA(`/`SortD(` en place sur les **listes `L1`-`L6`** (pas seulement les matrices) + `fMin(`/`fMax(`/`nDeriv(`/`fnInt(` dans l'**interpréteur PRGM** (plus seulement écran home + CATALOG) + correctif doc `stdDev`/`variance`. Voir la section **🔧 Correctifs Version 3.7.2** ci-dessous.
 
 **Nouveautés v3.6.0** ∫🔤🔢 : `fMin(`/`fMax(` (optimisation numérique, MATH>6/7), variables chaîne persistantes `Str1`-`Str9` (home + PRGM, `Input Str1`), `Fill(`/`SortA(`/`SortD(` en place sur matrices + stockage résultat vers `[A]`-`[J]` (`[A]→[B]`, `randM(2,2)→[A]`), `→Dec` parsing DMS (round-trip `→Dec(→DMS(x))`). Voir la section **✨ Nouveautés Version 3.6.0** ci-dessous.
 
-**Correctifs v3.3.1** 🎹 : mapping ALPHA du clavier partiellement corrigé — rang haut MATH/APPS/PRGM/VARS/CLEAR = A/B/C/D/E (confirmé guidebook TI officiel), doublon `X` sur `÷` supprimé, mauvaises lettres A-E retirées des touches numériques 7/8/9/4/5. Voir la section **🔧 Correctifs v3.3.1** ci-dessous.
+**Correctifs v3.3.1** 🎹 : mapping ALPHA du clavier partiellement corrigé (rang haut MATH/APPS/PRGM = A/B/C confirmés, doublons `X`/A-E supprimés). ⚠️ L'hypothèse « VARS/CLEAR = D/E » de cette version était **incorrecte** (ces touches n'ont pas de lettre verte) — corrigé et complété pour tout l'alphabet A-Z en **v3.7.3**. Voir **🔧 Correctifs Version 3.3.1**.
 
 **Nouveautés v3.3.0** 🎮 :
 - `getKey` — lecture de l'entrée clavier dans les programmes TI-BASIC (codes officiels TI-BASIC `ligne×10+colonne`), avec tampon consommable à la lecture (comme une vraie TI-83). Les touches fléchées et le pavé numérique alimentent le programme hors des modes `Input`/`Menu`. Écrivez des jeux interactifs ! Voir la section **✨ Nouveautés v3.3.0** ci-dessous.
@@ -49,6 +55,41 @@ Une implémentation moderne et performante de la calculatrice graphique TI-83 Pl
 **Correctifs v3.2.2** 🐛 : 3 bugs du module PRGM corrigés (opérateurs `=`/`≠`/`≥`/`≤` dans les conditions, interpolation de variables dans les chaînes, `If` mono-ligne `cond:commande`) — voir la section **🔧 Correctifs v3.2.2** ci-dessous.
 
 **Correctifs v3.2.1** 🐛 : 6 bugs mathématiques/finance/graphique corrigés (`ln` en mode graph, QuadReg, séquences récursives, TVM solveN/solveI, DrawInv) — voir la section **🔧 Correctifs v3.2.1** ci-dessous.
+
+---
+
+## 🔧 Correctifs Version 3.7.3
+
+**Mapping ALPHA A-Z complet du clavier** (`Keyboard.tsx`). Jusqu'ici seules A-C (MATH/APPS/PRGM) étaient correctes ; tout le reste (F→Z) était faux ou absent (héritage v3.3.1 non vérifié — les outils de vision et les sources web se contredisaient). Cette version applique une **table autoritaire croisée**, conforme à une vraie TI-83/84 Plus.
+
+### 🎹 Table ALPHA complète (touche → lettre verte)
+
+| Lettre | Touche | | Lettre | Touche | | Lettre | Touche |
+|---|---|---|---|---|---|---|---|
+| **A** | MATH | | **J** | `,` | | **S** | LN |
+| **B** | APPS | | **K** | `(` | | **T** | 4 |
+| **C** | PRGM | | **L** | `)` | | **U** | 5 |
+| **D** | X⁻¹ | | **M** | ÷ | | **V** | 6 |
+| **E** | SIN | | **N** | LOG | | **W** | − |
+| **F** | COS | | **O** | 7 | | **X** | STO→ |
+| **G** | TAN | | **P** | 8 | | **Y** | 1 |
+| **H** | ^ | | **Q** | 9 | | **Z** | 2 |
+| **I** | X² | | **R** | × | | | |
+
+Caractères spéciaux : `+` → `"`, `.` → `:`, `0` → espace. Touches **sans** lettre verte : `VARS`, `CLEAR`, `(−)`, `3`, `ENTER`, `X,T,θ,n`, `STAT`, touches graphiques (en mode ALPHA elles font leur action normale).
+
+### 🔑 Ancres de vérification
+
+L'affectation est confirmée par l'exemple officiel TI : taper le mot **TEST** = `[2nd][ALPHA][4][SIN][LN][4]` → donc `4=T`, `SIN=E`, `LN=S`, et `7=O` (« the letter O is in green above the [7] key »). La séquence A→Z est continue, sans trou ni doublon.
+
+### 🐛 Corrections notables
+
+- **`VARS` / `CLEAR` n'ont pas de lettre verte** — l'hypothèse v3.3.1 (`VARS=D`, `CLEAR=E`) était fausse ; `D` est sur `X⁻¹`.
+- **`LN` = `S`** (et non `'n'` minuscule — bug corrigé).
+- **`STO→` = `X`** (et non `L` comme le supposait v3.3.1).
+- **Lettres manquantes ajoutées** : `D`(X⁻¹), `H`(^), `N`(LOG), `O`(7)… et les chiffres `4,5,7,8,9` + `÷` reçoivent maintenant leur lettre.
+
+> 🔗 Détails : `calculatrice-ti83-react/src/components/Calculator/Keyboard.tsx`. `tsc -b` clean, suite Vitest 122/122 inchangée (composant, hors services purs).
 
 ---
 
@@ -297,18 +338,18 @@ Correctif partiel du **mapping ALPHA** du clavier (`Keyboard.tsx`). Seules les t
 
 | Touche | Avant | Après |
 |---|---|---|
-| MATH / APPS / PRGM / VARS / CLEAR | (aucune lettre) | **A / B / C / D / E** |
+| MATH / APPS / PRGM | (aucune lettre) | **A / B / C** |
 | ÷ | `X` (doublon) | (supprimé — `X,T,θ,n` est la vraie touche X) |
 | 7 / 8 / 9 | A / B / C (doublons) | (supprimé — A-C sont sur le rang haut) |
-| 4 / 5 | D / E (doublons) | (supprimé — D-E sont sur le rang haut) |
+| 4 / 5 | D / E (doublons) | (supprimé) |
 
-- **Rang du haut A-E** : confirmé par le guidebook TI (« ƒ [A] above MATH », « ƒ [B] above APPS »). `ALPHA + MATH` tape désormais « A », comme sur une vraie TI-83.
+- **Rang du haut A-C** : confirmé par le guidebook TI (« ƒ [A] above MATH »). ⚠️ L'hypothèse `VARS=D` / `CLEAR=E` de v3.3.1 était **incorrecte** (ces touches n'ont pas de lettre verte) — corrigé en v3.7.3 (`D` est sur `X⁻¹`).
 - **Doublon `X`** : la touche `÷` produisait à tort `X` (doublon avec `X,T,θ,n`). Supprimé.
 - **Doublons A-E** : les touches numériques 7/8/9/4/5 portaient les mauvaises lettres A/B/C/D/E ; retirées pour éviter les doublons avec le rang haut désormais correct.
 
-### ⚠️ Reste à corriger (doute → table autoritaire)
+### ✅ Résolu en v3.7.3
 
-Les lettres F-M et N-Z sur les touches scientifiques/numériques (`X⁻¹`, `SIN`, `COS`, `TAN`, `^`, `LOG`, `LN`, `X²`, `,`, `(`, `×`, `−`, `STO→`, `1`, `2`, `3`, `6`, `(−)`) ainsi que les caractères spéciaux (`0`=espace, `.`=:, `)`=θ, `+`=") et le bug `LN='n'` minuscule ne sont pas encore alignés sur la vraie TI-83 : les sources web consultées se contredisent. Ils seront corrigés avec le diagramme officiel du **TI-83 Plus Guidebook** (lettres vertes imprimées sur les touches).
+Les lettres F-M et N-Z sur les touches scientifiques/numériques, les caractères spéciaux et le bug `LN='n'` minuscule sont désormais **alignés sur la vraie TI-83** — voir la section **🔧 Correctifs Version 3.7.3** (table ALPHA complète A-Z, via une table autoritaire croisée). Les sources web consultées à l'époque se contredisaient ; la résolution a nécessité une vérification point par point confirmée par l'exemple officiel TI `[2nd][ALPHA][4][SIN][LN][4]` = TEST.
 
 > 🔗 Détails techniques : commit `74eceff` sur la branche par défaut. Modification dans `calculatrice-ti83-react/src/components/Calculator/Keyboard.tsx`.
 
@@ -591,7 +632,7 @@ Les **deux principaux manques** de l'audit initial — opérations matricielles 
 
 ### Manques mineurs restants
 
-`Archive`/`Asm(`/link (transfert matériel) et quelques caractères ALPHA du clavier (F-M/N-Z, en attente d'une table autoritaire). Les listes `L1`-`L6` (`Fill`/`SortA`/`SortD`) et le calcul numérique en PRGM (`fMin`/`fMax`/`nDeriv`/`fnInt`) sont désormais couverts (v3.7.2).
+`Archive`/`Asm(`/link (transfert matériel — hors scope web). Le **mapping ALPHA A-Z du clavier est désormais complet et vérifié** (v3.7.3) ; les listes `L1`-`L6` (`Fill`/`SortA`/`SortD`) et le calcul numérique en PRGM (`fMin`/`fMax`/`nDeriv`/`fnInt`) sont couverts (v3.7.2). Tous les manques mineurs identifiés par l'audit de compatibilité sont désormais comblés.
 
 ---
 

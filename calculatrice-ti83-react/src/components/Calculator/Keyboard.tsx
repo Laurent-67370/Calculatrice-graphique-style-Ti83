@@ -42,65 +42,65 @@ const keyLayout: Key[][] = [
   // Ligne 3 : ALPHA, X,T,Θ,n, STAT, flèches bas/droite
   [
     { action: 'alpha', primary: 'ALPHA', color: 'blue' },
-    { action: 'x', secondAction: 'link', primary: 'X,T,θ,n', second: 'LINK', alpha: 'X', color: 'gray' },
+    { action: 'x', secondAction: 'link', primary: 'X,T,θ,n', second: 'LINK', color: 'gray' },
     { action: 'stat', primary: 'STAT', color: 'blue' },
     { action: 'down', primary: '↓', color: 'gray' },
     { action: 'right', primary: '→', color: 'gray' },
   ],
-  // Ligne 4 : MATH, APPS, PRGM, VARS, CLEAR  (ALPHA : A, B, C, D, E — guidebook TI officiel)
+  // Ligne 4 : MATH, APPS, PRGM, VARS, CLEAR  (ALPHA : A, B, C ; VARS & CLEAR sans lettre verte)
   [
     { action: 'math', secondAction: 'test', primary: 'MATH', second: 'TEST', alpha: 'A', color: 'gray' },
     { action: 'apps', secondAction: 'angle', primary: 'APPS', second: 'ANGLE', alpha: 'B', color: 'gray' },
     { action: 'prgm', secondAction: 'draw', primary: 'PRGM', second: 'DRAW', alpha: 'C', color: 'gray' },
-    { action: 'vars', secondAction: 'distr', primary: 'VARS', second: 'DISTR', alpha: 'D', color: 'gray' },
-    { action: 'clear', primary: 'CLEAR', alpha: 'E', color: 'gray' },
+    { action: 'vars', secondAction: 'distr', primary: 'VARS', second: 'DISTR', color: 'gray' },
+    { action: 'clear', primary: 'CLEAR', color: 'gray' },
   ],
-  // Ligne 5 : X⁻¹, SIN, COS, TAN, ^
+  // Ligne 5 : X⁻¹, SIN, COS, TAN, ^  (ALPHA : D, E, F, G, H)
   [
-    { action: 'inverse', secondAction: 'matrix', primary: 'X⁻¹', second: 'MATRIX', alpha: 'P' },
-    { action: 'sin', secondAction: 'asin', primary: 'SIN', second: 'SIN⁻¹', alpha: 'Q' },
-    { action: 'cos', secondAction: 'acos', primary: 'COS', second: 'COS⁻¹', alpha: 'R' },
-    { action: 'tan', secondAction: 'atan', primary: 'TAN', second: 'TAN⁻¹', alpha: 'S' },
-    { action: 'pow', secondAction: 'pi', primary: '^', second: 'π', alpha: 'T' },
+    { action: 'inverse', secondAction: 'matrix', primary: 'X⁻¹', second: 'MATRIX', alpha: 'D' },
+    { action: 'sin', secondAction: 'asin', primary: 'SIN', second: 'SIN⁻¹', alpha: 'E' },
+    { action: 'cos', secondAction: 'acos', primary: 'COS', second: 'COS⁻¹', alpha: 'F' },
+    { action: 'tan', secondAction: 'atan', primary: 'TAN', second: 'TAN⁻¹', alpha: 'G' },
+    { action: 'pow', secondAction: 'pi', primary: '^', second: 'π', alpha: 'H' },
   ],
-  // Ligne 6 : X², , (virgule), (, ), ÷
+  // Ligne 6 : X², , (virgule), (, ), ÷  (ALPHA : I, J, K, L, M)
   [
-    { action: 'square', secondAction: 'sqrt', primary: 'X²', second: '√', alpha: 'U' },
-    { action: 'comma', secondAction: 'ee', primary: ',', second: 'EE', alpha: 'V' },
-    { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'W' },
-    { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'θ' },
-    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e' },
+    { action: 'square', secondAction: 'sqrt', primary: 'X²', second: '√', alpha: 'I' },
+    { action: 'comma', secondAction: 'ee', primary: ',', second: 'EE', alpha: 'J' },
+    { action: 'left-paren', secondAction: 'left-brace', primary: '(', second: '{', alpha: 'K' },
+    { action: 'right-paren', secondAction: 'right-brace', primary: ')', second: '}', alpha: 'L' },
+    { action: 'divide', secondAction: 'exp', primary: '÷', second: 'e', alpha: 'M' },
   ],
-  // Ligne 7 : LOG, 7, 8, 9, ×
+  // Ligne 7 : LOG, 7, 8, 9, ×  (ALPHA : N, O, P, Q, R)
   [
-    { action: 'log', secondAction: 'power10', primary: 'LOG', second: '10ˣ', alpha: 'Y' },
-    { action: '7', secondAction: 'u', primary: '7', second: 'u' },
-    { action: '8', secondAction: 'v', primary: '8', second: 'v' },
-    { action: '9', secondAction: 'w', primary: '9', second: 'w' },
-    { action: 'multiply', secondAction: 'left-bracket', primary: '×', second: '[', alpha: 'Z' },
+    { action: 'log', secondAction: 'power10', primary: 'LOG', second: '10ˣ', alpha: 'N' },
+    { action: '7', secondAction: 'u', primary: '7', second: 'u', alpha: 'O' },
+    { action: '8', secondAction: 'v', primary: '8', second: 'v', alpha: 'P' },
+    { action: '9', secondAction: 'w', primary: '9', second: 'w', alpha: 'Q' },
+    { action: 'multiply', secondAction: 'left-bracket', primary: '×', second: '[', alpha: 'R' },
   ],
-  // Ligne 8 : LN, 4, 5, 6, −
+  // Ligne 8 : LN, 4, 5, 6, −  (ALPHA : S, T, U, V, W)
   [
-    { action: 'ln', secondAction: 'exp-func', primary: 'LN', second: 'eˣ', alpha: 'n' },
-    { action: '4', secondAction: 'left-brace-small', primary: '4', second: '{' },
-    { action: '5', primary: '5' },
-    { action: '6', secondAction: 'right-brace-small', primary: '6', second: '}', alpha: 'F' },
-    { action: 'subtract', secondAction: 'right-bracket', primary: '−', second: ']', alpha: 'G' },
+    { action: 'ln', secondAction: 'exp-func', primary: 'LN', second: 'eˣ', alpha: 'S' },
+    { action: '4', secondAction: 'left-brace-small', primary: '4', second: '{', alpha: 'T' },
+    { action: '5', primary: '5', alpha: 'U' },
+    { action: '6', secondAction: 'right-brace-small', primary: '6', second: '}', alpha: 'V' },
+    { action: 'subtract', secondAction: 'right-bracket', primary: '−', second: ']', alpha: 'W' },
   ],
-  // Ligne 9 : STO→, 1, 2, 3, +
+  // Ligne 9 : STO→, 1, 2, 3, +  (ALPHA : X, Y, Z ; 3 sans lettre ; + = ")
   [
-    { action: 'sto', secondAction: 'rcl', primary: 'STO→', second: 'RCL', alpha: 'L' },
-    { action: '1', primary: '1', alpha: 'I' },
-    { action: '2', secondAction: 'list', primary: '2', second: 'LIST', alpha: 'J' },
-    { action: '3', primary: '3', alpha: 'K' },
+    { action: 'sto', secondAction: 'rcl', primary: 'STO→', second: 'RCL', alpha: 'X' },
+    { action: '1', primary: '1', alpha: 'Y' },
+    { action: '2', secondAction: 'list', primary: '2', second: 'LIST', alpha: 'Z' },
+    { action: '3', primary: '3' },
     { action: 'add', secondAction: 'mem', primary: '+', second: 'MEM', alpha: '"' },
   ],
-  // Ligne 10 : ON, 0, ., (−), ENTER
+  // Ligne 10 : ON, 0, ., (−), ENTER  (ALPHA : 0=espace, .=: ; (−) sans lettre)
   [
     { action: 'on', secondAction: 'off', primary: 'ON', second: 'OFF', color: 'gray' },
     { action: '0', secondAction: 'catalog', primary: '0', second: 'CATALOG', alpha: ' ' },
     { action: 'dot', secondAction: 'i', primary: '.', second: 'i', alpha: ':' },
-    { action: 'negative', secondAction: 'ans', primary: '(−)', second: 'ANS', alpha: 'M' },
+    { action: 'negative', secondAction: 'ans', primary: '(−)', second: 'ANS' },
     { action: 'enter', secondAction: 'entry', primary: 'ENTER', second: 'ENTRY', size: 'wide', color: 'blue' },
   ],
 ];
